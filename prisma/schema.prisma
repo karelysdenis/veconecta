@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  role        Role      @default(EDITOR)
+  countrySlug String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  sessions    Session[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MagicToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Country {
+  slug          String     @id
+  nameEs        String
+  nameEn        String
+  namePt        String?
+  flag          String
+  active        Boolean    @default(true)
+  lastUpdatedAt DateTime   @updatedAt
+  resources     Resource[]
+}
+
+model Resource {
+  id          String           @id @default(cuid())
+  countrySlug String
+  country     Country          @relation(fields: [countrySlug], references: [slug])
+  category    ResourceCategory
+  name        String
+  url         String?
+  phone       String?
+  bizum       String?
+  free        Boolean          @default(false)
+  notesEs     String?
+  notesEn     String?
+  notesPt     String?
+  status      ResourceStatus   @default(DRAFT)
+  verifiedAt  DateTime?
+  verifiedBy  String?
+  expiresAt   DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model CommunityReport {
+  id          String   @id @default(cuid())
+  resourceId  String?
+  countrySlug String
+  message     String
+  url         String?
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+enum ResourceCategory {
+  FIND_FAMILY
+  DONATE_MONEY
+  SEND_MONEY
+  CALL_FREE
+  DONATE_PHYSICALLY
+  DIGITAL_BRIDGE
+  CONSULAR
+  MENTAL_HEALTH
+}
+
+enum ResourceStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
