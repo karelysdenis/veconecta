@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
+import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
@@ -128,6 +129,8 @@ export default async function CountryPage({
         <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <p className="text-xs text-gray-500">{tDisclaimer('disclaimer')}</p>
         </div>
+
+        <ReportForm countrySlug={slug} />
       </div>
     </main>
   )
