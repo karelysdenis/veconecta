@@ -43,3 +43,5 @@ next-env.d.ts
 
 # superpowers (implementation plan tooling)
 .superpowers/
+
+/app/generated/prisma
