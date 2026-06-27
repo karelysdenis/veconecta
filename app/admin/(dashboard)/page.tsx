@@ -106,6 +106,8 @@ export default async function AdminDashboard() {
 function ResolveButton({ reportId }: { reportId: string }) {
   async function resolve() {
     'use server'
+    const { user } = await getSession()
+    if (!user || user.role !== 'ADMIN') return
     await prisma.communityReport.update({
       where: { id: reportId },
       data: { resolved: true },
