@@ -1,5 +1,55 @@
 {
-  "app": {
-    "title": "VeConecta"
+  "site": {
+    "name": "VeConecta",
+    "tagline": "La diáspora venezolana conectada"
+  },
+  "homepage": {
+    "title": "¿Desde dónde quieres ayudar?",
+    "subtitle": "Selecciona tu país de residencia para ver recursos verificados",
+    "emergencyBanner": "Terremoto Venezuela — Recursos verificados para la diáspora"
+  },
+  "categories": {
+    "FIND_FAMILY": "Buscar familiares",
+    "DONATE_MONEY": "Donar dinero",
+    "SEND_MONEY": "Enviar dinero a familia",
+    "CALL_FREE": "Llamar gratis a Venezuela",
+    "DONATE_PHYSICALLY": "Donar físicamente",
+    "DIGITAL_BRIDGE": "Ser puente digital",
+    "CONSULAR": "Trámites consulares",
+    "MENTAL_HEALTH": "Apoyo psicológico"
+  },
+  "verification": {
+    "verified": "Verificado",
+    "unverified": "Sin verificar reciente",
+    "expired": "Verificación vencida — confirmar antes de usar",
+    "lastChecked": "Última verificación: {date}",
+    "reportError": "¿Info desactualizada? Repórtalo"
+  },
+  "resource": {
+    "visit": "Visitar",
+    "call": "Llamar",
+    "bizum": "Bizum: {code}",
+    "free": "Gratuito"
+  },
+  "digitalBridge": {
+    "title": "Cómo ser puente digital",
+    "subtitle": "Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela",
+    "step1": "Cuando te llame un familiar desde Venezuela, pide estos datos antes de que se corte: nombre completo, cédula, última ubicación conocida, descripción física, ropa que llevaba.",
+    "step2": "Antes de crear un reporte, busca primero en venezuelatebusca.com y desaparecidosterremotovenezuela.com por nombre y cédula. Evita duplicados — saturan el sistema.",
+    "step3": "Si no aparece, crea el reporte en venezuelatebusca.com. Sube foto si tienes. El registro es inmediato.",
+    "step4": "Comparte el link del reporte con todos los grupos de WhatsApp familiares.",
+    "step5": "Cuando la persona sea localizada, márcala como encontrada. Eso libera capacidad para quienes siguen sin aparecer."
+  },
+  "report": {
+    "title": "Reportar información desactualizada",
+    "placeholder": "Describe qué información está desactualizada o incorrecta",
+    "submit": "Enviar reporte",
+    "success": "Gracias. Revisaremos tu reporte en las próximas horas.",
+    "error": "Error al enviar. Inténtalo de nuevo."
+  },
+  "disclaimer": "VeConecta es una iniciativa ciudadana independiente. Verificamos la información antes de publicarla, pero los recursos cambian rápido. Confirma siempre antes de actuar.",
+  "country": {
+    "lastUpdated": "Actualizado: {date}",
+    "noResources": "Recursos en preparación — vuelve pronto."
   }
 }

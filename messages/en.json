@@ -1,5 +1,55 @@
 {
-  "app": {
-    "title": "VeConecta"
+  "site": {
+    "name": "VeConecta",
+    "tagline": "The Venezuelan diaspora, connected"
+  },
+  "homepage": {
+    "title": "Where are you helping from?",
+    "subtitle": "Select your country of residence to see verified local resources",
+    "emergencyBanner": "Venezuela Earthquake — Verified resources for the diaspora"
+  },
+  "categories": {
+    "FIND_FAMILY": "Find family members",
+    "DONATE_MONEY": "Donate money",
+    "SEND_MONEY": "Send money to family",
+    "CALL_FREE": "Call Venezuela for free",
+    "DONATE_PHYSICALLY": "Donate supplies",
+    "DIGITAL_BRIDGE": "Be a digital bridge",
+    "CONSULAR": "Consular services",
+    "MENTAL_HEALTH": "Mental health support"
+  },
+  "verification": {
+    "verified": "Verified",
+    "unverified": "Not recently verified",
+    "expired": "Verification expired — confirm before acting",
+    "lastChecked": "Last verified: {date}",
+    "reportError": "Info outdated? Report it"
+  },
+  "resource": {
+    "visit": "Visit",
+    "call": "Call",
+    "bizum": "Bizum: {code}",
+    "free": "Free"
+  },
+  "digitalBridge": {
+    "title": "How to be a digital bridge",
+    "subtitle": "If you have a stable connection, you can help family members with no internet in Venezuela",
+    "step1": "When a family member calls from Venezuela, get these details before the call drops: full name, ID number, last known location, physical description, what they were wearing.",
+    "step2": "Before creating a report, search first at venezuelatebusca.com and desaparecidosterremotovenezuela.com by name and ID. Avoid duplicates — they saturate the system.",
+    "step3": "If they don't appear, create a report at venezuelatebusca.com. Upload a photo if you have one. Registration is immediate.",
+    "step4": "Share the report link with all family WhatsApp groups.",
+    "step5": "When the person is found, mark them as located. This frees up capacity for those still missing."
+  },
+  "report": {
+    "title": "Report outdated information",
+    "placeholder": "Describe what information is outdated or incorrect",
+    "submit": "Send report",
+    "success": "Thank you. We'll review your report within a few hours.",
+    "error": "Error sending. Please try again."
+  },
+  "disclaimer": "VeConecta is an independent citizen initiative. We verify information before publishing, but resources change fast. Always confirm before acting.",
+  "country": {
+    "lastUpdated": "Updated: {date}",
+    "noResources": "Resources in preparation — check back soon."
   }
 }
