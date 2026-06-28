@@ -60,25 +60,18 @@ export default async function HomePage({
           <br />
           {t('heroPost')}
         </h1>
-        <p className="font-sans font-light text-base text-[#808080] mt-2">
-          {t('selectCountry')}
-        </p>
       </div>
 
       {/* Resource count */}
       {totalResources > 0 && (
-        <div className="flex items-center gap-2 h-11 px-5">
-          <span className="w-1.5 h-1.5 rounded-full bg-guacamaya shrink-0" aria-hidden="true" />
+        <div className="flex flex-col items-center gap-1 py-3 px-5">
           <span className="font-sans font-semibold text-sm text-caribe">
             {t('verifiedResources', { count: totalResources })}
           </span>
           {formattedDate && (
-            <>
-              <span className="text-[#b8b8b8] text-sm" aria-hidden="true">·</span>
-              <span className="font-sans text-sm text-[#808080]">
-                {t('updatedAt', { date: formattedDate })}
-              </span>
-            </>
+            <span className="font-sans font-light text-sm text-[#808080]">
+              {t('updatedAt', { date: formattedDate })}
+            </span>
           )}
         </div>
       )}
