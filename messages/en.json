@@ -10,6 +10,7 @@
     "verifiedResources": "{count} verified resources",
     "selectCountry": "Select your country of residence.",
     "updatedAt": "updated {date}",
+    "globalSection": "From anywhere in the world",
     "sectionLabel": "Resources by country",
     "emergencyBanner": "Yaracuy Earthquake · Verified emergency resources"
   },
@@ -67,5 +68,24 @@
     "language": "Language",
     "share": "Share",
     "changeLanguage": "Change language"
+  },
+  "city": {
+    "selectCity": "Select your city or region",
+    "activeSection": "CITIES WITH ACTIVE RESOURCES",
+    "filterPlaceholder": "Filter cities...",
+    "resources": "{count} {count, plural, one {resource} other {resources}}",
+    "backToCountry": "All resources"
+  },
+  "resourceDetail": {
+    "keyInfo": "KEY INFORMATION",
+    "website": "Website",
+    "phone": "Phone",
+    "bizum": "Bizum",
+    "address": "Address",
+    "schedule": "Hours",
+    "free": "Free · No cost",
+    "verifiedBy": "Verified by VeConecta",
+    "goToResource": "Go to resource",
+    "reportOutdated": "Incorrect or outdated info? Report it"
   }
 }

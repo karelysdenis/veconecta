@@ -27,7 +27,7 @@ export function ActionCard({
   resources: SerializedResource[]
   locale: 'es' | 'en' | 'pt'
 }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const t = useTranslations('categories')
 
   if (category === 'DIGITAL_BRIDGE') {
@@ -40,6 +40,8 @@ export function ActionCard({
       </div>
     )
   }
+
+  if (resources.length === 0) return null
 
   const Icon = categoryIcons[category]
 
@@ -54,29 +56,23 @@ export function ActionCard({
           <div className="w-9 h-9 rounded-full bg-coco flex items-center justify-center shrink-0">
             <Icon className="w-[18px] h-[18px] text-[#184e68]" strokeWidth={1.5} />
           </div>
-          <div className="flex flex-col gap-[3px]">
-            <span className="font-sans font-semibold text-base text-[#141414] leading-tight">
-              {t(category)}
-            </span>
-            {resources.length > 0 && (
-              <span className="font-sans font-light text-[13px] text-caribe leading-none">
-                {resources.length} recursos
-              </span>
-            )}
-          </div>
+          <span className="font-sans font-semibold text-base text-[#141414] leading-tight">
+            {t(category)}
+          </span>
+          <span className="font-sans text-[12px] font-semibold text-caribe bg-caribe/10 rounded-full px-2 py-0.5 leading-none shrink-0">
+            {resources.length}
+          </span>
         </div>
-        <span className="font-sans font-light text-sm text-[#b8b8b8] shrink-0 ml-3">
+        <span className="font-sans text-lg text-[#b8b8b8] shrink-0 ml-3 select-none">
           {open ? '−' : '+'}
         </span>
       </button>
 
       {open && (
-        <div className="px-5 pb-4 space-y-3">
-          {resources.length === 0 ? (
-            <p className="font-sans font-light text-sm text-[#808080]">En preparación.</p>
-          ) : (
-            resources.map((r) => <ResourceLink key={r.id} resource={r} locale={locale} />)
-          )}
+        <div>
+          {resources.map((r) => (
+            <ResourceLink key={r.id} resource={r} locale={locale} />
+          ))}
         </div>
       )}
     </div>

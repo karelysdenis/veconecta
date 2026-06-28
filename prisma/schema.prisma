@@ -51,9 +51,12 @@ model Resource {
   country     Country          @relation(fields: [countrySlug], references: [slug])
   category    ResourceCategory
   name        String
+  city        String?
   url         String?
   phone       String?
   bizum       String?
+  address     String?
+  schedule    String?
   free        Boolean          @default(false)
   notesEs     String?
   notesEn     String?
@@ -67,6 +70,7 @@ model Resource {
 
   @@index([status])
   @@index([countrySlug])
+  @@index([city])
 }
 
 model CommunityReport {

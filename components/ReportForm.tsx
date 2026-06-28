@@ -2,8 +2,16 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 
-export function ReportForm({ countrySlug }: { countrySlug: string }) {
-  const [open, setOpen] = useState(false)
+export function ReportForm({
+  countrySlug,
+  resourceId,
+  inline,
+}: {
+  countrySlug: string
+  resourceId?: string
+  inline?: boolean
+}) {
+  const [open, setOpen] = useState(inline ?? false)
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const t = useTranslations('report')
@@ -16,7 +24,7 @@ export function ReportForm({ countrySlug }: { countrySlug: string }) {
       const res = await fetch('/api/reports', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ countrySlug, message }),
+        body: JSON.stringify({ countrySlug, resourceId, message }),
       })
       if (!res.ok) throw new Error()
       setStatus('success')

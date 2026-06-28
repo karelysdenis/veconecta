@@ -10,6 +10,7 @@
     "verifiedResources": "{count} recursos verificados",
     "selectCountry": "Selecciona tu país de residencia.",
     "updatedAt": "actualizado {date}",
+    "globalSection": "Desde cualquier país",
     "sectionLabel": "Recursos por país",
     "emergencyBanner": "Terremoto Yaracuy · Recursos de emergencia verificados"
   },
@@ -67,5 +68,24 @@
     "language": "Idioma",
     "share": "Compartir",
     "changeLanguage": "Cambiar idioma"
+  },
+  "city": {
+    "selectCity": "Selecciona tu ciudad o región",
+    "activeSection": "CIUDADES CON RECURSOS ACTIVOS",
+    "filterPlaceholder": "Filtrar ciudades...",
+    "resources": "{count} {count, plural, one {recurso} other {recursos}}",
+    "backToCountry": "Todos los recursos"
+  },
+  "resourceDetail": {
+    "keyInfo": "INFORMACIÓN CLAVE",
+    "website": "Sitio web",
+    "phone": "Teléfono",
+    "bizum": "Bizum",
+    "address": "Dirección",
+    "schedule": "Horario",
+    "free": "Gratuito · Sin costo",
+    "verifiedBy": "Verificado por VeConecta",
+    "goToResource": "Ir al recurso",
+    "reportOutdated": "¿Información incorrecta o desactualizada? Repórtalo"
   }
 }
