@@ -1,7 +1,9 @@
+import Link from 'next/link'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { CountrySelector } from '@/components/CountrySelector'
 import { ResourceStatus } from '@prisma/client'
+import { Globe } from 'lucide-react'
 
 export const revalidate = 3600
 
@@ -14,17 +16,24 @@ export default async function HomePage({
   setRequestLocale(locale)
 
   const t = await getTranslations('homepage')
-  const countries = await prisma.country.findMany({
-    where: { active: true },
-    orderBy: { slug: 'asc' },
-    include: {
-      _count: {
-        select: { resources: { where: { status: ResourceStatus.PUBLISHED } } },
-      },
-    },
-  })
 
-  const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+  const [countries, globalCount] = await Promise.all([
+    prisma.country.findMany({
+      where: { active: true },
+      orderBy: { slug: 'asc' },
+      include: {
+        _count: {
+          select: { resources: { where: { status: ResourceStatus.PUBLISHED } } },
+        },
+      },
+    }),
+    prisma.resource.count({
+      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
+    }),
+  ])
+
+  const totalResources =
+    countries.reduce((sum, c) => sum + c._count.resources, 0) + globalCount
 
   const latestDate = countries
     .map((c) => c.lastUpdatedAt)
@@ -82,6 +91,29 @@ export default async function HomePage({
           {t('sectionLabel')}
         </p>
       </div>
+
+      {/* Global resources row */}
+      {globalCount > 0 && (
+        <Link
+          href={`/${locale}/global`}
+          className="flex items-center justify-between h-14 px-5 bg-white border-b border-black/[0.08] hover:bg-guacamaya/5 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-[30px] h-[20px] flex items-center justify-center shrink-0">
+              <Globe className="w-5 h-5 text-[#808080]" strokeWidth={1.5} />
+            </div>
+            <div>
+              <p className="font-sans font-semibold text-base text-[#141414] leading-tight">
+                {t('globalSection')}
+              </p>
+              <p className="font-sans font-light text-[13px] text-[#808080] leading-tight">
+                {globalCount} recursos
+              </p>
+            </div>
+          </div>
+          <span className="text-guacamaya text-sm font-sans" aria-hidden="true">›</span>
+        </Link>
+      )}
 
       <CountrySelector countries={countries} locale={locale} />
     </main>
