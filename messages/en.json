@@ -57,6 +57,7 @@
   "nav": {
     "home": "Home",
     "language": "Language",
-    "share": "Share"
+    "share": "Share",
+    "changeLanguage": "Change language"
   }
 }

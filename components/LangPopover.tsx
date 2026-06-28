@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter } from 'next/navigation'
 import { locales } from '@/i18n'
 
@@ -22,6 +22,7 @@ export function LangPopover({
   const pathname = usePathname()
   const router = useRouter()
   const ref = useRef<HTMLDivElement>(null)
+  const t = useTranslations('nav')
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -49,7 +50,7 @@ export function LangPopover({
     <div ref={ref} className={`relative ${className ?? ''}`}>
       <button
         onClick={() => setOpen(!open)}
-        aria-label={locale === 'es' ? 'Cambiar idioma' : 'Change language'}
+        aria-label={t('changeLanguage')}
         aria-expanded={open}
         className="flex items-center justify-center"
       >

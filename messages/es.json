@@ -57,6 +57,7 @@
   "nav": {
     "home": "Inicio",
     "language": "Idioma",
-    "share": "Compartir"
+    "share": "Compartir",
+    "changeLanguage": "Cambiar idioma"
   }
 }
