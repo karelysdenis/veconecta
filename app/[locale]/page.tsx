@@ -43,7 +43,7 @@ export default async function HomePage({
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
-      <div className="px-5 pt-5 pb-4">
+      <div className="px-5 pt-5 pb-4 text-center">
         <h1 className="font-display font-extrabold text-[28px] leading-[1.15] tracking-[-0.01em] text-[#141414]">
           {t('heroPre')}{' '}
           <span className="inline-flex items-center gap-1.5 align-baseline">

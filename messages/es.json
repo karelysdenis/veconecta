@@ -6,7 +6,7 @@
   "homepage": {
     "heroPre": "Ayuda a",
     "heroCountry": "Venezuela",
-    "heroPost": "desde donde estás.",
+    "heroPost": "desde donde estás",
     "verifiedResources": "{count} recursos verificados",
     "selectCountry": "Selecciona tu país de residencia.",
     "updatedAt": "actualizado {date}",
