@@ -23,7 +23,7 @@ async function main() {
   const now = new Date()
   const expiry = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000) // +14 días (umbral rojo)
 
-  // Spain resources (verified by VeConecta — Mallorca)
+  // Spain resources (verified by VeConecta)
   const spainResources = [
     {
       countrySlug: 'spain',
@@ -186,15 +186,18 @@ async function main() {
   await prisma.resource.createMany({ data: spainResources, skipDuplicates: true })
 
   // Admin user
-  await prisma.user.upsert({
-    where: { email: 'admin@veconecta.org' },
-    update: {},
-    create: {
-      email: 'admin@veconecta.org',
-      role: 'ADMIN',
-      isActive: true,
-    },
-  })
+  const adminEmail = process.env.ADMIN_EMAIL
+  if (adminEmail) {
+    await prisma.user.upsert({
+      where: { email: adminEmail },
+      update: {},
+      create: {
+        email: adminEmail,
+        role: 'ADMIN',
+        isActive: true,
+      },
+    })
+  }
 
   console.log('Seed complete.')
 }
