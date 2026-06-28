@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { ResourceStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
+import Link from 'next/link'
 
 export default async function AdminCountryPage({
   params,
@@ -68,9 +69,19 @@ export default async function AdminCountryPage({
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-3">
-        <span className="text-3xl">{countryRecord.flag}</span>
-        <h1 className="text-xl font-bold text-gray-900">{countryRecord.nameEs}</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{countryRecord.flag}</span>
+          <h1 className="text-xl font-bold text-gray-900">{countryRecord.nameEs}</h1>
+        </div>
+        {user.role === 'ADMIN' && (
+          <Link
+            href={`/admin/${country}/new`}
+            className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+          >
+            + Añadir recurso
+          </Link>
+        )}
       </div>
 
       {drafts.length > 0 && (
@@ -95,6 +106,12 @@ export default async function AdminCountryPage({
                   </div>
                   {user.role === 'ADMIN' && (
                     <div className="flex gap-2 shrink-0">
+                      <Link
+                        href={`/admin/${country}/${r.id}`}
+                        className="text-xs border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-50"
+                      >
+                        Editar
+                      </Link>
                       <form action={publishResource}>
                         <input type="hidden" name="id" value={r.id} />
                         <button
@@ -145,15 +162,23 @@ export default async function AdminCountryPage({
                   )}
                 </div>
                 {user.role === 'ADMIN' && (
-                  <form action={archiveResource}>
-                    <input type="hidden" name="id" value={r.id} />
-                    <button
-                      type="submit"
-                      className="text-xs text-gray-400 hover:text-gray-600 underline shrink-0"
+                  <div className="flex gap-2 shrink-0">
+                    <Link
+                      href={`/admin/${country}/${r.id}`}
+                      className="text-xs text-gray-400 hover:text-gray-600 underline"
                     >
-                      Archivar
-                    </button>
-                  </form>
+                      Editar
+                    </Link>
+                    <form action={archiveResource}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button
+                        type="submit"
+                        className="text-xs text-gray-400 hover:text-gray-600 underline"
+                      >
+                        Archivar
+                      </button>
+                    </form>
+                  </div>
                 )}
               </div>
             </div>
