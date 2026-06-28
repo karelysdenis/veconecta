@@ -95,13 +95,10 @@ export default async function CountryPage({
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="bg-red-700 text-white py-3 px-4 text-center text-sm font-medium">
-        VeConecta {country.flag} {name}
-      </div>
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-1">
           <h1 className="text-xl font-bold text-gray-900">
-            {locale === 'en' ? `From ${name}` : `Desde ${name}`}
+            {country.flag} {locale === 'en' ? `From ${name}` : `Desde ${name}`}
           </h1>
           {lastUpdated && (
             <span className="text-xs text-gray-500">

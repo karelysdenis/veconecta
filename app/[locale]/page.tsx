@@ -20,7 +20,7 @@ export default async function HomePage({
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="bg-red-700 text-white py-3 px-4 text-center text-sm font-medium">
+      <div className="bg-amber-50 border-b border-amber-200 text-amber-800 py-2 px-4 text-center text-sm font-medium">
         {t('emergencyBanner')}
       </div>
       <div className="max-w-2xl mx-auto px-4 py-10">
