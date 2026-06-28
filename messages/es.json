@@ -59,6 +59,9 @@
     "fromCountry": "Desde {name}",
     "whatYouCanDo": "Esto es lo que puedes hacer ahora mismo:"
   },
+  "footer": {
+    "cta": "¿Tienes un recurso para agregar?"
+  },
   "nav": {
     "home": "Inicio",
     "language": "Idioma",

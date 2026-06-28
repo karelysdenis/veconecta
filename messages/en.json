@@ -59,6 +59,9 @@
     "fromCountry": "From {name}",
     "whatYouCanDo": "Here's what you can do right now:"
   },
+  "footer": {
+    "cta": "Have a resource to add?"
+  },
   "nav": {
     "home": "Home",
     "language": "Language",
