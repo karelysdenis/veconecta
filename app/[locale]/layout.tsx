@@ -3,6 +3,8 @@ import { getMessages, setRequestLocale } from 'next-intl/server'
 import { locales } from '@/i18n'
 import { AppHeader } from '@/components/AppHeader'
 import { BottomNav } from '@/components/BottomNav'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { ReactNode } from 'react'
 import '../globals.css'
 
@@ -32,6 +34,8 @@ export default async function LocaleLayout({
           </div>
           <BottomNav locale={locale} />
         </NextIntlClientProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
