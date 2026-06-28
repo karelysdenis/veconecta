@@ -3,9 +3,10 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
-import { ReportForm } from '@/components/ReportForm'
+import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
+import { cityToSlug, isVirtualCity } from '@/lib/slugify'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -62,15 +63,30 @@ export default async function CountryPage({
     getTranslations('nav'),
   ])
 
-  const country = await prisma.country.findUnique({
-    where: { slug, active: true },
-    include: {
-      resources: {
-        where: { status: ResourceStatus.PUBLISHED },
-        orderBy: { createdAt: 'asc' },
+  const [country, globalResources, cityGroups] = await Promise.all([
+    prisma.country.findUnique({
+      where: { slug, active: true },
+      include: {
+        resources: {
+          where: { status: ResourceStatus.PUBLISHED },
+          orderBy: { createdAt: 'asc' },
+        },
       },
-    },
-  })
+    }),
+    prisma.resource.findMany({
+      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
+      orderBy: { createdAt: 'asc' },
+    }),
+    prisma.resource.groupBy({
+      by: ['city'],
+      where: {
+        countrySlug: slug,
+        status: ResourceStatus.PUBLISHED,
+        city: { not: null },
+      },
+      _count: { _all: true },
+    }),
+  ])
 
   if (!country) notFound()
 
@@ -81,7 +97,73 @@ export default async function CountryPage({
         ? (country.namePt ?? country.nameEs)
         : country.nameEs
 
-  const serializedResources = country.resources.map(serializeResource)
+  // Build city list — filter out virtual cities (Nacional, etc.)
+  const realCities: CityEntry[] = cityGroups
+    .filter((g) => g.city && !isVirtualCity(g.city))
+    .map((g) => ({
+      name: g.city!,
+      slug: cityToSlug(g.city!),
+      count: g._count._all,
+    }))
+    .sort((a, b) => b.count - a.count)
+
+  const hasCitySelector = realCities.length >= 2
+
+  const flag40 = flagUrl(slug, 'w40')
+  const flag80 = flagUrl(slug, 'w80')
+
+  const lastUpdated = country.lastUpdatedAt
+    ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }).format(country.lastUpdatedAt)
+    : null
+
+  if (hasCitySelector) {
+    return (
+      <main className="min-h-screen bg-white">
+        {/* Breadcrumb */}
+        <div className="bg-coco h-10 flex items-center px-5 gap-1.5">
+          <Link
+            href={`/${locale}`}
+            className="font-sans font-normal text-sm text-caribe hover:underline"
+          >
+            {tNav('home')}
+          </Link>
+          <span className="font-sans text-sm text-[#b8b8b8]">›</span>
+          <span className="font-sans font-normal text-sm text-[#141414]">{name}</span>
+        </div>
+
+        {/* Hero */}
+        <div className="px-5 pt-5 pb-4 flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            {flag40 && (
+              <img
+                src={flag40}
+                srcSet={flag80 ? `${flag80} 2x` : undefined}
+                width={30}
+                height={20}
+                alt=""
+                className="object-cover shrink-0"
+              />
+            )}
+            <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
+              {name}
+            </h1>
+          </div>
+          <p className="font-sans font-light text-base text-[#808080]">
+            {locale === 'en' ? 'Select your city or region' : 'Selecciona tu ciudad o región'}
+          </p>
+        </div>
+
+        <CityList cities={realCities} countrySlug={slug} locale={locale} />
+      </main>
+    )
+  }
+
+  // No city selector: show all resources directly
+  const serializedResources = [...country.resources, ...globalResources].map(serializeResource)
 
   const resourcesByCategory = CATEGORY_ORDER.reduce(
     (acc, cat) => {
@@ -92,17 +174,6 @@ export default async function CountryPage({
   )
 
   const totalResources = serializedResources.length
-
-  const lastUpdated = country.lastUpdatedAt
-    ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }).format(country.lastUpdatedAt)
-    : null
-
-  const flag40 = flagUrl(slug, 'w40')
-  const flag80 = flagUrl(slug, 'w80')
 
   return (
     <main className="min-h-screen bg-white">
@@ -144,7 +215,6 @@ export default async function CountryPage({
         )}
       </div>
 
-      {/* Category list */}
       {CATEGORY_ORDER.map((category) => (
         <ActionCard
           key={category}
@@ -154,11 +224,6 @@ export default async function CountryPage({
         />
       ))}
       <div className="h-px bg-[rgba(20,20,20,0.12)]" />
-
-      {/* Report form */}
-      <div className="px-5 flex justify-center">
-        <ReportForm countrySlug={slug} />
-      </div>
     </main>
   )
 }
