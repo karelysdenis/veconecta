@@ -8,15 +8,12 @@ export function AppFooter() {
       <p className="font-sans font-light text-xs text-[#808080] leading-relaxed">
         {t('disclaimer')}
       </p>
-      <p className="font-sans font-light text-xs text-[#b8b8b8]">
-        {t('footer.made')}{' '}
-        <a
-          href="mailto:veconecta.org@gmail.com"
-          className="underline underline-offset-2 hover:text-[#808080] transition-colors"
-        >
-          veconecta.org@gmail.com
-        </a>
-      </p>
+      <a
+        href="mailto:veconecta.org@gmail.com"
+        className="font-sans font-light text-xs text-[#b8b8b8] underline underline-offset-2 hover:text-[#808080] transition-colors"
+      >
+        veconecta.org@gmail.com
+      </a>
     </footer>
   )
 }

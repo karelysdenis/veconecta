@@ -59,9 +59,6 @@
     "fromCountry": "Desde {name}",
     "whatYouCanDo": "Esto es lo que puedes hacer ahora mismo:"
   },
-  "footer": {
-    "made": "Iniciativa ciudadana independiente."
-  },
   "nav": {
     "home": "Inicio",
     "language": "Idioma",
