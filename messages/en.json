@@ -4,11 +4,13 @@
     "tagline": "The Venezuelan diaspora, connected"
   },
   "homepage": {
-    "heroTitle": "Help Venezuela from where you are.",
+    "heroPre": "Help",
+    "heroCountry": "Venezuela",
+    "heroPost": "from where you are.",
     "verifiedResources": "{count} verified resources",
     "selectCountry": "Select your country of residence.",
     "updatedAt": "updated {date}",
-    "sectionLabel": "Resources by country of residence",
+    "sectionLabel": "Resources by country",
     "emergencyBanner": "Yaracuy Earthquake · Verified emergency resources"
   },
   "categories": {
