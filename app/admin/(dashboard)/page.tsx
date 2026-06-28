@@ -6,11 +6,21 @@ import { revalidatePath } from 'next/cache'
 export default async function AdminDashboard() {
   const { user } = await getSession()
 
+  if (user!.role === 'EDITOR' && !user!.countrySlug) {
+    return (
+      <div className="text-center py-16">
+        <p className="text-sm text-gray-500">
+          Tu cuenta no tiene un país asignado.
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          Contacta al administrador: admin@veconecta.org
+        </p>
+      </div>
+    )
+  }
+
   const countries = await prisma.country.findMany({
-    where:
-      user!.role === 'EDITOR' && user!.countrySlug
-        ? { slug: user!.countrySlug }
-        : {},
+    where: user!.role === 'EDITOR' ? { slug: user!.countrySlug! } : {},
     include: {
       _count: {
         select: {
@@ -24,9 +34,7 @@ export default async function AdminDashboard() {
   const reports = await prisma.communityReport.findMany({
     where: {
       resolved: false,
-      ...(user!.role === 'EDITOR' && user!.countrySlug
-        ? { countrySlug: user!.countrySlug }
-        : {}),
+      ...(user!.role === 'EDITOR' ? { countrySlug: user!.countrySlug! } : {}),
     },
     orderBy: { createdAt: 'desc' },
     take: 20,

@@ -1,10 +1,11 @@
-// app/api/auth/magic-link/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { sendMagicLink } from '@/lib/resend'
 
 const schema = z.object({ email: z.string().email() })
+
+const COOLDOWN_MS = 60_000 // 1 request per email per minute
 
 function generateToken(): string {
   const bytes = new Uint8Array(32)
@@ -22,11 +23,20 @@ export async function POST(req: NextRequest) {
   // Only registered users can receive magic links
   const user = await prisma.user.findUnique({ where: { email } })
   if (!user || !user.isActive) {
-    // Return 200 to avoid email enumeration
+    // Silent 200 to avoid email enumeration
     return NextResponse.json({ ok: true })
   }
 
-  // Invalidate old tokens for this email
+  // Rate limit: one request per email per minute (DB-based, works in serverless)
+  const recentToken = await prisma.magicToken.findFirst({
+    where: { email, createdAt: { gte: new Date(Date.now() - COOLDOWN_MS) } },
+  })
+  if (recentToken) {
+    // Silent 200 to avoid revealing whether the email is registered
+    return NextResponse.json({ ok: true })
+  }
+
+  // Invalidate old tokens and create a new one
   await prisma.magicToken.deleteMany({ where: { email } })
 
   const token = generateToken()
@@ -41,7 +51,10 @@ export async function POST(req: NextRequest) {
   try {
     await sendMagicLink(email, token)
   } catch (err) {
-    console.error('[magic-link] Resend error (non-fatal):', err)
+    console.error('[magic-link] Resend error:', err)
+    // Roll back: token is useless if the user never receives the email
+    await prisma.magicToken.delete({ where: { token } })
+    return NextResponse.json({ ok: true })
   }
 
   return NextResponse.json({ ok: true })

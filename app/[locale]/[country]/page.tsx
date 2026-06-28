@@ -40,7 +40,7 @@ export async function generateMetadata({
     openGraph: {
       type: 'website',
       siteName: 'VeConecta',
-      images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+      images: [{ url: '/api/og', width: 1200, height: 630 }],
     },
   }
 }

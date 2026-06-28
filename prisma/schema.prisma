@@ -71,7 +71,10 @@ model CommunityReport {
   message     String
   url         String?
   resolved    Boolean  @default(false)
+  ipHash      String?
   createdAt   DateTime @default(now())
+
+  @@index([ipHash, createdAt])
 }
 
 enum Role {

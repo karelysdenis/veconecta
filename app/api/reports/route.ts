@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
+import { createHash } from 'crypto'
 
 const schema = z.object({
   countrySlug: z.string().min(1),
@@ -9,25 +10,26 @@ const schema = z.object({
   resourceId: z.string().optional(),
 })
 
-// In-memory rate limiter: max 3 reports per IP per 60 seconds
-const ipTimestamps = new Map<string, number[]>()
+const WINDOW_MS = 60_000
+const MAX_REQUESTS = 3
 
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const windowMs = 60_000
-  const maxRequests = 3
+function hashIp(ip: string): string {
+  return createHash('sha256').update(ip).digest('hex').slice(0, 16)
+}
 
-  const timestamps = (ipTimestamps.get(ip) ?? []).filter(t => now - t < windowMs)
-  if (timestamps.length >= maxRequests) return true
-  timestamps.push(now)
-  ipTimestamps.set(ip, timestamps)
-  return false
+async function isRateLimited(ipHash: string): Promise<boolean> {
+  const since = new Date(Date.now() - WINDOW_MS)
+  const count = await prisma.communityReport.count({
+    where: { ipHash, createdAt: { gte: since } },
+  })
+  return count >= MAX_REQUESTS
 }
 
 export async function POST(request: Request) {
-  const ip = request.headers.get('x-forwarded-for') ?? 'unknown'
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+  const ipHash = hashIp(ip)
 
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ipHash)) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
   }
 
@@ -43,6 +45,7 @@ export async function POST(request: Request) {
       message: parsed.data.message,
       url: parsed.data.url || null,
       resourceId: parsed.data.resourceId || null,
+      ipHash,
     },
   })
 
