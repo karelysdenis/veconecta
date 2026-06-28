@@ -42,12 +42,6 @@ export default async function HomePage({
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Emergency banner */}
-      <div className="bg-emergencia text-white py-2.5 px-5 text-center text-sm font-semibold flex items-center justify-center gap-2">
-        <span aria-hidden="true">⚠️</span>
-        {t('emergencyBanner')}
-      </div>
-
       {/* Hero */}
       <div className="px-5 pt-5 pb-4">
         <h1 className="font-display font-extrabold text-[28px] leading-[1.15] tracking-[-0.01em] text-[#141414]">
