@@ -47,6 +47,7 @@ export default async function HomePage({
         <h1 className="font-display font-extrabold text-[28px] leading-[1.15] tracking-[-0.01em] text-[#141414]">
           {t('heroPre')}{' '}
           <span className="inline-flex items-center gap-1.5 align-baseline">
+            {t('heroCountry')}
             <img
               src="https://flagcdn.com/w40/ve.png"
               srcSet="https://flagcdn.com/w80/ve.png 2x"
@@ -55,8 +56,8 @@ export default async function HomePage({
               alt=""
               className="object-cover rounded-[2px] inline-block translate-y-[-1px]"
             />
-            {t('heroCountry')}
-          </span>{' '}
+          </span>
+          <br />
           {t('heroPost')}
         </h1>
         <p className="font-sans font-light text-base text-[#808080] mt-2">
