@@ -1,5 +1,4 @@
-import { useTranslations } from 'next-intl'
-import { setRequestLocale } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { CountrySelector } from '@/components/CountrySelector'
 
@@ -11,7 +10,7 @@ export default async function HomePage({
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = useTranslations('homepage')
+  const t = await getTranslations('homepage')
   const countries = await prisma.country.findMany({
     where: { active: true },
     orderBy: { slug: 'asc' },
