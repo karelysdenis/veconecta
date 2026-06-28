@@ -5,6 +5,8 @@ import { ActionCard } from '@/components/ActionCard'
 import { serializeResource } from '@/lib/types'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 const CATEGORY_ORDER: ResourceCategory[] = [
   'FIND_FAMILY',
   'CALL_FREE',
