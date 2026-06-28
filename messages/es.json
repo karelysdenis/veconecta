@@ -50,7 +50,9 @@
   "disclaimer": "VeConecta es una iniciativa ciudadana independiente. Verificamos la información antes de publicarla, pero los recursos cambian rápido. Confirma siempre antes de actuar.",
   "country": {
     "lastUpdated": "Actualizado: {date}",
-    "noResources": "Recursos en preparación — vuelve pronto."
+    "noResources": "Recursos en preparación — vuelve pronto.",
+    "fromCountry": "Desde {name}",
+    "whatYouCanDo": "Esto es lo que puedes hacer ahora mismo:"
   },
   "nav": {
     "home": "Inicio",

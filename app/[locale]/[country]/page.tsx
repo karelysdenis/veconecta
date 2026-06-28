@@ -24,19 +24,21 @@ export async function generateMetadata({
   params: Promise<{ locale: string; country: string }>
 }): Promise<Metadata> {
   const { locale, country: slug } = await params
-  const country = await prisma.country.findUnique({ where: { slug } })
+  const [country, t] = await Promise.all([
+    prisma.country.findUnique({ where: { slug } }),
+    getTranslations({ locale, namespace: 'country' }),
+  ])
   if (!country) return {}
 
   const name = locale === 'en' ? country.nameEn : country.nameEs
-  const isEn = locale === 'en'
+  const heading = t('fromCountry', { name })
 
   return {
-    title: isEn
-      ? `From ${name}: How to help with the Venezuela earthquake | VeConecta`
-      : `Desde ${name}: Cómo ayudar con el terremoto de Venezuela | VeConecta`,
-    description: isEn
-      ? `Verified donation channels, free calls, and how to find missing family from ${name}. Updated resources for Venezuelans.`
-      : `Recursos verificados para venezolanos en ${name}: donaciones, llamadas gratis, búsqueda de familiares.`,
+    title: `${heading}: ${locale === 'en' ? 'How to help with the Venezuela earthquake' : 'Cómo ayudar con el terremoto de Venezuela'} | VeConecta`,
+    description:
+      locale === 'en'
+        ? `Verified donation channels, free calls, and how to find missing family from ${name}. Updated resources for Venezuelans.`
+        : `Recursos verificados para venezolanos en ${name}: donaciones, llamadas gratis, búsqueda de familiares.`,
     openGraph: {
       type: 'website',
       siteName: 'VeConecta',
@@ -98,7 +100,7 @@ export default async function CountryPage({
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-1">
           <h1 className="text-xl font-bold text-gray-900">
-            {country.flag} {locale === 'en' ? `From ${name}` : `Desde ${name}`}
+            {country.flag} {t('fromCountry', { name })}
           </h1>
           {lastUpdated && (
             <span className="text-xs text-gray-500">
@@ -107,9 +109,7 @@ export default async function CountryPage({
           )}
         </div>
         <p className="text-gray-600 text-sm mb-6">
-          {locale === 'en'
-            ? "Here's what you can do right now:"
-            : 'Esto es lo que puedes hacer ahora mismo:'}
+          {t('whatYouCanDo')}
         </p>
 
         <div className="space-y-2">

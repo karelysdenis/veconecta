@@ -49,7 +49,7 @@ export function LangPopover({
     <div ref={ref} className={`relative ${className ?? ''}`}>
       <button
         onClick={() => setOpen(!open)}
-        aria-label="Cambiar idioma"
+        aria-label={locale === 'es' ? 'Cambiar idioma' : 'Change language'}
         aria-expanded={open}
         className="flex items-center justify-center"
       >
