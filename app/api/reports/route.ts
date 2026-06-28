@@ -29,25 +29,30 @@ export async function POST(request: Request) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
   const ipHash = hashIp(ip)
 
-  if (await isRateLimited(ipHash)) {
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-  }
-
   const body = await request.json().catch(() => null)
   const parsed = schema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
   }
 
-  await prisma.communityReport.create({
-    data: {
-      countrySlug: parsed.data.countrySlug,
-      message: parsed.data.message,
-      url: parsed.data.url || null,
-      resourceId: parsed.data.resourceId || null,
-      ipHash,
-    },
-  })
+  try {
+    if (await isRateLimited(ipHash)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
 
-  return NextResponse.json({ ok: true })
+    await prisma.communityReport.create({
+      data: {
+        countrySlug: parsed.data.countrySlug,
+        message: parsed.data.message,
+        url: parsed.data.url || null,
+        resourceId: parsed.data.resourceId || null,
+        ipHash,
+      },
+    })
+
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[reports] DB error:', err)
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
+  }
 }

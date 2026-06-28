@@ -30,6 +30,8 @@ model MagicToken {
   email     String
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@index([email])
 }
 
 model Country {
@@ -62,6 +64,9 @@ model Resource {
   expiresAt   DateTime?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+
+  @@index([status])
+  @@index([countrySlug])
 }
 
 model CommunityReport {
@@ -74,6 +79,7 @@ model CommunityReport {
   ipHash      String?
   createdAt   DateTime @default(now())
 
+  @@index([resolved, countrySlug])
   @@index([ipHash, createdAt])
 }
 

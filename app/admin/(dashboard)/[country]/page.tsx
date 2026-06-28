@@ -50,6 +50,7 @@ export default async function AdminCountryPage({
     })
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
+    revalidatePath(`/pt/${country}`)
     revalidatePath('/admin')
   }
 
@@ -61,6 +62,7 @@ export default async function AdminCountryPage({
     await prisma.resource.update({ where: { id }, data: { status: 'ARCHIVED' } })
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
+    revalidatePath(`/pt/${country}`)
     revalidatePath('/admin')
   }
 

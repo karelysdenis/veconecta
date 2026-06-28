@@ -22,23 +22,27 @@ export async function PATCH(
   const { user } = await getSession()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const resource = await prisma.resource.findUnique({ where: { id } })
-  if (!resource) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-
-  if (user.role === 'EDITOR' && user.countrySlug !== resource.countrySlug) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  }
-
   const body = await req.json().catch(() => null)
   const parsed = patchSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
 
-  const updated = await prisma.resource.update({
-    where: { id },
-    data: { ...parsed.data, status: 'DRAFT', url: parsed.data.url || null },
-  })
+  try {
+    const resource = await prisma.resource.findUnique({ where: { id } })
+    if (!resource) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  return NextResponse.json(updated)
+    if (user.role === 'EDITOR' && user.countrySlug !== resource.countrySlug) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    const updated = await prisma.resource.update({
+      where: { id },
+      data: { ...parsed.data, status: 'DRAFT', url: parsed.data.url || null },
+    })
+    return NextResponse.json(updated)
+  } catch (err) {
+    console.error('[resources PATCH] DB error:', err)
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
+  }
 }
 
 export async function DELETE(
@@ -51,10 +55,14 @@ export async function DELETE(
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  await prisma.resource.update({
-    where: { id },
-    data: { status: 'ARCHIVED' },
-  })
-
-  return NextResponse.json({ ok: true })
+  try {
+    await prisma.resource.update({
+      where: { id },
+      data: { status: 'ARCHIVED' },
+    })
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[resources DELETE] DB error:', err)
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
+  }
 }

@@ -30,9 +30,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const resource = await prisma.resource.create({
-    data: { ...parsed.data, status: 'DRAFT', url: parsed.data.url || null },
-  })
-
-  return NextResponse.json(resource, { status: 201 })
+  try {
+    const resource = await prisma.resource.create({
+      data: { ...parsed.data, status: 'DRAFT', url: parsed.data.url || null },
+    })
+    return NextResponse.json(resource, { status: 201 })
+  } catch (err) {
+    console.error('[resources POST] DB error:', err)
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
+  }
 }

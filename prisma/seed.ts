@@ -183,9 +183,7 @@ async function main() {
     },
   ]
 
-  for (const resource of spainResources) {
-    await prisma.resource.create({ data: resource })
-  }
+  await prisma.resource.createMany({ data: spainResources, skipDuplicates: true })
 
   // Admin user
   await prisma.user.upsert({

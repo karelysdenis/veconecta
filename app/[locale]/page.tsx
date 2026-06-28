@@ -2,6 +2,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { CountrySelector } from '@/components/CountrySelector'
 
+export const revalidate = 3600
+
 export default async function HomePage({
   params,
 }: {
