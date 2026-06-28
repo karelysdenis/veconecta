@@ -17,17 +17,6 @@ const CATEGORY_LABELS: Record<ResourceCategory, { es: string; en: string }> = {
   MENTAL_HEALTH: { es: 'Apoyo psicológico', en: 'Mental health' },
 }
 
-const CATEGORY_COLORS: Record<ResourceCategory, string> = {
-  FIND_FAMILY: 'bg-red-100 text-red-800',
-  DONATE_MONEY: 'bg-pink-100 text-pink-800',
-  SEND_MONEY: 'bg-blue-100 text-blue-800',
-  CALL_FREE: 'bg-green-100 text-green-800',
-  DONATE_PHYSICALLY: 'bg-orange-100 text-orange-800',
-  DIGITAL_BRIDGE: 'bg-purple-100 text-purple-800',
-  CONSULAR: 'bg-yellow-100 text-yellow-800',
-  MENTAL_HEALTH: 'bg-teal-100 text-teal-800',
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -75,7 +64,9 @@ export default async function ResourceDetailPage({
   const notes =
     locale === 'en'
       ? (resource.notesEn ?? resource.notesEs)
-      : resource.notesEs
+      : locale === 'pt'
+        ? (resource.notesPt ?? resource.notesEs)
+        : resource.notesEs
 
   const categoryLabel =
     locale === 'en'
@@ -93,178 +84,124 @@ export default async function ResourceDetailPage({
   const isGlobal = resource.countrySlug === 'global'
   const countrySlug = isGlobal ? null : resource.countrySlug
 
-  // Build URL display (strip protocol for clean display)
   const urlDisplay = resource.url
     ? resource.url.replace(/^https?:\/\//, '').replace(/\/$/, '')
     : null
 
-  const hasKeyInfo =
-    resource.url ||
-    resource.phone ||
-    resource.bizum ||
-    resource.address ||
-    resource.schedule ||
-    resource.free
-
   return (
-    <main className="min-h-screen bg-white pb-8">
+    <main className="min-h-screen bg-white pb-10">
       {/* Breadcrumb */}
       <div className="bg-coco h-10 flex items-center px-5 gap-1.5 overflow-x-auto whitespace-nowrap">
-        <Link
-          href={`/${locale}`}
-          className="font-sans font-normal text-sm text-caribe hover:underline shrink-0"
-        >
+        <Link href={`/${locale}`} className="font-sans font-normal text-sm text-caribe hover:underline shrink-0">
           {tNav('home')}
         </Link>
         {countrySlug && (
           <>
             <span className="font-sans text-sm text-[#b8b8b8] shrink-0">›</span>
-            <Link
-              href={`/${locale}/${countrySlug}`}
-              className="font-sans font-normal text-sm text-caribe hover:underline shrink-0"
-            >
+            <Link href={`/${locale}/${countrySlug}`} className="font-sans font-normal text-sm text-caribe hover:underline shrink-0">
               {countryName}
             </Link>
           </>
         )}
         <span className="font-sans text-sm text-[#b8b8b8] shrink-0">›</span>
-        <span className="font-sans font-normal text-sm text-[#141414] shrink-0">
-          {categoryLabel}
-        </span>
+        <span className="font-sans font-normal text-sm text-[#141414] shrink-0">{categoryLabel}</span>
       </div>
 
-      <div className="px-5 pt-5">
-        {/* Category badge */}
-        <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-medium mb-4 ${CATEGORY_COLORS[resource.category]}`}
-        >
-          <span className="w-2 h-2 rounded-full bg-current opacity-70" />
-          {categoryLabel}
-        </span>
-
-        {/* Resource name */}
-        <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414] mb-2">
-          {resource.name}
-        </h1>
-
-        {/* Verified badge */}
-        {verifiedDate && (
-          <p className="font-sans text-sm text-[#2d7a4f] mb-4">
-            ✓ {tDetail('verifiedBy')} · {verifiedDate}
-          </p>
-        )}
+      <div className="px-5 pt-5 pb-6 space-y-5">
+        {/* Name + meta */}
+        <div>
+          <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
+            {resource.name}
+          </h1>
+          {verifiedDate && (
+            <p className="font-sans font-light text-[13px] text-[#808080] mt-1">
+              {tDetail('verifiedBy')} · {verifiedDate}
+            </p>
+          )}
+        </div>
 
         {/* Description */}
         {notes && (
-          <div className="bg-coco rounded-xl px-4 py-4 mb-6">
-            <p className="font-sans font-light text-[15px] text-[#141414] leading-relaxed">
-              {notes}
-            </p>
-          </div>
+          <p className="font-sans font-light text-[15px] text-[#141414] leading-relaxed">
+            {notes}
+          </p>
         )}
 
         {/* Key info */}
-        {hasKeyInfo && (
-          <div className="mb-6">
-            <p className="font-sans font-semibold text-[11px] tracking-[0.08em] uppercase text-[#808080] mb-3">
-              {tDetail('keyInfo')}
-            </p>
-            <div className="divide-y divide-[rgba(20,20,20,0.08)]">
-              {resource.free && (
-                <div className="py-3">
-                  <p className="font-sans text-[11px] text-[#808080] uppercase tracking-wide mb-0.5">
-                    {tDetail('free')}
-                  </p>
-                  <p className="font-sans font-semibold text-[15px] text-[#141414]">✓ Gratuito</p>
-                </div>
-              )}
-              {resource.url && urlDisplay && (
-                <div className="py-3">
-                  <p className="font-sans text-[11px] text-[#808080] uppercase tracking-wide mb-0.5">
-                    {tDetail('website')}
-                  </p>
-                  <a
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-sans font-semibold text-[15px] text-caribe underline"
-                  >
-                    {urlDisplay}
-                  </a>
-                </div>
-              )}
-              {resource.bizum && (
-                <div className="py-3">
-                  <p className="font-sans text-[11px] text-[#808080] uppercase tracking-wide mb-0.5">
-                    {tDetail('bizum')}
-                  </p>
-                  <p className="font-sans font-semibold text-[15px] text-[#141414]">
-                    {resource.bizum}
-                  </p>
-                </div>
-              )}
-              {resource.phone && (
-                <div className="py-3">
-                  <p className="font-sans text-[11px] text-[#808080] uppercase tracking-wide mb-0.5">
-                    {tDetail('phone')}
-                  </p>
-                  <a
-                    href={`tel:${resource.phone.replace(/[^+\d]/g, '')}`}
-                    className="font-sans font-semibold text-[15px] text-caribe"
-                  >
-                    {resource.phone}
-                  </a>
-                </div>
-              )}
-              {resource.address && (
-                <div className="py-3">
-                  <p className="font-sans text-[11px] text-[#808080] uppercase tracking-wide mb-0.5">
-                    {tDetail('address')}
-                  </p>
-                  <p className="font-sans font-semibold text-[15px] text-[#141414]">
-                    {resource.address}
-                  </p>
-                </div>
-              )}
-              {resource.schedule && (
-                <div className="py-3">
-                  <p className="font-sans text-[11px] text-[#808080] uppercase tracking-wide mb-0.5">
-                    {tDetail('schedule')}
-                  </p>
-                  <p className="font-sans font-semibold text-[15px] text-[#141414]">
-                    {resource.schedule}
-                  </p>
-                </div>
-              )}
-            </div>
+        {(resource.url || resource.phone || resource.bizum || resource.address || resource.schedule || resource.free) && (
+          <div className="divide-y divide-[rgba(20,20,20,0.08)] border-t border-[rgba(20,20,20,0.08)]">
+            {resource.free && (
+              <div className="py-3 flex items-center justify-between">
+                <span className="font-sans text-[13px] text-[#808080]">{tDetail('free')}</span>
+                <span className="font-sans font-semibold text-[13px] text-[#141414]">✓</span>
+              </div>
+            )}
+            {resource.url && urlDisplay && (
+              <div className="py-3 flex items-start justify-between gap-4">
+                <span className="font-sans text-[13px] text-[#808080] shrink-0">{tDetail('website')}</span>
+                <a
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-sans text-[13px] text-caribe text-right break-all"
+                >
+                  {urlDisplay}
+                </a>
+              </div>
+            )}
+            {resource.bizum && (
+              <div className="py-3 flex items-center justify-between gap-4">
+                <span className="font-sans text-[13px] text-[#808080] shrink-0">{tDetail('bizum')}</span>
+                <span className="font-sans font-semibold text-[13px] text-[#141414]">{resource.bizum}</span>
+              </div>
+            )}
+            {resource.phone && (
+              <div className="py-3 flex items-center justify-between gap-4">
+                <span className="font-sans text-[13px] text-[#808080] shrink-0">{tDetail('phone')}</span>
+                <a
+                  href={`tel:${resource.phone.replace(/[^+\d]/g, '')}`}
+                  className="font-sans text-[13px] text-caribe"
+                >
+                  {resource.phone}
+                </a>
+              </div>
+            )}
+            {resource.address && (
+              <div className="py-3 flex items-start justify-between gap-4">
+                <span className="font-sans text-[13px] text-[#808080] shrink-0">{tDetail('address')}</span>
+                <span className="font-sans text-[13px] text-[#141414] text-right">{resource.address}</span>
+              </div>
+            )}
+            {resource.schedule && (
+              <div className="py-3 flex items-start justify-between gap-4">
+                <span className="font-sans text-[13px] text-[#808080] shrink-0">{tDetail('schedule')}</span>
+                <span className="font-sans text-[13px] text-[#141414] text-right">{resource.schedule}</span>
+              </div>
+            )}
           </div>
         )}
 
         {/* CTA */}
         {resource.url && (
-          <div className="mb-5">
-            <a
-              href={resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-sans font-semibold text-[15px] text-caribe hover:underline"
-            >
-              {tDetail('goToResource')} ↗
-            </a>
-          </div>
+          <a
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-caribe text-white font-sans font-semibold text-[15px] hover:bg-caribe/90 transition-colors"
+          >
+            {tDetail('goToResource')} ↗
+          </a>
         )}
         {resource.phone && !resource.url && (
-          <div className="mb-5">
-            <a
-              href={`tel:${resource.phone.replace(/[^+\d]/g, '')}`}
-              className="inline-flex items-center gap-1.5 font-sans font-semibold text-[15px] text-caribe hover:underline"
-            >
-              {locale === 'en' ? 'Call now' : 'Llamar ahora'} →
-            </a>
-          </div>
+          <a
+            href={`tel:${resource.phone.replace(/[^+\d]/g, '')}`}
+            className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-caribe text-white font-sans font-semibold text-[15px] hover:bg-caribe/90 transition-colors"
+          >
+            {locale === 'en' ? 'Call now' : 'Llamar ahora'} →
+          </a>
         )}
 
-        {/* Report link */}
+        {/* Report — very low prominence */}
         <ReportForm countrySlug={resource.countrySlug} resourceId={resource.id} />
       </div>
     </main>

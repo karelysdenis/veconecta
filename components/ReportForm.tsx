@@ -35,7 +35,7 @@ export function ReportForm({
   }
 
   return (
-    <div className="py-6 text-center">
+    <div className="pt-2">
       {!open ? (
         <button
           onClick={() => setOpen(true)}
@@ -46,7 +46,7 @@ export function ReportForm({
       ) : status === 'success' ? (
         <p className="font-sans font-light text-xs text-[#808080]">{t('success')}</p>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-2 text-left max-w-sm mx-auto">
+        <form onSubmit={handleSubmit} className="space-y-2">
           <label className="block font-sans font-light text-xs text-[#808080]">{t('title')}</label>
           <textarea
             value={message}
