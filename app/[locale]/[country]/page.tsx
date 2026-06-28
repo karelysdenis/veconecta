@@ -57,7 +57,6 @@ export default async function CountryPage({
   setRequestLocale(locale)
 
   const t = await getTranslations('country')
-  const tDisclaimer = await getTranslations()
 
   const country = await prisma.country.findUnique({
     where: { slug, active: true },
@@ -145,11 +144,6 @@ export default async function CountryPage({
             locale={locale as 'es' | 'en' | 'pt'}
           />
         ))}
-      </div>
-
-      {/* Disclaimer */}
-      <div className="px-5 pb-6 border-t border-black/[0.08] pt-4">
-        <p className="font-sans font-light text-xs text-[#808080]">{tDisclaimer('disclaimer')}</p>
       </div>
 
       <ReportForm countrySlug={slug} />

@@ -59,6 +59,9 @@
     "fromCountry": "From {name}",
     "whatYouCanDo": "Here's what you can do right now:"
   },
+  "footer": {
+    "made": "Independent citizen initiative."
+  },
   "nav": {
     "home": "Home",
     "language": "Language",
