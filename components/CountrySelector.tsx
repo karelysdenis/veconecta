@@ -5,6 +5,25 @@ type CountryWithCount = Country & {
   _count: { resources: number }
 }
 
+const SLUG_TO_ISO: Record<string, string> = {
+  spain: 'es',
+  usa: 'us',
+  colombia: 'co',
+  brazil: 'br',
+  argentina: 'ar',
+  peru: 'pe',
+  chile: 'cl',
+  mexico: 'mx',
+  ecuador: 'ec',
+  france: 'fr',
+  italy: 'it',
+  germany: 'de',
+  portugal: 'pt',
+  panama: 'pa',
+  uruguay: 'uy',
+  venezuela: 've',
+}
+
 export function CountrySelector({
   countries,
   locale,
@@ -13,7 +32,7 @@ export function CountrySelector({
   locale: string
 }) {
   return (
-    <div className="flex flex-col divide-y divide-gray-200">
+    <div>
       {countries.map((country) => {
         const name =
           locale === 'en'
@@ -21,36 +40,38 @@ export function CountrySelector({
             : locale === 'pt'
               ? (country.namePt ?? country.nameEs)
               : country.nameEs
+        const iso = SLUG_TO_ISO[country.slug]
+        const count = country._count.resources
+
         return (
           <Link
             key={country.slug}
             href={`/${locale}/${country.slug}`}
-            className="flex items-center gap-3 py-4 hover:bg-guacamaya/5 -mx-4 px-4 transition-colors"
+            className="flex items-center justify-between h-14 px-5 bg-white border-b border-black/[0.08] hover:bg-guacamaya/5 transition-colors"
           >
-            <img
-              src={`https://flagcdn.com/${country.slug}.svg`}
-              width={32}
-              height={24}
-              alt=""
-              className="rounded-sm object-cover shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-selva text-sm leading-tight">{name}</p>
-              {country._count.resources > 0 && (
-                <p className="text-xs text-gray-500 mt-0.5">
-                  {country._count.resources} recursos
-                </p>
+            <div className="flex items-center gap-3">
+              {iso ? (
+                <img
+                  src={`https://flagcdn.com/w40/${iso}.png`}
+                  srcSet={`https://flagcdn.com/w80/${iso}.png 2x`}
+                  width={30}
+                  height={20}
+                  alt=""
+                  className="object-cover shrink-0"
+                />
+              ) : (
+                <span className="text-xl shrink-0 w-[30px] text-center leading-none">{country.flag}</span>
               )}
+              <div>
+                <p className="font-sans font-semibold text-base text-[#141414] leading-tight">{name}</p>
+                {count > 0 && (
+                  <p className="font-sans font-light text-[13px] text-[#808080] leading-tight">
+                    {count} recursos
+                  </p>
+                )}
+              </div>
             </div>
-            <svg
-              className="w-4 h-4 text-gray-400 shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
+            <span className="text-guacamaya text-sm font-sans" aria-hidden="true">›</span>
           </Link>
         )
       })}

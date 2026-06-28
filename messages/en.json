@@ -6,8 +6,10 @@
   "homepage": {
     "heroTitle": "Help from where you are.",
     "verifiedResources": "{count} verified resources",
-    "selectCountry": "Select your country of residence:",
-    "emergencyBanner": "Yaracuy Earthquake — Verified emergency resources"
+    "selectCountry": "Select your country of residence.",
+    "updatedAt": "updated {date}",
+    "sectionLabel": "Resources by country of residence",
+    "emergencyBanner": "Yaracuy Earthquake · Verified emergency resources"
   },
   "categories": {
     "FIND_FAMILY": "Find family members",

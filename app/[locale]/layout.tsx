@@ -40,10 +40,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={`${jakarta.variable} ${sourceSans.variable}`}>
-      <body className="bg-coco text-selva antialiased font-sans">
+      <body className="bg-white text-foreground antialiased font-sans">
         <NextIntlClientProvider messages={messages}>
           <AppHeader locale={locale} />
-          <div className="pt-11 pb-20 md:pb-0">
+          <div className="pt-14 pb-20 md:pb-0">
             {children}
           </div>
           <BottomNav locale={locale} />
