@@ -28,6 +28,13 @@ export async function GET(req: NextRequest) {
     const cookieStore = await cookies()
     cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes)
 
+    await prisma.session.deleteMany({
+      where: {
+        userId: user.id,
+        expiresAt: { lt: new Date() },
+      },
+    })
+
     return NextResponse.redirect(new URL('/admin', req.url))
   } catch (err) {
     console.error('[verify] DB error:', err)

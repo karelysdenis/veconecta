@@ -12,6 +12,8 @@ const schema = z.object({
 
 const WINDOW_MS = 60_000
 const MAX_REQUESTS = 3
+const DAILY_GLOBAL_LIMIT = 500
+const DAILY_WINDOW_MS = 24 * 60 * 60 * 1000
 
 function hashIp(ip: string): string {
   return createHash('sha256').update(ip).digest('hex').slice(0, 16)
@@ -25,6 +27,14 @@ async function isRateLimited(ipHash: string): Promise<boolean> {
   return count >= MAX_REQUESTS
 }
 
+async function isGlobalLimitReached(): Promise<boolean> {
+  const since = new Date(Date.now() - DAILY_WINDOW_MS)
+  const count = await prisma.communityReport.count({
+    where: { createdAt: { gte: since } },
+  })
+  return count >= DAILY_GLOBAL_LIMIT
+}
+
 export async function POST(request: Request) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
   const ipHash = hashIp(ip)
@@ -36,6 +46,10 @@ export async function POST(request: Request) {
   }
 
   try {
+    if (await isGlobalLimitReached()) {
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 429 })
+    }
+
     if (await isRateLimited(ipHash)) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
     }
