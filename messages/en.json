@@ -51,5 +51,10 @@
   "country": {
     "lastUpdated": "Updated: {date}",
     "noResources": "Resources in preparation — check back soon."
+  },
+  "nav": {
+    "home": "Home",
+    "language": "Language",
+    "share": "Share"
   }
 }

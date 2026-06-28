@@ -8,7 +8,6 @@ import { locales } from '@/i18n'
 const LOCALE_LABELS: Record<string, string> = {
   es: 'Español',
   en: 'English',
-  pt: 'Português',
 }
 
 export function LangPopover({

@@ -9,7 +9,7 @@ export function ShareButton({ className }: { className?: string }) {
     const url = window.location.href
     const title = document.title
 
-    if (typeof navigator !== 'undefined' && navigator.share) {
+    if (navigator.share) {
       try {
         await navigator.share({ title, url })
       } catch {
@@ -18,9 +18,14 @@ export function ShareButton({ className }: { className?: string }) {
       return
     }
 
-    await navigator.clipboard.writeText(url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    // Fallback: copy to clipboard
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard access denied — no action
+    }
   }
 
   return (

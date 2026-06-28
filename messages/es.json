@@ -51,5 +51,10 @@
   "country": {
     "lastUpdated": "Actualizado: {date}",
     "noResources": "Recursos en preparación — vuelve pronto."
+  },
+  "nav": {
+    "home": "Inicio",
+    "language": "Idioma",
+    "share": "Compartir"
   }
 }

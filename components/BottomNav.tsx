@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { LangPopover } from './LangPopover'
 import { ShareButton } from './ShareButton'
 
 export function BottomNav({ locale }: { locale: string }) {
   const pathname = usePathname()
+  const t = useTranslations('nav')
   const isHome = pathname === `/${locale}`
 
   const activeClass = 'text-red-700'
@@ -38,7 +40,7 @@ export function BottomNav({ locale }: { locale: string }) {
             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
           />
         </svg>
-        <span>Inicio</span>
+        <span>{t('home')}</span>
       </Link>
 
       {/* Idioma */}
@@ -46,7 +48,7 @@ export function BottomNav({ locale }: { locale: string }) {
         className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs ${inactiveClass}`}
       >
         <LangPopover direction="up" />
-        <span>Idioma</span>
+        <span>{t('language')}</span>
       </div>
 
       {/* Compartir */}
@@ -54,7 +56,7 @@ export function BottomNav({ locale }: { locale: string }) {
         className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs ${inactiveClass}`}
       >
         <ShareButton />
-        <span>Compartir</span>
+        <span>{t('share')}</span>
       </div>
     </nav>
   )
