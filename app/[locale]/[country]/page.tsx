@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
@@ -56,7 +57,10 @@ export default async function CountryPage({
   const { locale, country: slug } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations('country')
+  const [t, tNav] = await Promise.all([
+    getTranslations('country'),
+    getTranslations('nav'),
+  ])
 
   const country = await prisma.country.findUnique({
     where: { slug, active: true },
@@ -87,6 +91,8 @@ export default async function CountryPage({
     {} as Record<ResourceCategory, typeof serializedResources>,
   )
 
+  const totalResources = serializedResources.length
+
   const lastUpdated = country.lastUpdatedAt
     ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
         day: 'numeric',
@@ -100,9 +106,21 @@ export default async function CountryPage({
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Country header */}
-      <div className="px-5 pt-5 pb-4">
-        <div className="flex items-center gap-3 mb-2">
+      {/* Breadcrumb */}
+      <div className="bg-coco h-10 flex items-center px-5 gap-1.5">
+        <Link
+          href={`/${locale}`}
+          className="font-sans font-normal text-sm text-caribe hover:underline"
+        >
+          {tNav('home')}
+        </Link>
+        <span className="font-sans text-sm text-[#b8b8b8]">›</span>
+        <span className="font-sans font-normal text-sm text-[#141414]">{name}</span>
+      </div>
+
+      {/* Hero */}
+      <div className="px-5 pt-5 pb-4 flex flex-col gap-2">
+        <div className="flex items-center gap-3">
           {flag40 && (
             <img
               src={flag40}
@@ -113,40 +131,34 @@ export default async function CountryPage({
               className="object-cover shrink-0"
             />
           )}
-          <h1 className="font-display font-extrabold text-[28px] leading-[1.15] tracking-[-0.01em] text-[#141414]">
-            {t('fromCountry', { name })}
+          <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
+            {name}
           </h1>
         </div>
-        {lastUpdated && (
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-guacamaya shrink-0" aria-hidden="true" />
-            <p className="font-sans font-light text-sm text-[#808080]">
-              {t('lastUpdated', { date: lastUpdated })}
-            </p>
-          </div>
+        {(totalResources > 0 || lastUpdated) && (
+          <p className="font-sans font-light text-base text-[#808080]">
+            {totalResources > 0 && `${totalResources} recursos verificados`}
+            {totalResources > 0 && lastUpdated && ' · '}
+            {lastUpdated && `actualizado ${lastUpdated}`}
+          </p>
         )}
       </div>
 
-      {/* Section label */}
-      <div className="bg-coco h-9 flex items-center px-5">
-        <p className="font-sans font-light text-[11px] text-[#808080] tracking-[0.02em] uppercase">
-          {t('whatYouCanDo')}
-        </p>
-      </div>
+      {/* Category list */}
+      {CATEGORY_ORDER.map((category) => (
+        <ActionCard
+          key={category}
+          category={category}
+          resources={resourcesByCategory[category] ?? []}
+          locale={locale as 'es' | 'en' | 'pt'}
+        />
+      ))}
+      <div className="h-px bg-[rgba(20,20,20,0.12)]" />
 
-      {/* Resource categories */}
-      <div className="px-5 pt-4 pb-6 space-y-2">
-        {CATEGORY_ORDER.map((category) => (
-          <ActionCard
-            key={category}
-            category={category}
-            resources={resourcesByCategory[category] ?? []}
-            locale={locale as 'es' | 'en' | 'pt'}
-          />
-        ))}
+      {/* Report form */}
+      <div className="px-5 flex justify-center">
+        <ReportForm countrySlug={slug} />
       </div>
-
-      <ReportForm countrySlug={slug} />
     </main>
   )
 }

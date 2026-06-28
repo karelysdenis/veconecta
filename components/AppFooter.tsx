@@ -4,8 +4,8 @@ export function AppFooter() {
   const t = useTranslations()
 
   return (
-    <footer className="border-t border-black/[0.08] px-5 py-6 space-y-3">
-      <p className="font-sans font-light text-xs text-[#808080] leading-relaxed">
+    <footer className="border-t border-black/[0.08] px-5 py-6 flex flex-col items-center gap-3 text-center">
+      <p className="font-sans font-light text-xs text-[#808080] leading-relaxed max-w-sm">
         {t('disclaimer')}
       </p>
       <p className="font-sans font-light text-xs text-[#b8b8b8]">

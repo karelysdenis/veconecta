@@ -27,31 +27,33 @@ export function ReportForm({ countrySlug }: { countrySlug: string }) {
   }
 
   return (
-    <div className="mt-6 border-t border-gray-100 pt-4">
+    <div className="py-6 text-center">
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="text-xs text-gray-500 underline hover:text-gray-700"
+          className="font-sans font-light text-xs text-[#b8b8b8] underline underline-offset-2 hover:text-[#808080] transition-colors"
         >
           {t('title')}
         </button>
       ) : status === 'success' ? (
-        <p className="text-xs text-green-700">{t('success')}</p>
+        <p className="font-sans font-light text-xs text-[#808080]">{t('success')}</p>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-2">
-          <label className="block text-xs font-medium text-gray-700">{t('title')}</label>
+        <form onSubmit={handleSubmit} className="space-y-2 text-left max-w-sm mx-auto">
+          <label className="block font-sans font-light text-xs text-[#808080]">{t('title')}</label>
           <textarea
             value={message}
             onChange={e => setMessage(e.target.value)}
             placeholder={t('placeholder')}
             rows={3}
-            className="w-full text-sm border border-gray-300 rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-red-300"
+            className="w-full font-sans text-sm text-[#141414] border border-black/[0.12] rounded-lg p-3 resize-none focus:outline-none focus:ring-1 focus:ring-caribe"
           />
-          {status === 'error' && <p className="text-xs text-red-600">{t('error')}</p>}
+          {status === 'error' && (
+            <p className="font-sans font-light text-xs text-emergencia">{t('error')}</p>
+          )}
           <button
             type="submit"
             disabled={status === 'loading' || !message.trim()}
-            className="text-sm bg-red-700 text-white px-4 py-1.5 rounded-lg disabled:opacity-50"
+            className="font-sans font-semibold text-sm bg-caribe text-white px-5 py-2 rounded-lg disabled:opacity-40 hover:bg-caribe/90 transition-colors"
           >
             {status === 'loading' ? '...' : t('submit')}
           </button>

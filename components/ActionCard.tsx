@@ -27,13 +27,16 @@ export function ActionCard({
   resources: SerializedResource[]
   locale: 'es' | 'en' | 'pt'
 }) {
-  const [open, setOpen] = useState(category === 'FIND_FAMILY')
+  const [open, setOpen] = useState(false)
   const t = useTranslations('categories')
 
   if (category === 'DIGITAL_BRIDGE') {
     return (
-      <div className="py-1">
-        <DigitalBridgeTutorial />
+      <div>
+        <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+        <div className="py-3 px-5">
+          <DigitalBridgeTutorial />
+        </div>
       </div>
     )
   }
@@ -41,24 +44,36 @@ export function ActionCard({
   const Icon = categoryIcons[category]
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+    <div>
+      <div className="h-px bg-[rgba(20,20,20,0.12)]" />
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-4 text-left hover:bg-guacamaya/5 transition-colors"
+        className="w-full flex items-center justify-between h-16 px-5 text-left hover:bg-guacamaya/5 transition-colors"
       >
-        <span className="font-semibold text-selva text-sm flex items-center gap-2">
-          <Icon className="h-4 w-4 shrink-0 text-guacamaya" />
-          {t(category)}
-          {resources.length > 0 && (
-            <span className="text-xs font-normal text-gray-400">({resources.length})</span>
-          )}
+        <div className="flex items-center gap-3.5 flex-1 min-w-0">
+          <div className="w-9 h-9 rounded-full bg-coco flex items-center justify-center shrink-0">
+            <Icon className="w-[18px] h-[18px] text-[#184e68]" strokeWidth={1.5} />
+          </div>
+          <div className="flex flex-col gap-[3px]">
+            <span className="font-sans font-semibold text-base text-[#141414] leading-tight">
+              {t(category)}
+            </span>
+            {resources.length > 0 && (
+              <span className="font-sans font-light text-[13px] text-caribe leading-none">
+                {resources.length} recursos
+              </span>
+            )}
+          </div>
+        </div>
+        <span className="font-sans font-light text-sm text-[#b8b8b8] shrink-0 ml-3">
+          {open ? '−' : '+'}
         </span>
-        <span className="text-gray-400 text-sm">{open ? '▲' : '▼'}</span>
       </button>
+
       {open && (
-        <div className="px-4 pb-4 pt-0 space-y-3 border-t border-gray-100">
+        <div className="px-5 pb-4 space-y-3">
           {resources.length === 0 ? (
-            <p className="text-gray-400 text-sm pt-3">En preparación.</p>
+            <p className="font-sans font-light text-sm text-[#808080]">En preparación.</p>
           ) : (
             resources.map((r) => <ResourceLink key={r.id} resource={r} locale={locale} />)
           )}
