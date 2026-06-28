@@ -4,9 +4,10 @@
     "tagline": "La diáspora venezolana conectada"
   },
   "homepage": {
-    "title": "¿Desde dónde quieres ayudar?",
-    "subtitle": "Selecciona tu país de residencia para ver recursos verificados",
-    "emergencyBanner": "Terremoto Venezuela — Recursos verificados para la diáspora"
+    "heroTitle": "Ayuda desde donde estás.",
+    "verifiedResources": "{count} recursos verificados",
+    "selectCountry": "Selecciona tu país de residencia:",
+    "emergencyBanner": "Terremoto Yaracuy — Recursos de emergencia verificados"
   },
   "categories": {
     "FIND_FAMILY": "Buscar familiares",

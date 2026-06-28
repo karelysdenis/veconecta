@@ -11,7 +11,7 @@ export function BottomNav({ locale }: { locale: string }) {
   const t = useTranslations('nav')
   const isHome = pathname === `/${locale}`
 
-  const activeClass = 'text-red-700'
+  const activeClass = 'text-guacamaya'
   const inactiveClass = 'text-gray-500'
 
   return (

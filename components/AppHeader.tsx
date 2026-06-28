@@ -4,19 +4,27 @@ import { ShareButton } from './ShareButton'
 
 export function AppHeader({ locale }: { locale: string }) {
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 h-11 bg-red-700 flex items-center px-4">
-      <Link
-        href={`/${locale}`}
-        className="text-white font-bold text-base flex items-center gap-1.5 flex-1"
-      >
-        🇻🇪 VeConecta
+    <header className="fixed top-0 left-0 right-0 z-40 h-11 bg-selva flex items-center px-4">
+      <Link href={`/${locale}`} className="flex items-center flex-1">
+        <VeConectaLogo />
       </Link>
-
-      {/* Controles solo en desktop */}
-      <div className="hidden md:flex items-center gap-4 text-white">
+      <div className="hidden md:flex items-center gap-4 text-coco">
         <LangPopover direction="down" />
         <ShareButton />
       </div>
     </header>
+  )
+}
+
+function VeConectaLogo() {
+  return (
+    <span className="inline-flex items-stretch rounded-[3px] overflow-hidden leading-none select-none">
+      <span className="bg-guacamaya text-white font-display font-extrabold text-sm px-2 py-[5px] tracking-tight">
+        VE
+      </span>
+      <span className="bg-coco text-selva font-display font-light text-sm px-2 py-[5px] tracking-tight">
+        conecta
+      </span>
+    </span>
   )
 }

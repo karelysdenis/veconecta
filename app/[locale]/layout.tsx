@@ -5,8 +5,23 @@ import { AppHeader } from '@/components/AppHeader'
 import { BottomNav } from '@/components/BottomNav'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Plus_Jakarta_Sans, Source_Sans_3 } from 'next/font/google'
 import type { ReactNode } from 'react'
 import '../globals.css'
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
+  weight: ['300', '400', '700', '800'],
+  display: 'swap',
+})
+
+const sourceSans = Source_Sans_3({
+  subsets: ['latin'],
+  variable: '--font-source',
+  weight: ['300', '400', '600'],
+  display: 'swap',
+})
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -24,11 +39,10 @@ export default async function LocaleLayout({
   const messages = await getMessages()
 
   return (
-    <html lang={locale}>
-      <body className="bg-white text-gray-900 antialiased">
+    <html lang={locale} className={`${jakarta.variable} ${sourceSans.variable}`}>
+      <body className="bg-coco text-selva antialiased font-sans">
         <NextIntlClientProvider messages={messages}>
           <AppHeader locale={locale} />
-          {/* pt-11: compensa header fijo 44px; pb-20 md:pb-0: compensa bottom nav móvil */}
           <div className="pt-11 pb-20 md:pb-0">
             {children}
           </div>

@@ -96,21 +96,25 @@ export default async function CountryPage({
     : null
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-1">
-          <h1 className="text-xl font-bold text-gray-900">
-            {country.flag} {t('fromCountry', { name })}
+    <main className="min-h-screen">
+      <div className="max-w-lg mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="font-display font-extrabold text-2xl text-selva flex items-center gap-2 mb-1">
+            <img
+              src={`https://flagcdn.com/${slug}.svg`}
+              width={28}
+              height={21}
+              alt=""
+              className="rounded-sm object-cover"
+            />
+            {t('fromCountry', { name })}
           </h1>
           {lastUpdated && (
-            <span className="text-xs text-gray-500">
+            <p className="text-xs text-guacamaya font-semibold">
               {t('lastUpdated', { date: lastUpdated })}
-            </span>
+            </p>
           )}
         </div>
-        <p className="text-gray-600 text-sm mb-6">
-          {t('whatYouCanDo')}
-        </p>
 
         <div className="space-y-2">
           {CATEGORY_ORDER.map((category) => (
@@ -123,7 +127,7 @@ export default async function CountryPage({
           ))}
         </div>
 
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="mt-8 p-4 bg-white/60 rounded-lg border border-gray-200">
           <p className="text-xs text-gray-500">{tDisclaimer('disclaimer')}</p>
         </div>
 
