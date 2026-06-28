@@ -240,37 +240,33 @@ export default async function ResourceDetailPage({
           </div>
         )}
 
-        {/* Report link */}
-        <div className="mb-6">
-          <ReportForm countrySlug={resource.countrySlug} resourceId={resource.id} inline />
-        </div>
-      </div>
+        {/* CTA */}
+        {resource.url && (
+          <div className="mb-5">
+            <a
+              href={resource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-sans font-semibold text-[15px] text-caribe hover:underline"
+            >
+              {tDetail('goToResource')} ↗
+            </a>
+          </div>
+        )}
+        {resource.phone && !resource.url && (
+          <div className="mb-5">
+            <a
+              href={`tel:${resource.phone.replace(/[^+\d]/g, '')}`}
+              className="inline-flex items-center gap-1.5 font-sans font-semibold text-[15px] text-caribe hover:underline"
+            >
+              {locale === 'en' ? 'Call now' : 'Llamar ahora'} →
+            </a>
+          </div>
+        )}
 
-      {/* CTA — sticky bottom */}
-      {resource.url && (
-        <div className="px-5">
-          <a
-            href={resource.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full h-14 rounded-2xl bg-guacamaya text-white font-sans font-semibold text-base hover:bg-guacamaya/90 transition-colors"
-          >
-            {tDetail('goToResource')}
-            <span className="text-lg">↗</span>
-          </a>
-        </div>
-      )}
-      {resource.phone && !resource.url && (
-        <div className="px-5">
-          <a
-            href={`tel:${resource.phone.replace(/[^+\d]/g, '')}`}
-            className="flex items-center justify-center gap-2 w-full h-14 rounded-2xl bg-guacamaya text-white font-sans font-semibold text-base hover:bg-guacamaya/90 transition-colors"
-          >
-            Llamar ahora
-            <span className="text-lg">→</span>
-          </a>
-        </div>
-      )}
+        {/* Report link */}
+        <ReportForm countrySlug={resource.countrySlug} resourceId={resource.id} />
+      </div>
     </main>
   )
 }
