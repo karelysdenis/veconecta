@@ -1,27 +1,9 @@
 import Link from 'next/link'
 import type { Country } from '@prisma/client'
+import { flagUrl } from '@/lib/country-iso'
 
 type CountryWithCount = Country & {
   _count: { resources: number }
-}
-
-const SLUG_TO_ISO: Record<string, string> = {
-  spain: 'es',
-  usa: 'us',
-  colombia: 'co',
-  brazil: 'br',
-  argentina: 'ar',
-  peru: 'pe',
-  chile: 'cl',
-  mexico: 'mx',
-  ecuador: 'ec',
-  france: 'fr',
-  italy: 'it',
-  germany: 'de',
-  portugal: 'pt',
-  panama: 'pa',
-  uruguay: 'uy',
-  venezuela: 've',
 }
 
 export function CountrySelector({
@@ -40,7 +22,8 @@ export function CountrySelector({
             : locale === 'pt'
               ? (country.namePt ?? country.nameEs)
               : country.nameEs
-        const iso = SLUG_TO_ISO[country.slug]
+        const flag40 = flagUrl(country.slug, 'w40')
+        const flag80 = flagUrl(country.slug, 'w80')
         const count = country._count.resources
 
         return (
@@ -50,10 +33,10 @@ export function CountrySelector({
             className="flex items-center justify-between h-14 px-5 bg-white border-b border-black/[0.08] hover:bg-guacamaya/5 transition-colors"
           >
             <div className="flex items-center gap-3">
-              {iso ? (
+              {flag40 ? (
                 <img
-                  src={`https://flagcdn.com/w40/${iso}.png`}
-                  srcSet={`https://flagcdn.com/w80/${iso}.png 2x`}
+                  src={flag40}
+                  srcSet={flag80 ? `${flag80} 2x` : undefined}
                   width={30}
                   height={20}
                   alt=""

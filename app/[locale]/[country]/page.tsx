@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
+import { flagUrl } from '@/lib/country-iso'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -77,7 +78,6 @@ export default async function CountryPage({
         ? (country.namePt ?? country.nameEs)
         : country.nameEs
 
-  // Serialize dates before passing to Client Components
   const serializedResources = country.resources.map(serializeResource)
 
   const resourcesByCategory = CATEGORY_ORDER.reduce(
@@ -91,48 +91,68 @@ export default async function CountryPage({
   const lastUpdated = country.lastUpdatedAt
     ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
         day: 'numeric',
-        month: 'long',
+        month: 'short',
+        year: 'numeric',
       }).format(country.lastUpdatedAt)
     : null
 
+  const flag40 = flagUrl(slug, 'w40')
+  const flag80 = flagUrl(slug, 'w80')
+
   return (
-    <main className="min-h-screen">
-      <div className="max-w-lg mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="font-display font-extrabold text-2xl text-selva flex items-center gap-2 mb-1">
+    <main className="min-h-screen bg-white">
+      {/* Country header */}
+      <div className="px-5 pt-5 pb-4">
+        <div className="flex items-center gap-3 mb-2">
+          {flag40 && (
             <img
-              src={`https://flagcdn.com/${slug}.svg`}
-              width={28}
-              height={21}
+              src={flag40}
+              srcSet={flag80 ? `${flag80} 2x` : undefined}
+              width={30}
+              height={20}
               alt=""
-              className="rounded-sm object-cover"
+              className="object-cover shrink-0"
             />
+          )}
+          <h1 className="font-display font-extrabold text-[28px] leading-[1.15] tracking-[-0.01em] text-[#141414]">
             {t('fromCountry', { name })}
           </h1>
-          {lastUpdated && (
-            <p className="text-xs text-guacamaya font-semibold">
+        </div>
+        {lastUpdated && (
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-guacamaya shrink-0" aria-hidden="true" />
+            <p className="font-sans font-light text-sm text-[#808080]">
               {t('lastUpdated', { date: lastUpdated })}
             </p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          {CATEGORY_ORDER.map((category) => (
-            <ActionCard
-              key={category}
-              category={category}
-              resources={resourcesByCategory[category] ?? []}
-              locale={locale as 'es' | 'en' | 'pt'}
-            />
-          ))}
-        </div>
-
-        <div className="mt-8 p-4 bg-white/60 rounded-lg border border-gray-200">
-          <p className="text-xs text-gray-500">{tDisclaimer('disclaimer')}</p>
-        </div>
-
-        <ReportForm countrySlug={slug} />
+          </div>
+        )}
       </div>
+
+      {/* Section label */}
+      <div className="bg-coco h-9 flex items-center px-5">
+        <p className="font-sans font-light text-[11px] text-[#808080] tracking-[0.02em] uppercase">
+          {t('whatYouCanDo')}
+        </p>
+      </div>
+
+      {/* Resource categories */}
+      <div className="px-5 pt-4 pb-6 space-y-2">
+        {CATEGORY_ORDER.map((category) => (
+          <ActionCard
+            key={category}
+            category={category}
+            resources={resourcesByCategory[category] ?? []}
+            locale={locale as 'es' | 'en' | 'pt'}
+          />
+        ))}
+      </div>
+
+      {/* Disclaimer */}
+      <div className="px-5 pb-6 border-t border-black/[0.08] pt-4">
+        <p className="font-sans font-light text-xs text-[#808080]">{tDisclaimer('disclaimer')}</p>
+      </div>
+
+      <ReportForm countrySlug={slug} />
     </main>
   )
 }
