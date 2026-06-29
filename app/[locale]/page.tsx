@@ -19,7 +19,7 @@ export default async function HomePage({
 
   const [countries, globalCount] = await Promise.all([
     prisma.country.findMany({
-      where: { active: true },
+      where: { active: true, slug: { not: 'global' } },
       orderBy: { slug: 'asc' },
       include: {
         _count: {
