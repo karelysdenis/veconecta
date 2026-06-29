@@ -44,6 +44,9 @@ importers:
       resend:
         specifier: ^6.16.0
         version: 6.16.0
+      world-countries:
+        specifier: ^5.1.0
+        version: 5.1.0
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -1714,6 +1717,9 @@ packages:
     engines: {node: '>=8'}
     hasBin: true
 
+  world-countries@5.1.0:
+    resolution: {integrity: sha512-CXR6EBvTbArDlDDIWU3gfKb7Qk0ck2WNZ234b/A0vuecPzIfzzxH+O6Ejnvg1sT8XuiZjVlzOH0h08ZtaO7g0w==}
+
   xml-name-validator@5.0.0:
     resolution: {integrity: sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==}
     engines: {node: '>=18'}
@@ -3001,6 +3007,8 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
+
+  world-countries@5.1.0: {}
 
   xml-name-validator@5.0.0: {}
 

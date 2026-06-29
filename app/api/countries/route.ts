@@ -1,33 +1,20 @@
 import { NextResponse } from 'next/server'
+import countries from 'world-countries'
 
-type ApiCountry = {
-  name: { common: string }
-  translations: { spa?: { common: string }; por?: { common: string } }
-  flag: string
-  cca2: string
-}
+export const dynamic = 'force-static'
 
-let cached: ApiCountry[] | null = null
+const data = countries.map(c => ({
+  name: { common: c.name.common },
+  translations: {
+    spa: c.translations.spa ? { common: c.translations.spa.common } : undefined,
+    por: c.translations.por ? { common: c.translations.por.common } : undefined,
+  },
+  flag: c.flag,
+  cca2: c.cca2,
+}))
 
-export async function GET() {
-  if (cached) {
-    return NextResponse.json(cached, {
-      headers: { 'Cache-Control': 'public, max-age=86400' },
-    })
-  }
-
-  try {
-    const res = await fetch(
-      'https://restcountries.com/v3.1/all?fields=name,translations,flag,cca2',
-      { next: { revalidate: 86400 } }
-    )
-    if (!res.ok) throw new Error('upstream error')
-    const data: ApiCountry[] = await res.json()
-    cached = data
-    return NextResponse.json(data, {
-      headers: { 'Cache-Control': 'public, max-age=86400' },
-    })
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch countries' }, { status: 502 })
-  }
+export function GET() {
+  return NextResponse.json(data, {
+    headers: { 'Cache-Control': 'public, max-age=86400' },
+  })
 }
