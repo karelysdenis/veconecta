@@ -23,7 +23,7 @@ const sourceSans = Source_Sans_3({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${jakarta.variable} ${sourceSans.variable}`}>
+    <html lang="es" className={`${jakarta.variable} ${sourceSans.variable}`} suppressHydrationWarning>
       <body className="bg-white text-foreground antialiased font-sans">
         {children}
       </body>
