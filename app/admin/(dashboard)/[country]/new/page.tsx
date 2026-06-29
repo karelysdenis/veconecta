@@ -83,7 +83,7 @@ export default async function NewResourcePage({
           {countryRecord?.flag} {countryName}
         </Link>
         <span className="text-gray-300">/</span>
-        <span className="text-gray-900 font-medium">Nuevo recurso</span>
+        <span className="text-gray-900 font-medium">Nuevo</span>
       </nav>
 
       <form action={create} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
@@ -126,7 +126,7 @@ export default async function NewResourcePage({
             type="submit"
             className="bg-red-700 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-red-800"
           >
-            Crear recurso
+            Crear
           </button>
         </div>
       </form>
