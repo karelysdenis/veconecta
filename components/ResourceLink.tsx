@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { SerializedResource } from '@/lib/types'
+import { getResourceName } from '@/lib/types'
 
 export function ResourceLink({
   resource,
@@ -8,6 +9,7 @@ export function ResourceLink({
   resource: SerializedResource
   locale: 'es' | 'en' | 'pt'
 }) {
+  const name = getResourceName(resource, locale)
   const notes =
     locale === 'en'
       ? (resource.notesEn ?? resource.notesEs)
@@ -22,7 +24,7 @@ export function ResourceLink({
     >
       <div className="flex-1 min-w-0">
         <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">
-          {resource.name}
+          {name}
         </p>
         {notes && (
           <p className="font-sans font-light text-[13px] text-[#808080] mt-0.5 leading-snug line-clamp-1">

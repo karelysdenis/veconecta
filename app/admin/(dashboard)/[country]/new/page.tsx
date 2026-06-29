@@ -30,6 +30,8 @@ export default async function NewResourcePage({
       data: {
         countrySlug: country,
         name: (fd.get('name') as string).trim(),
+        nameEn: (fd.get('nameEn') as string).trim() || null,
+        namePt: (fd.get('namePt') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
         status: ResourceStatus.DRAFT,
         url: (fd.get('url') as string).trim() || null,
@@ -66,7 +68,11 @@ export default async function NewResourcePage({
       </nav>
 
       <form action={create} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
-        <F label="Nombre" name="name" required />
+        <F label="Nombre (español)" name="name" required />
+        <div className="grid grid-cols-2 gap-4">
+          <F label="Nombre (inglés)" name="nameEn" />
+          <F label="Nombre (portugués)" name="namePt" />
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <Sel label="Categoría" name="category" opts={CATEGORIES} />

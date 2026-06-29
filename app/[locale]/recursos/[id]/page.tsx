@@ -25,8 +25,9 @@ export async function generateMetadata({
   const { locale, id } = await params
   const resource = await prisma.resource.findUnique({ where: { id } })
   if (!resource) return {}
+  const resourceName = locale === 'en' ? (resource.nameEn ?? resource.name) : locale === 'pt' ? (resource.namePt ?? resource.name) : resource.name
   return {
-    title: `${resource.name} | VeConecta`,
+    title: `${resourceName} | VeConecta`,
     description:
       locale === 'en'
         ? (resource.notesEn ?? resource.notesEs ?? undefined)
@@ -61,6 +62,7 @@ export default async function ResourceDetailPage({
         ? (resource.country.namePt ?? resource.country.nameEs)
         : resource.country.nameEs
 
+  const displayName = locale === 'en' ? (resource.nameEn ?? resource.name) : locale === 'pt' ? (resource.namePt ?? resource.name) : resource.name
   const notes =
     locale === 'en'
       ? (resource.notesEn ?? resource.notesEs)
@@ -111,7 +113,7 @@ export default async function ResourceDetailPage({
         {/* Name + meta */}
         <div>
           <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
-            {resource.name}
+            {displayName}
           </h1>
           {verifiedDate && (
             <p className="font-sans font-light text-[13px] text-[#808080] mt-1">

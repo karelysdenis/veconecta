@@ -13,6 +13,15 @@ export type SerializedResource = Omit<
   updatedAt: string
 }
 
+export function getResourceName(
+  resource: { name: string; nameEn?: string | null; namePt?: string | null },
+  locale: string
+): string {
+  if (locale === 'en') return resource.nameEn ?? resource.name
+  if (locale === 'pt') return resource.namePt ?? resource.name
+  return resource.name
+}
+
 export function serializeResource(r: Resource): SerializedResource {
   return {
     ...r,

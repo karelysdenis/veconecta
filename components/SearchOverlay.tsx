@@ -6,10 +6,13 @@ import { useTranslations } from 'next-intl'
 import type { ResourceCategory } from '@prisma/client'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getLocalizedSlug } from '@/lib/country-slug'
+import { getResourceName } from '@/lib/types'
 
 type Result = {
   id: string
   name: string
+  nameEn: string | null
+  namePt: string | null
   notesEs: string | null
   notesEn: string | null
   notesPt: string | null
@@ -261,6 +264,7 @@ function ResultRow({
   lang: 'es' | 'en' | 'pt'
   onClose: () => void
 }) {
+  const name = getResourceName(result, lang)
   const notes =
     lang === 'en' ? (result.notesEn ?? result.notesEs)
     : lang === 'pt' ? (result.notesPt ?? result.notesEs)
@@ -283,7 +287,7 @@ function ResultRow({
       className="flex items-center justify-between gap-3 min-h-14 px-5 py-3 border-t border-[rgba(20,20,20,0.08)] hover:bg-guacamaya/5 transition-colors"
     >
       <div className="flex-1 min-w-0">
-        <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">{result.name}</p>
+        <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">{name}</p>
         {notes && (
           <p className="font-sans font-light text-[13px] text-[#808080] mt-0.5 leading-snug line-clamp-1">{notes}</p>
         )}

@@ -11,6 +11,8 @@ import type { Metadata } from 'next'
 const GLOBAL_SELECT = {
   id: true,
   name: true,
+  nameEn: true,
+  namePt: true,
   category: true,
   countrySlug: true,
   notesEs: true,
@@ -103,6 +105,8 @@ export default async function SearchPage({
           status: ResourceStatus.PUBLISHED,
           OR: [
             { name: { contains: query, mode: 'insensitive' } },
+            { nameEn: { contains: query, mode: 'insensitive' } },
+            { namePt: { contains: query, mode: 'insensitive' } },
             { notesEs: { contains: query, mode: 'insensitive' } },
             { notesEn: { contains: query, mode: 'insensitive' } },
             { notesPt: { contains: query, mode: 'insensitive' } },

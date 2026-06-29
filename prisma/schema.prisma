@@ -55,6 +55,8 @@ model Resource {
   country     Country          @relation(fields: [countrySlug], references: [slug])
   category    ResourceCategory
   name        String
+  nameEn      String?
+  namePt      String?
   city        String?
   url         String?
   phone       String?

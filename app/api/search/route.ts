@@ -4,6 +4,8 @@ import { ResourceStatus } from '@prisma/client'
 const RESOURCE_SELECT = {
   id: true,
   name: true,
+  nameEn: true,
+  namePt: true,
   category: true,
   countrySlug: true,
   notesEs: true,
@@ -38,6 +40,8 @@ export async function GET(request: Request) {
       status: ResourceStatus.PUBLISHED,
       OR: [
         { name: { contains: q, mode: 'insensitive' } },
+        { nameEn: { contains: q, mode: 'insensitive' } },
+        { namePt: { contains: q, mode: 'insensitive' } },
         { notesEs: { contains: q, mode: 'insensitive' } },
         { notesEn: { contains: q, mode: 'insensitive' } },
         { notesPt: { contains: q, mode: 'insensitive' } },

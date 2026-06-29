@@ -1,9 +1,12 @@
 import Link from 'next/link'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
+import { getResourceName } from '@/lib/types'
 
 type ResourceWithCountry = {
   id: string
   name: string
+  nameEn: string | null
+  namePt: string | null
   notesEs: string | null
   notesEn: string | null
   notesPt: string | null
@@ -23,6 +26,7 @@ export function SearchResultLink({
   resource: ResourceWithCountry
   locale: string
 }) {
+  const name = getResourceName(resource, locale)
   const notes =
     locale === 'en'
       ? (resource.notesEn ?? resource.notesEs)
@@ -50,7 +54,7 @@ export function SearchResultLink({
     >
       <div className="flex-1 min-w-0">
         <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">
-          {resource.name}
+          {name}
         </p>
         {notes && (
           <p className="font-sans font-light text-[13px] text-[#808080] mt-0.5 leading-snug line-clamp-1">
