@@ -36,7 +36,7 @@ export default async function EditResourcePage({
   const { country, id } = await params
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
-  if (user.role === 'EDITOR' && user.countrySlug !== country) redirect('/admin')
+  if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
 
   const [resource, countryRecord] = await Promise.all([
     prisma.resource.findUnique({ where: { id } }),

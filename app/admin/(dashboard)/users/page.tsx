@@ -42,7 +42,7 @@ export default async function UsersPage() {
         <div className="grid grid-cols-[1fr_auto_auto_auto] border-b border-gray-200 bg-gray-50 px-5 py-2.5">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center px-4">Rol</span>
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center px-4">País</span>
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center px-4">Países</span>
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center px-4">Estado</span>
         </div>
 
@@ -70,9 +70,13 @@ export default async function UsersPage() {
               </span>
             </div>
             <div className="px-4 text-center">
-              <span className="text-sm text-gray-500">
-                {u.countrySlug ? (countryMap[u.countrySlug] ?? u.countrySlug) : <span className="text-gray-300">—</span>}
-              </span>
+              {u.countrySlugs.length === 0 ? (
+                <span className="text-gray-300">—</span>
+              ) : u.countrySlugs.length === 1 ? (
+                <span className="text-sm text-gray-500">{countryMap[u.countrySlugs[0]] ?? u.countrySlugs[0]}</span>
+              ) : (
+                <span className="text-sm text-gray-500">{u.countrySlugs.length} países</span>
+              )}
             </div>
             <div className="px-4 text-center">
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${

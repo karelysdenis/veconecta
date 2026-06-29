@@ -44,7 +44,7 @@ export default async function AdminCountryPage({
   if (!user) redirect('/admin/login')
 
   // EDITOR can only access their assigned country
-  if (user.role === 'EDITOR' && user.countrySlug !== country) {
+  if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) {
     redirect('/admin')
   }
 

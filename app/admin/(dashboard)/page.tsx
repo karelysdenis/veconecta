@@ -13,7 +13,7 @@ function Flag({ cca2, slug, flag, size = 24 }: { cca2: string | null; slug: stri
 export default async function AdminDashboard() {
   const { user } = await getSession()
 
-  if (user!.role === 'EDITOR' && !user!.countrySlug) {
+  if (user!.role === 'EDITOR' && user!.countrySlugs.length === 0) {
     return (
       <div className="text-center py-16">
         <p className="text-sm text-gray-500">
@@ -27,7 +27,7 @@ export default async function AdminDashboard() {
   }
 
   const countries = await prisma.country.findMany({
-    where: user!.role === 'EDITOR' ? { slug: user!.countrySlug! } : {},
+    where: user!.role === 'EDITOR' ? { slug: { in: user!.countrySlugs } } : {},
     include: {
       _count: {
         select: {
@@ -41,7 +41,7 @@ export default async function AdminDashboard() {
   const reports = await prisma.communityReport.findMany({
     where: {
       resolved: false,
-      ...(user!.role === 'EDITOR' ? { countrySlug: user!.countrySlug! } : {}),
+      ...(user!.role === 'EDITOR' ? { countrySlug: { in: user!.countrySlugs } } : {}),
     },
     orderBy: { createdAt: 'desc' },
     take: 20,

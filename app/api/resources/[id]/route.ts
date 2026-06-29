@@ -30,7 +30,7 @@ export async function PATCH(
     const resource = await prisma.resource.findUnique({ where: { id } })
     if (!resource) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-    if (user.role === 'EDITOR' && user.countrySlug !== resource.countrySlug) {
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(resource.countrySlug)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

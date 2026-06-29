@@ -32,16 +32,14 @@ export default async function EditUserPage({
     if (!me || me.role !== 'ADMIN') return
 
     const role = fd.get('role') as Role
-    const countrySlug = (fd.get('countrySlug') as string).trim() || null
+    const countrySlugs = role === 'EDITOR'
+      ? fd.getAll('countrySlugs').map(v => (v as string).trim()).filter(Boolean)
+      : []
     const isActive = fd.get('isActive') === 'on'
 
     await prisma.user.update({
       where: { id },
-      data: {
-        role,
-        countrySlug: role === 'EDITOR' ? countrySlug : null,
-        isActive,
-      },
+      data: { role, countrySlugs, isActive },
     })
 
     revalidatePath('/admin/users')
@@ -83,7 +81,7 @@ export default async function EditUserPage({
             disabled={isSelf}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 disabled:bg-gray-50 disabled:text-gray-400"
           >
-            <option value="EDITOR">Editor — acceso solo a su país</option>
+            <option value="EDITOR">Editor — acceso solo a sus países</option>
             <option value="ADMIN">Admin — acceso total</option>
           </select>
           {isSelf && (
@@ -92,19 +90,23 @@ export default async function EditUserPage({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            País asignado <span className="text-gray-400 font-normal">(solo para editores)</span>
-          </label>
-          <select
-            name="countrySlug"
-            defaultValue={target.countrySlug ?? ''}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-          >
-            <option value="">Sin restricción</option>
+          <p className="text-sm font-medium text-gray-700 mb-2">
+            Países asignados <span className="text-gray-400 font-normal">(solo para editores)</span>
+          </p>
+          <div className="border border-gray-200 rounded-lg divide-y divide-gray-100 overflow-hidden">
             {countries.map(c => (
-              <option key={c.slug} value={c.slug}>{c.nameEs}</option>
+              <label key={c.slug} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="countrySlugs"
+                  value={c.slug}
+                  defaultChecked={target.countrySlugs.includes(c.slug)}
+                  className="h-4 w-4 rounded text-red-700"
+                />
+                <span className="text-sm text-gray-800">{c.nameEs}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
 
         <label className="flex items-center gap-2 cursor-pointer">
@@ -125,9 +127,6 @@ export default async function EditUserPage({
               <button
                 type="submit"
                 className="text-sm text-red-600 hover:underline"
-                onClick={e => {
-                  if (!confirm(`¿Eliminar a ${target.email}?`)) e.preventDefault()
-                }}
               >
                 Eliminar usuario
               </button>

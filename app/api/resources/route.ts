@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
 
   // EDITOR can only create resources for their country
-  if (user.role === 'EDITOR' && user.countrySlug !== parsed.data.countrySlug) {
+  if (user.role === 'EDITOR' && !user.countrySlugs.includes(parsed.data.countrySlug)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

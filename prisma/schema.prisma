@@ -11,7 +11,7 @@ model User {
   id          String    @id @default(cuid())
   email       String    @unique
   role        Role      @default(EDITOR)
-  countrySlug String?
+  countrySlugs String[] @default([])
   isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
   sessions    Session[]
