@@ -23,6 +23,14 @@ type Result = {
   }
 }
 
+type CountryResult = {
+  slug: string
+  nameEs: string
+  nameEn: string
+  namePt: string | null
+  cca2: string | null
+}
+
 const CATEGORY_ORDER: ResourceCategory[] = [
   'FIND_FAMILY', 'CALL_FREE', 'DONATE_MONEY', 'SEND_MONEY',
   'DONATE_PHYSICALLY', 'DIGITAL_BRIDGE', 'CONSULAR', 'MENTAL_HEALTH',
@@ -40,6 +48,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Result[]>([])
   const [fallback, setFallback] = useState<Result[]>([])
+  const [countries, setCountries] = useState<CountryResult[]>([])
   const [loading, setLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -65,7 +74,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
   function handleChange(v: string) {
     setQuery(v)
     if (debounceRef.current) clearTimeout(debounceRef.current)
-    if (v.trim().length < 2) { setResults([]); setFallback([]); return }
+    if (v.trim().length < 2) { setResults([]); setFallback([]); setCountries([]); return }
     debounceRef.current = setTimeout(async () => {
       setLoading(true)
       try {
@@ -73,6 +82,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
         const data = await res.json()
         setResults(data.results)
         setFallback(data.fallback)
+        setCountries(data.countries)
       } finally {
         setLoading(false)
       }
@@ -84,6 +94,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
     setQuery('')
     setResults([])
     setFallback([])
+    setCountries([])
   }
 
   const byCategory = CATEGORY_ORDER.reduce((acc, cat) => {
@@ -159,6 +170,26 @@ export function SearchOverlay({ locale }: { locale: string }) {
                     : `Sin resultados para "${query}"`}
                 </p>
               )}
+
+              {/* Países encontrados */}
+              {!loading && countries.length > 0 && countries.map(c => {
+                const name = lang === 'en' ? c.nameEn : lang === 'pt' ? (c.namePt ?? c.nameEs) : c.nameEs
+                const flagSrc = c.cca2 ? `https://flagcdn.com/w40/${c.cca2}.png` : isoFlagUrl(c.slug, 'w40')
+                return (
+                  <div key={c.slug}>
+                    <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+                    <Link
+                      href={`/${locale}/${c.slug}`}
+                      onClick={close}
+                      className="flex items-center gap-3 h-14 px-5 hover:bg-guacamaya/5 transition-colors"
+                    >
+                      {flagSrc && <img src={flagSrc} width={24} height={16} alt="" className="object-cover rounded-[2px] shrink-0" />}
+                      <span className="font-sans font-semibold text-base text-[#141414]">{name}</span>
+                      <span className="ml-auto text-[#b8b8b8] text-base shrink-0 select-none">›</span>
+                    </Link>
+                  </div>
+                )
+              })}
 
               {/* Resultados agrupados */}
               {!loading && total > 0 && CATEGORY_ORDER.map(cat => {

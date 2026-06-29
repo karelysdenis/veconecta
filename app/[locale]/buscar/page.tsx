@@ -81,6 +81,21 @@ export default async function SearchPage({
     getTranslations('categories'),
   ])
 
+  const matchingCountries = query.length >= 2
+    ? await prisma.country.findMany({
+        where: {
+          active: true,
+          OR: [
+            { nameEs: { contains: query, mode: 'insensitive' } },
+            { nameEn: { contains: query, mode: 'insensitive' } },
+            { namePt: { contains: query, mode: 'insensitive' } },
+          ],
+        },
+        select: { slug: true, nameEs: true, nameEn: true, namePt: true, cca2: true },
+      })
+    : []
+  const countrySlugs = matchingCountries.map(c => c.slug)
+
   const results = query.length >= 2
     ? await prisma.resource.findMany({
         where: {
@@ -90,21 +105,10 @@ export default async function SearchPage({
             { notesEs: { contains: query, mode: 'insensitive' } },
             { notesEn: { contains: query, mode: 'insensitive' } },
             { notesPt: { contains: query, mode: 'insensitive' } },
-            { country: { nameEs: { contains: query, mode: 'insensitive' } } },
-            { country: { nameEn: { contains: query, mode: 'insensitive' } } },
-            { country: { namePt: { contains: query, mode: 'insensitive' } } },
+            ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
           ],
         },
-        include: {
-          country: {
-            select: {
-              nameEs: true,
-              nameEn: true,
-              namePt: true,
-              cca2: true,
-            },
-          },
-        },
+        select: GLOBAL_SELECT,
         orderBy: { createdAt: 'asc' },
         take: 100,
       })
@@ -180,6 +184,25 @@ export default async function SearchPage({
           </p>
         </div>
       )}
+
+      {/* Países encontrados */}
+      {matchingCountries.length > 0 && matchingCountries.map(c => {
+        const name = lang === 'en' ? c.nameEn : c.nameEs
+        const flagSrc = c.cca2 ? `https://flagcdn.com/w40/${c.cca2}.png` : null
+        return (
+          <div key={c.slug}>
+            <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+            <Link
+              href={`/${locale}/${c.slug}`}
+              className="flex items-center gap-3 h-14 px-5 hover:bg-guacamaya/5 transition-colors"
+            >
+              {flagSrc && <img src={flagSrc} width={24} height={16} alt="" className="object-cover rounded-[2px] shrink-0" />}
+              <span className="font-sans font-semibold text-base text-[#141414]">{name}</span>
+              <span className="ml-auto text-[#b8b8b8] text-base shrink-0 select-none">›</span>
+            </Link>
+          </div>
+        )
+      })}
 
       {/* Results by category */}
       {total > 0 && CATEGORY_ORDER.map((cat) => {
