@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, type LucideIcon } from 'lucide-react'
 import { ResourceLink } from './ResourceLink'
-import { DigitalBridgeTutorial } from './DigitalBridgeTutorial'
 import type { ResourceCategory } from '@prisma/client'
 import type { SerializedResource } from '@/lib/types'
 
@@ -29,17 +28,6 @@ export function ActionCard({
 }) {
   const [open, setOpen] = useState(true)
   const t = useTranslations('categories')
-
-  if (category === 'DIGITAL_BRIDGE') {
-    return (
-      <div>
-        <div className="h-px bg-[rgba(20,20,20,0.12)]" />
-        <div className="py-3 px-5">
-          <DigitalBridgeTutorial />
-        </div>
-      </div>
-    )
-  }
 
   if (resources.length === 0) return null
 
