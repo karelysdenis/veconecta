@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Search } from 'lucide-react'
 import { LangPopover } from './LangPopover'
+import { SearchOverlay } from './SearchOverlay'
 
 export function AppHeader({ locale }: { locale: string }) {
   return (
@@ -10,9 +10,7 @@ export function AppHeader({ locale }: { locale: string }) {
           <VeConectaLogo />
         </Link>
         <div className="flex items-center gap-3.5 text-[#141414]">
-          <Link href={`/${locale}/buscar`} className="p-0.5" aria-label="Buscar">
-            <Search size={18} strokeWidth={1.5} />
-          </Link>
+          <SearchOverlay locale={locale} />
           <LangPopover direction="down" />
         </div>
       </div>
