@@ -45,7 +45,7 @@ export default async function EditUserPage({
       where: { id },
       data: { role, countrySlugs, isActive },
     })
-    await logAction({ userEmail: me.email, action: 'USER_UPDATE', entityType: 'user', entityId: id, entityName: target.email, detail: role })
+    await logAction({ userEmail: me.email, action: 'USER_UPDATE', entityType: 'user', entityId: id, entityName: target?.email, detail: role })
 
     revalidatePath('/admin/users')
     redirect('/admin/users')
@@ -57,7 +57,7 @@ export default async function EditUserPage({
     if (!me || me.role !== 'ADMIN') return
     if (me.id === id) return
 
-    await logAction({ userEmail: me.email, action: 'USER_DELETE', entityType: 'user', entityId: id, entityName: target.email })
+    await logAction({ userEmail: me.email, action: 'USER_DELETE', entityType: 'user', entityId: id, entityName: target?.email })
     await prisma.user.delete({ where: { id } })
     revalidatePath('/admin/users')
     redirect('/admin/users')
