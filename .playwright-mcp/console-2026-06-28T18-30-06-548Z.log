@@ -1,0 +1,549 @@
+[     293ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    2281ms] [LOG] [Fast Refresh] done in 2104ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    2477ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    2555ms] [LOG] [Fast Refresh] done in 190ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    4008ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(1), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    4013ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(1), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    4954ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    5216ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    6549ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    6554ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[locale]/[country], path: /es/spain} @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    6561ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es/spain color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es/spain, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782671413107} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[    6573ms] [LOG] %c[Vercel Speed Insights]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   28672ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   28686ms] [LOG] [Fast Refresh] done in 122ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   43264ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   44302ms] [LOG] [Fast Refresh] done in 1141ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   45994ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(4), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   46242ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es/recursos/cmqy4ij8h0004wne8nzswxhdx color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es/recursos/cmqy4ij8h0004wne8nzswxhdx, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782671452762} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   53647ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   55495ms] [LOG] [Fast Refresh] done in 1956ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   60472ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   60576ms] [LOG] [Fast Refresh] done in 207ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   60725ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[   60788ms] [LOG] [Fast Refresh] done in 177ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  156210ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  156771ms] [LOG] [Fast Refresh] done in 664ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  157591ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782671564115} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  164071ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  165444ms] [LOG] [Fast Refresh] done in 1482ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  166793ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es/brazil color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es/brazil, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782671573310} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  181261ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  181881ms] [LOG] [Fast Refresh] done in 738ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  182554ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782671589075} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  189128ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  195688ms] [LOG] [Fast Refresh] done in 6620ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  199454ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  205060ms] [LOG] [Fast Refresh] done in 5716ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  205699ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  206265ms] [LOG] [Fast Refresh] done in 671ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  230370ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  234844ms] [WARNING] [HMR] Invalid message: {"isTrusted":true}
+TypeError: Cannot convert undefined or null to object
+    at Object.keys (<anonymous>)
+    at extractModulesFromTurbopackMessage (http://localhost:3000/_next/static/chunks/19by_next_dist_client_206tll4._.js:13754:39)
+    at TurbopackHmr.onTurbopackMessage (http://localhost:3000/_next/static/chunks/19by_next_dist_client_206tll4._.js:13701:32)
+    at processMessage (http://localhost:3000/_next/static/chunks/19by_next_dist_client_206tll4._.js:14059:30)
+    at WebSocket.handleMessage (http://localhost:3000/_next/static/chunks/19by_next_dist_client_206tll4._.js:13458:52) @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  234853ms] [LOG] [Fast Refresh] done in 4572ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  236838ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  240802ms] [LOG] [Fast Refresh] done in 4066ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  245684ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  248871ms] [LOG] [Fast Refresh] done in 3296ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  250831ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  252324ms] [LOG] [Fast Refresh] done in 1600ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  253381ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  253732ms] [LOG] [Fast Refresh] done in 454ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  255148ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  255511ms] [LOG] [Fast Refresh] done in 470ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  350198ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  350209ms] [LOG] [Fast Refresh] done in 120ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  358027ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  358065ms] [LOG] [Fast Refresh] done in 142ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  687012ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  689923ms] [LOG] [Fast Refresh] done in 3015ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  690456ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(1), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  690461ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(1), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  691370ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  691612ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  692742ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  692746ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[locale], path: /es} @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  692751ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782672099296} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[  692758ms] [LOG] %c[Vercel Speed Insights]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1327678ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1333239ms] [LOG] [Fast Refresh] done in 5666ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1333935ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1334749ms] [LOG] [Fast Refresh] done in 928ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1335372ms] [WARNING] %c%s%c ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1336288ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(4), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1336772ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es/argentina color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es/argentina, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782672743277} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1403618ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1405103ms] [LOG] [Fast Refresh] done in 1589ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1406271ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es/recursos/cmqy4ijcs000ywne8iwfpfis4 color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es/recursos/cmqy4ijcs000ywne8iwfpfis4, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782672812794} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1408744ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1409477ms] [LOG] [Fast Refresh] done in 848ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1410180ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es/argentina color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es/argentina, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782672816703} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1456662ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1457220ms] [LOG] [Fast Refresh] done in 669ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1458029ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782672864553} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1460146ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1460913ms] [LOG] [Fast Refresh] done in 877ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1461816ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/es/brazil color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/es/brazil, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, ts: 1782672868336} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1467315ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1470892ms] [LOG] [Fast Refresh] done in 3653ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1473306ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1479231ms] [LOG] [Fast Refresh] done in 6043ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1482802ms] [WARNING] %c%s%c ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1484622ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1488917ms] [LOG] [Fast Refresh] done in 4398ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1489452ms] [WARNING] %c%s%c ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1490056ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1494051ms] [LOG] [Fast Refresh] done in 4098ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1505827ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1508818ms] [WARNING] %c%s%c ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1509050ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1513631ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1514368ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1514399ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1514459ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1514523ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1514762ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1528021ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1528034ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1528050ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1528144ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1530914ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1531971ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1532003ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1532096ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1533025ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1533045ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1533157ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1533167ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1533307ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1533813ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1534750ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1534790ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1534878ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1535045ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1535353ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1535385ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1535482ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1535782ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1535802ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1535903ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1535915ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1536014ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1536119ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1536264ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1536497ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1536567ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1536769ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1536831ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1536943ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1537087ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1537759ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1537778ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1537889ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1537913ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1537946ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1538026ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1538518ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1538616ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1538763ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1538772ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1538798ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/recursos/cmqy4ij8f0000wne87p6hgx6x?_rsc=LtnuDU2b40KgcReH:0
+[ 1538863ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1539145ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/brazil?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1540199ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1540348ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1540369ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1540405ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1540471ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1540533ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1540654ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1541584ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1541961ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/recursos/cmqy4ij8f0000wne87p6hgx6x?_rsc=lmXpVXgdLEgeiPp4:0
+[ 1543198ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1543243ms] [ERROR] ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:3318
+[ 1543603ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1544154ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(1), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1544162ms] [LOG] %c[Vercel Speed Insights]%c [vitals] color: rgb(120, 120, 120) color: inherit {speed: 3g, metrics: Array(1), scriptVersion: 0.1.3, sdkName: @vercel/speed-insights/next, sdkVersion: 2.0.0} /_vercel/speed-insights/vitals @ http://localhost:3000/_next/static/chunks/19by_next_dist_09-gqi0._.js:2477
+[ 1544204ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es/recursos/cmqy4ij8f0000wne87p6hgx6x:0
+[ 1548665ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0al3_react-dom_0fzy2kt._.js:15305
+[ 1551433ms] Error: ./Projects/veconecta/app/[locale]/page.tsx:42:3
+Expected ',', got 'const'
+  40 |   })
+  41 |
+> 42 |   const totalResources = countries.reduce((sum, c) => sum + c._count.resources, 0)
+     |   ^^^^^
+  43 |
+  44 |   const latestDate = countries
+  45 |     .map((c) => c.lastUpdatedAt)
+
+Parsing ecmascript source code failed
+
+
+    at <unknown> (Error: ./Projects/veconecta/app/[locale]/page.tsx:42:3)
+    at Object.getCompilationErrors (file://C:\Users\34634\Projects\veconecta\node_modules\.pnpm\next@16.2.9_react-dom@19.2.4_react@19.2.4__react@19.2.4\node_modules\next\dist\server\dev\hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file://C:\Users\34634\Projects\veconecta\node_modules\.pnpm\next@16.2.9_react-dom@19.2.4_react@19.2.4__react@19.2.4\node_modules\next\dist\server\lib\dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file://C:\Users\34634\Projects\veconecta\node_modules\.pnpm\next@16.2.9_react-dom@19.2.4_react@19.2.4__react@19.2.4\node_modules\next\dist\server\dev\next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file://C:\Users\34634\Projects\veconecta\node_modules\.pnpm\next@16.2.9_react-dom@19.2.4_react@19.2.4__react@19.2.4\node_modules\next\dist\server\dev\next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file://C:\Users\34634\Projects\veconecta\node_modules\.pnpm\next@16.2.9_react-dom@19.2.4_react@19.2.4__react@19.2.4\node_modules\next\dist\server\base-server.js:1753:26)
+[ 1553462ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/19by_next_dist_0vc97e5._.js:1226
+[ 1553629ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_0vc97e5._.js:1226
+[ 1554003ms] [LOG] [Fast Refresh] done in 465ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_0vc97e5._.js:1226
+[ 1573924ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_0vc97e5._.js:1226
+[ 1574597ms] [LOG] [Fast Refresh] done in 776ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_0vc97e5._.js:1226
+[ 1574881ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/19by_next_dist_0vc97e5._.js:1226
+[ 1574953ms] [LOG] [Fast Refresh] done in 184ms @ http://localhost:3000/_next/static/chunks/19by_next_dist_0vc97e5._.js:1226

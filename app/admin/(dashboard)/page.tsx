@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
+import { flagUrl } from '@/lib/country-iso'
 
 export default async function AdminDashboard() {
   const { user } = await getSession()
@@ -61,7 +62,19 @@ export default async function AdminDashboard() {
                 href={`/admin/${country.slug}`}
                 className="block border border-gray-200 rounded-lg p-4 hover:border-red-300 hover:bg-red-50 transition-colors"
               >
-                <div className="text-2xl mb-1">{country.flag}</div>
+                <div className="mb-2">
+                  {flagUrl(country.slug) || country.cca2 ? (
+                    <img
+                      src={country.cca2 ? `https://flagcdn.com/w40/${country.cca2}.png` : flagUrl(country.slug)!}
+                      width={36}
+                      height={24}
+                      alt=""
+                      className="object-cover rounded shadow-sm"
+                    />
+                  ) : (
+                    <span className="text-2xl">{country.flag}</span>
+                  )}
+                </div>
                 <div className="text-sm font-medium text-gray-900">{country.nameEs}</div>
                 {!country.active && (
                   <div className="text-xs text-gray-400 mt-1">Inactivo</div>

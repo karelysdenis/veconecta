@@ -1,0 +1,84 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "VE conecta" [ref=e3] [cursor=pointer]:
+      - /url: /es
+      - generic [ref=e4]:
+        - generic [ref=e5]: VE
+        - generic [ref=e6]: conecta
+    - generic [ref=e7]:
+      - button "Buscar" [ref=e8]:
+        - img [ref=e9]
+      - button "Cambiar idioma" [ref=e13]:
+        - img [ref=e14]
+      - button "Menú" [ref=e16]:
+        - img [ref=e17]
+  - generic [ref=e18]:
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - link "Inicio" [ref=e21] [cursor=pointer]:
+          - /url: /es
+        - generic [ref=e22]: ›
+        - link "Estados Unidos" [ref=e23] [cursor=pointer]:
+          - /url: /es/usa
+        - generic [ref=e24]: ›
+        - generic [ref=e25]: Doral, FL
+      - generic [ref=e26]:
+        - heading "Doral, FL" [level=1] [ref=e28]
+        - paragraph [ref=e29]: 15 recursos verificados
+      - button "Buscar familiares 3 recursos +" [ref=e32]:
+        - generic [ref=e33]:
+          - img [ref=e35]
+          - generic [ref=e40]:
+            - generic [ref=e41]: Buscar familiares
+            - generic [ref=e42]: 3 recursos
+        - generic [ref=e43]: +
+      - button "Llamar gratis a Venezuela +" [ref=e46]:
+        - generic [ref=e47]:
+          - img [ref=e49]
+          - generic [ref=e52]: Llamar gratis a Venezuela
+        - generic [ref=e53]: +
+      - button "Donar dinero 10 recursos +" [ref=e56]:
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - generic [ref=e61]:
+            - generic [ref=e62]: Donar dinero
+            - generic [ref=e63]: 10 recursos
+        - generic [ref=e64]: +
+      - button "Enviar dinero a familia +" [ref=e67]:
+        - generic [ref=e68]:
+          - img [ref=e70]
+          - generic [ref=e74]: Enviar dinero a familia
+        - generic [ref=e75]: +
+      - button "Donar físicamente 1 recursos +" [ref=e78]:
+        - generic [ref=e79]:
+          - img [ref=e81]
+          - generic [ref=e85]:
+            - generic [ref=e86]: Donar físicamente
+            - generic [ref=e87]: 1 recursos
+        - generic [ref=e88]: +
+      - button "Cómo ser puente digital Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela ▼" [ref=e93]:
+        - generic [ref=e94]:
+          - paragraph [ref=e95]: Cómo ser puente digital
+          - paragraph [ref=e96]: Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela
+        - generic [ref=e97]: ▼
+      - button "Trámites consulares +" [ref=e100]:
+        - generic [ref=e101]:
+          - img [ref=e103]
+          - generic [ref=e106]: Trámites consulares
+        - generic [ref=e107]: +
+      - button "Apoyo psicológico 1 recursos +" [ref=e110]:
+        - generic [ref=e111]:
+          - img [ref=e113]
+          - generic [ref=e121]:
+            - generic [ref=e122]: Apoyo psicológico
+            - generic [ref=e123]: 1 recursos
+        - generic [ref=e124]: +
+      - button "Reportar información desactualizada" [ref=e128]
+    - contentinfo [ref=e129]:
+      - paragraph [ref=e130]: VeConecta es una iniciativa ciudadana independiente. Verificamos la información antes de publicarla, pero los recursos cambian rápido. Confirma siempre antes de actuar.
+      - paragraph [ref=e131]:
+        - text: ¿Tienes un recurso para agregar?
+        - link "veconecta.org@gmail.com" [ref=e132] [cursor=pointer]:
+          - /url: mailto:veconecta.org@gmail.com
+  - button "Open Next.js Dev Tools" [ref=e138] [cursor=pointer]:
+    - img [ref=e139]

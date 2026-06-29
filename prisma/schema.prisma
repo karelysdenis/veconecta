@@ -40,6 +40,7 @@ model Country {
   nameEn        String
   namePt        String?
   flag          String
+  cca2          String?
   active        Boolean    @default(true)
   lastUpdatedAt DateTime   @updatedAt
   resources     Resource[]

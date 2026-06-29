@@ -1,0 +1,148 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "VE conecta" [ref=e3] [cursor=pointer]:
+      - /url: /es
+      - generic [ref=e4]:
+        - generic [ref=e5]: VE
+        - generic [ref=e6]: conecta
+    - generic [ref=e7]:
+      - button "Buscar" [ref=e8]:
+        - img [ref=e9]
+      - button "Cambiar idioma" [ref=e13]:
+        - img [ref=e14]
+      - button "Menú" [ref=e16]:
+        - img [ref=e17]
+  - generic [ref=e18]:
+    - main [ref=e19]:
+      - heading "Ayuda a Venezuela desde donde estás" [level=1] [ref=e21]:
+        - text: Ayuda a
+        - generic [ref=e22]: Venezuela
+        - text: desde donde estás
+      - generic [ref=e23]:
+        - generic [ref=e24]: 34 recursos verificados
+        - generic [ref=e25]: actualizado 28 jun 2026
+      - paragraph [ref=e27]: Desde cualquier país
+      - generic [ref=e28]:
+        - button "Buscar familiares 2 −" [ref=e30]:
+          - generic [ref=e31]:
+            - img [ref=e33]
+            - generic [ref=e38]: Buscar familiares
+            - generic [ref=e39]: "2"
+          - generic [ref=e40]: −
+        - generic [ref=e41]:
+          - link "Venezuela Te Busca ›" [ref=e42] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8f0000wne87p6hgx6x
+            - generic [ref=e43]: Venezuela Te Busca
+            - generic [ref=e44]: ›
+          - link "Desaparecidos Terremoto Venezuela ›" [ref=e45] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8g0001wne8ecpqvutj
+            - generic [ref=e46]: Desaparecidos Terremoto Venezuela
+            - generic [ref=e47]: ›
+      - generic [ref=e48]:
+        - button "Donar dinero 6 −" [ref=e50]:
+          - generic [ref=e51]:
+            - img [ref=e53]
+            - generic [ref=e55]: Donar dinero
+            - generic [ref=e56]: "6"
+          - generic [ref=e57]: −
+        - generic [ref=e58]:
+          - link "UNICEF — Fondo Emergencia Venezuela ›" [ref=e59] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8g0002wne87ctwgavu
+            - generic [ref=e60]: UNICEF — Fondo Emergencia Venezuela
+            - generic [ref=e61]: ›
+          - link "Cáritas Internationalis — Venezuela ›" [ref=e62] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8g0003wne8y185yawh
+            - generic [ref=e63]: Cáritas Internationalis — Venezuela
+            - generic [ref=e64]: ›
+          - link "International Rescue Committee (IRC) ›" [ref=e65] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8h0004wne8nzswxhdx
+            - generic [ref=e66]: International Rescue Committee (IRC)
+            - generic [ref=e67]: ›
+          - link "GlobalGiving — Venezuela Earthquake Relief Fund ›" [ref=e68] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8h0005wne8zu7hla30
+            - generic [ref=e69]: GlobalGiving — Venezuela Earthquake Relief Fund
+            - generic [ref=e70]: ›
+          - link "Direct Relief — Venezuela ›" [ref=e71] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8h0006wne8b1z88w83
+            - generic [ref=e72]: Direct Relief — Venezuela
+            - generic [ref=e73]: ›
+          - link "World Central Kitchen — Venezuela ›" [ref=e74] [cursor=pointer]:
+            - /url: /es/recursos/cmqy4ij8h0007wne83ck75sy8
+            - generic [ref=e75]: World Central Kitchen — Venezuela
+            - generic [ref=e76]: ›
+      - button "Cómo ser puente digital Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela ▼" [ref=e81]:
+        - generic [ref=e82]:
+          - paragraph [ref=e83]: Cómo ser puente digital
+          - paragraph [ref=e84]: Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela
+        - generic [ref=e85]: ▼
+      - generic [ref=e86]:
+        - button "Apoyo psicológico 1 −" [ref=e88]:
+          - generic [ref=e89]:
+            - img [ref=e91]
+            - generic [ref=e99]: Apoyo psicológico
+            - generic [ref=e100]: "1"
+          - generic [ref=e101]: −
+        - link "PsicoLínea Venezuela (apoyo desde exterior) ›" [ref=e103] [cursor=pointer]:
+          - /url: /es/recursos/cmqy4ij8h0008wne8x6mz11c0
+          - generic [ref=e104]: PsicoLínea Venezuela (apoyo desde exterior)
+          - generic [ref=e105]: ›
+      - paragraph [ref=e108]: Recursos por país
+      - generic [ref=e109]:
+        - link "Argentina 2 recursos" [ref=e110] [cursor=pointer]:
+          - /url: /es/argentina
+          - generic [ref=e112]:
+            - paragraph [ref=e113]: Argentina
+            - paragraph [ref=e114]: 2 recursos
+          - generic [ref=e115]: ›
+        - link "Brasil" [ref=e116] [cursor=pointer]:
+          - /url: /es/brazil
+          - paragraph [ref=e119]: Brasil
+          - generic [ref=e120]: ›
+        - link "Chile" [ref=e121] [cursor=pointer]:
+          - /url: /es/chile
+          - paragraph [ref=e124]: Chile
+          - generic [ref=e125]: ›
+        - link "Colombia 13 recursos" [ref=e126] [cursor=pointer]:
+          - /url: /es/colombia
+          - generic [ref=e128]:
+            - paragraph [ref=e129]: Colombia
+            - paragraph [ref=e130]: 13 recursos
+          - generic [ref=e131]: ›
+        - link "Ecuador 3 recursos" [ref=e132] [cursor=pointer]:
+          - /url: /es/ecuador
+          - generic [ref=e134]:
+            - paragraph [ref=e135]: Ecuador
+            - paragraph [ref=e136]: 3 recursos
+          - generic [ref=e137]: ›
+        - link "México 2 recursos" [ref=e138] [cursor=pointer]:
+          - /url: /es/mexico
+          - generic [ref=e140]:
+            - paragraph [ref=e141]: México
+            - paragraph [ref=e142]: 2 recursos
+          - generic [ref=e143]: ›
+        - link "Perú 2 recursos" [ref=e144] [cursor=pointer]:
+          - /url: /es/peru
+          - generic [ref=e146]:
+            - paragraph [ref=e147]: Perú
+            - paragraph [ref=e148]: 2 recursos
+          - generic [ref=e149]: ›
+        - link "España 5 recursos" [ref=e150] [cursor=pointer]:
+          - /url: /es/spain
+          - generic [ref=e152]:
+            - paragraph [ref=e153]: España
+            - paragraph [ref=e154]: 5 recursos
+          - generic [ref=e155]: ›
+        - link "Estados Unidos 7 recursos" [ref=e156] [cursor=pointer]:
+          - /url: /es/usa
+          - generic [ref=e158]:
+            - paragraph [ref=e159]: Estados Unidos
+            - paragraph [ref=e160]: 7 recursos
+          - generic [ref=e161]: ›
+    - contentinfo [ref=e162]:
+      - paragraph [ref=e163]: VeConecta es una iniciativa ciudadana independiente. Verificamos la información antes de publicarla, pero los recursos cambian rápido. Confirma siempre antes de actuar.
+      - paragraph [ref=e164]:
+        - text: ¿Tienes un recurso para agregar?
+        - link "veconecta.org@gmail.com" [ref=e165] [cursor=pointer]:
+          - /url: mailto:veconecta.org@gmail.com
+  - button "Open Next.js Dev Tools" [ref=e171] [cursor=pointer]:
+    - img [ref=e172]

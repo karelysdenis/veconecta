@@ -1,0 +1,278 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "VE conecta" [ref=e3] [cursor=pointer]:
+      - /url: /es
+      - generic [ref=e4]:
+        - generic [ref=e5]: VE
+        - generic [ref=e6]: conecta
+    - generic [ref=e7]:
+      - button "Buscar" [ref=e8]:
+        - img [ref=e9]
+      - button "Cambiar idioma" [ref=e13]:
+        - img [ref=e14]
+      - button "Menú" [ref=e16]:
+        - img [ref=e17]
+  - generic [ref=e18]:
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - link "Inicio" [ref=e21] [cursor=pointer]:
+          - /url: /es
+        - generic [ref=e22]: ›
+        - link "Estados Unidos" [ref=e23] [cursor=pointer]:
+          - /url: /es/usa
+        - generic [ref=e24]: ›
+        - generic [ref=e25]: Doral, FL
+      - generic [ref=e26]:
+        - heading "Doral, FL" [level=1] [ref=e28]
+        - paragraph [ref=e29]: 15 recursos verificados
+      - generic [ref=e30]:
+        - button "Buscar familiares 3 −" [ref=e32]:
+          - generic [ref=e33]:
+            - img [ref=e35]
+            - generic [ref=e40]: Buscar familiares
+            - generic [ref=e41]: "3"
+          - generic [ref=e42]: −
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - link [ref=e45] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lug000h11qczcnd0hur
+            - generic [ref=e46]:
+              - link "Venezuela Te Busca Base de datos centralizada. Permite crear carteles de búsqueda." [ref=e47] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34lug000h11qczcnd0hur
+                - paragraph [ref=e48]: Venezuela Te Busca
+                - paragraph [ref=e49]: Base de datos centralizada. Permite crear carteles de búsqueda.
+              - generic [ref=e50]:
+                - link "Gratuito" [ref=e51] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34lug000h11qczcnd0hur
+                  - generic [ref=e52]: Gratuito
+                - link "Visitar ↗" [ref=e53] [cursor=pointer]:
+                  - /url: https://venezuelatebusca.com
+            - text: ›
+          - generic [ref=e54]:
+            - link [ref=e55] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltu000011qc7u61oy88
+            - generic [ref=e56]:
+              - link "Venezuela Te Busca Base de datos centralizada con +50.000 reportes. Busca por nombre o cédula desde cualquier país." [ref=e57] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltu000011qc7u61oy88
+                - paragraph [ref=e58]: Venezuela Te Busca
+                - paragraph [ref=e59]: Base de datos centralizada con +50.000 reportes. Busca por nombre o cédula desde cualquier país.
+              - generic [ref=e60]:
+                - link "Gratuito" [ref=e61] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltu000011qc7u61oy88
+                  - generic [ref=e62]: Gratuito
+                - link "Visitar ↗" [ref=e63] [cursor=pointer]:
+                  - /url: https://venezuelatebusca.com
+            - text: ›
+          - generic [ref=e64]:
+            - link [ref=e65] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000111qca5ftb14x
+            - generic [ref=e66]:
+              - link "Desaparecidos Terremoto Venezuela Portal ciudadano con +58.000 reportes. Busca por nombre, cédula o apellido. Disponible desde cualquier país." [ref=e67] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000111qca5ftb14x
+                - paragraph [ref=e68]: Desaparecidos Terremoto Venezuela
+                - paragraph [ref=e69]: Portal ciudadano con +58.000 reportes. Busca por nombre, cédula o apellido. Disponible desde cualquier país.
+              - generic [ref=e70]:
+                - link "Gratuito" [ref=e71] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltv000111qca5ftb14x
+                  - generic [ref=e72]: Gratuito
+                - link "Visitar ↗" [ref=e73] [cursor=pointer]:
+                  - /url: https://desaparecidosterremotovenezuela.com
+            - text: ›
+      - generic [ref=e74]:
+        - button "Donar dinero 10 −" [ref=e76]:
+          - generic [ref=e77]:
+            - img [ref=e79]
+            - generic [ref=e81]: Donar dinero
+            - generic [ref=e82]: "10"
+          - generic [ref=e83]: −
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - link [ref=e86] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lug000i11qc0o8r1shs
+            - generic [ref=e87]:
+              - link "Global Empowerment Mission (GEM) Sede en Doral, FL. Desplegados activamente en Venezuela. Historial verificado desde 2018. Aliado de We Love Foundation." [ref=e88] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34lug000i11qc0o8r1shs
+                - paragraph [ref=e89]: Global Empowerment Mission (GEM)
+                - paragraph [ref=e90]: Sede en Doral, FL. Desplegados activamente en Venezuela. Historial verificado desde 2018. Aliado de We Love Foundation.
+              - generic [ref=e91]:
+                - link [ref=e92] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34lug000i11qc0o8r1shs
+                - link "Visitar ↗" [ref=e93] [cursor=pointer]:
+                  - /url: https://gemusa.org
+            - text: ›
+          - generic [ref=e94]:
+            - link [ref=e95] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lug000j11qc8xpr6ezv
+            - generic [ref=e96]:
+              - link "VACC Foundation — Cámara Venezolana-Americana ONGs de empresas venezolanas en Doral. Fondos para logística y distribución en Venezuela." [ref=e97] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34lug000j11qc8xpr6ezv
+                - paragraph [ref=e98]: VACC Foundation — Cámara Venezolana-Americana
+                - paragraph [ref=e99]: ONGs de empresas venezolanas en Doral. Fondos para logística y distribución en Venezuela.
+              - generic [ref=e100]:
+                - link [ref=e101] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34lug000j11qc8xpr6ezv
+                - link "Visitar ↗" [ref=e102] [cursor=pointer]:
+                  - /url: https://vaccfoundation.org
+            - text: ›
+          - generic [ref=e103]:
+            - link [ref=e104] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lug000k11qcdjuz3wh9
+            - generic [ref=e105]:
+              - link "GlobalGiving — Venezuela Earthquake Relief Fund Canaliza a múltiples ONGs verificadas incluyendo UNICEF USA y Save the Children." [ref=e106] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34lug000k11qcdjuz3wh9
+                - paragraph [ref=e107]: GlobalGiving — Venezuela Earthquake Relief Fund
+                - paragraph [ref=e108]: Canaliza a múltiples ONGs verificadas incluyendo UNICEF USA y Save the Children.
+              - generic [ref=e109]:
+                - link [ref=e110] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34lug000k11qcdjuz3wh9
+                - link "Visitar ↗" [ref=e111] [cursor=pointer]:
+                  - /url: https://globalgiving.org/projects/venezuela-earthquake-relief-fund
+            - text: ›
+          - generic [ref=e112]:
+            - link [ref=e113] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lug000l11qcrffe2c1w
+            - generic [ref=e114]:
+              - link "Direct Relief — Venezuela 100% de donaciones designadas para Venezuela van exclusivamente a esa respuesta." [ref=e115] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34lug000l11qcrffe2c1w
+                - paragraph [ref=e116]: Direct Relief — Venezuela
+                - paragraph [ref=e117]: 100% de donaciones designadas para Venezuela van exclusivamente a esa respuesta.
+              - generic [ref=e118]:
+                - link [ref=e119] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34lug000l11qcrffe2c1w
+                - link "Visitar ↗" [ref=e120] [cursor=pointer]:
+                  - /url: https://directrelief.org
+            - text: ›
+          - generic [ref=e121]:
+            - link [ref=e122] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000211qcpjpcrsg4
+            - generic [ref=e123]:
+              - link "UNICEF — Fondo Emergencia Venezuela Agencia ONU para la infancia. Appeal dedicado al sismo del 24-jun-2026. Estima necesitar $52M. Donaciones aceptadas desde cualquier país vía web local de UNICEF." [ref=e124] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000211qcpjpcrsg4
+                - paragraph [ref=e125]: UNICEF — Fondo Emergencia Venezuela
+                - paragraph [ref=e126]: Agencia ONU para la infancia. Appeal dedicado al sismo del 24-jun-2026. Estima necesitar $52M. Donaciones aceptadas desde cualquier país vía web local de UNICEF.
+              - generic [ref=e127]:
+                - link [ref=e128] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltv000211qcpjpcrsg4
+                - link "Visitar ↗" [ref=e129] [cursor=pointer]:
+                  - /url: https://unicef.org
+            - text: ›
+          - generic [ref=e130]:
+            - link [ref=e131] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000311qczopq579o
+            - generic [ref=e132]:
+              - link "Cáritas Internationalis — Venezuela Red Cáritas desplegada en Venezuela desde el 25-jun. Canal de donación internacional activo con IBAN para transferencias y opción online. Fundada 1997, presencia territorial real." [ref=e133] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000311qczopq579o
+                - paragraph [ref=e134]: Cáritas Internationalis — Venezuela
+                - paragraph [ref=e135]: Red Cáritas desplegada en Venezuela desde el 25-jun. Canal de donación internacional activo con IBAN para transferencias y opción online. Fundada 1997, presencia territorial real.
+              - generic [ref=e136]:
+                - link [ref=e137] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltv000311qczopq579o
+                - link "Visitar ↗" [ref=e138] [cursor=pointer]:
+                  - /url: https://donate.caritas.org/venezuela/
+            - text: ›
+          - generic [ref=e139]:
+            - link [ref=e140] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000411qcrs8ggi2f
+            - generic [ref=e141]:
+              - link "International Rescue Committee (IRC) 90+ años de experiencia humanitaria. Equipos en terreno en Venezuela entregando salud, agua, nutrición y protección. Máximas calificaciones en Charity Navigator." [ref=e142] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000411qcrs8ggi2f
+                - paragraph [ref=e143]: International Rescue Committee (IRC)
+                - paragraph [ref=e144]: 90+ años de experiencia humanitaria. Equipos en terreno en Venezuela entregando salud, agua, nutrición y protección. Máximas calificaciones en Charity Navigator.
+              - generic [ref=e145]:
+                - link [ref=e146] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltv000411qcrs8ggi2f
+                - link "Visitar ↗" [ref=e147] [cursor=pointer]:
+                  - /url: https://rescue.org
+            - text: ›
+          - generic [ref=e148]:
+            - link [ref=e149] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000511qc7wnamotb
+            - generic [ref=e150]:
+              - link "GlobalGiving — Venezuela Earthquake Relief Fund Canaliza donaciones a ONGs locales verificadas. Donaciones en USD desde cualquier país." [ref=e151] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000511qc7wnamotb
+                - paragraph [ref=e152]: GlobalGiving — Venezuela Earthquake Relief Fund
+                - paragraph [ref=e153]: Canaliza donaciones a ONGs locales verificadas. Donaciones en USD desde cualquier país.
+              - generic [ref=e154]:
+                - link [ref=e155] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltv000511qc7wnamotb
+                - link "Visitar ↗" [ref=e156] [cursor=pointer]:
+                  - /url: https://globalgiving.org/projects/venezuela-earthquake-relief-fund
+            - text: ›
+          - generic [ref=e157]:
+            - link [ref=e158] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000611qcnrb6elet
+            - generic [ref=e159]:
+              - link "Direct Relief — Venezuela 100% de donaciones designadas a Venezuela van a esa respuesta. Activos en Venezuela con historial verificado." [ref=e160] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000611qcnrb6elet
+                - paragraph [ref=e161]: Direct Relief — Venezuela
+                - paragraph [ref=e162]: 100% de donaciones designadas a Venezuela van a esa respuesta. Activos en Venezuela con historial verificado.
+              - generic [ref=e163]:
+                - link [ref=e164] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltv000611qcnrb6elet
+                - link "Visitar ↗" [ref=e165] [cursor=pointer]:
+                  - /url: https://directrelief.org
+            - text: ›
+          - generic [ref=e166]:
+            - link [ref=e167] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000711qc6f32yj6t
+            - generic [ref=e168]:
+              - link "World Central Kitchen — Venezuela Fundación del chef José Andrés. Desplegados en Venezuela distribuyendo comidas. Fondo dedicado al terremoto activo en wck.org." [ref=e169] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000711qc6f32yj6t
+                - paragraph [ref=e170]: World Central Kitchen — Venezuela
+                - paragraph [ref=e171]: Fundación del chef José Andrés. Desplegados en Venezuela distribuyendo comidas. Fondo dedicado al terremoto activo en wck.org.
+              - generic [ref=e172]:
+                - link [ref=e173] [cursor=pointer]:
+                  - /url: /es/recursos/cmqy34ltv000711qc6f32yj6t
+                - link "Visitar ↗" [ref=e174] [cursor=pointer]:
+                  - /url: https://wck.org
+            - text: ›
+      - generic [ref=e175]:
+        - button "Donar físicamente 1 −" [ref=e177]:
+          - generic [ref=e178]:
+            - img [ref=e180]
+            - generic [ref=e184]: Donar físicamente
+            - generic [ref=e185]: "1"
+          - generic [ref=e186]: −
+        - link "Miami — Nu Stadium (Inter Miami CF + GEM) Recolección 26 jun – 3 jul, 9am–3pm. También durante concierto Carín León 28 jun 6–8:30pm. Gratuito ›" [ref=e189] [cursor=pointer]:
+          - /url: /es/recursos/cmqy34lug000n11qc7r91qefi
+          - generic [ref=e190]:
+            - paragraph [ref=e191]: Miami — Nu Stadium (Inter Miami CF + GEM)
+            - paragraph [ref=e192]: Recolección 26 jun – 3 jul, 9am–3pm. También durante concierto Carín León 28 jun 6–8:30pm.
+            - generic [ref=e194]: Gratuito
+          - generic [ref=e195]: ›
+      - button "Cómo ser puente digital Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela ▼" [ref=e200]:
+        - generic [ref=e201]:
+          - paragraph [ref=e202]: Cómo ser puente digital
+          - paragraph [ref=e203]: Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela
+        - generic [ref=e204]: ▼
+      - generic [ref=e205]:
+        - button "Apoyo psicológico 1 −" [ref=e207]:
+          - generic [ref=e208]:
+            - img [ref=e210]
+            - generic [ref=e218]: Apoyo psicológico
+            - generic [ref=e219]: "1"
+          - generic [ref=e220]: −
+        - generic [ref=e222]:
+          - link [ref=e223] [cursor=pointer]:
+            - /url: /es/recursos/cmqy34ltv000811qcr21fbgc5
+          - generic [ref=e224]:
+            - link "PsicoLínea Venezuela (apoyo desde exterior) Canal de asistencia psicológica gratuita operado desde Venezuela. Accesible por llamada internacional para quien tenga familia allá y necesite orientación." [ref=e225] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000811qcr21fbgc5
+              - paragraph [ref=e226]: PsicoLínea Venezuela (apoyo desde exterior)
+              - paragraph [ref=e227]: Canal de asistencia psicológica gratuita operado desde Venezuela. Accesible por llamada internacional para quien tenga familia allá y necesite orientación.
+            - generic [ref=e228]:
+              - link "Gratuito" [ref=e229] [cursor=pointer]:
+                - /url: /es/recursos/cmqy34ltv000811qcr21fbgc5
+                - generic [ref=e230]: Gratuito
+              - link "Llamar" [ref=e231] [cursor=pointer]:
+                - /url: tel:0414121788204241723981
+          - text: ›
+      - button "Reportar información desactualizada" [ref=e235]
+    - contentinfo [ref=e236]:
+      - paragraph [ref=e237]: VeConecta es una iniciativa ciudadana independiente. Verificamos la información antes de publicarla, pero los recursos cambian rápido. Confirma siempre antes de actuar.
+      - paragraph [ref=e238]:
+        - text: ¿Tienes un recurso para agregar?
+        - link "veconecta.org@gmail.com" [ref=e239] [cursor=pointer]:
+          - /url: mailto:veconecta.org@gmail.com
+  - button "Open Next.js Dev Tools" [ref=e245] [cursor=pointer]:
+    - img [ref=e246]

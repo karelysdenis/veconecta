@@ -1,0 +1,372 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "VE conecta" [ref=e3] [cursor=pointer]:
+      - /url: /es
+      - generic [ref=e4]:
+        - generic [ref=e5]: VE
+        - generic [ref=e6]: conecta
+    - generic [ref=e7]:
+      - button "Buscar" [ref=e8]:
+        - img [ref=e9]
+      - button "Cambiar idioma" [ref=e13]:
+        - img [ref=e14]
+      - button "Menú" [ref=e16]:
+        - img [ref=e17]
+  - generic [ref=e18]:
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - link "Inicio" [ref=e21] [cursor=pointer]:
+          - /url: /es
+        - generic [ref=e22]: ›
+        - generic [ref=e23]: España
+      - generic [ref=e24]:
+        - heading "España" [level=1] [ref=e26]
+        - paragraph [ref=e27]: 26 recursos verificados · actualizado 28 jun 2026
+      - generic [ref=e28]:
+        - button "Buscar familiares 4 −" [ref=e30]:
+          - generic [ref=e31]:
+            - img [ref=e33]
+            - generic [ref=e38]: Buscar familiares
+            - generic [ref=e39]: "4"
+          - generic [ref=e40]: −
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - link "Venezuela Te Busca" [ref=e43] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92e00014l1v6e9q0n7c
+            - generic [ref=e44]:
+              - generic [ref=e45]:
+                - paragraph [ref=e46]: Venezuela Te Busca
+                - paragraph [ref=e47]: Base de datos centralizada con más de 50.000 reportes activos
+                - link "Visitar ↗" [ref=e49] [cursor=pointer]:
+                  - /url: https://venezuelatebusca.com
+              - generic [ref=e50]: ›
+          - generic [ref=e51]:
+            - link "Venezuela Te Busca" [ref=e52] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lud000911qcdqayj3fu
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - paragraph [ref=e55]: Venezuela Te Busca
+                - paragraph [ref=e56]: Base de datos centralizada con +50.000 reportes. Busca por nombre o cédula.
+                - generic [ref=e57]:
+                  - generic [ref=e58]: Gratuito
+                  - link "Visitar ↗" [ref=e59] [cursor=pointer]:
+                    - /url: https://venezuelatebusca.com
+              - generic [ref=e60]: ›
+          - generic [ref=e61]:
+            - link "Venezuela Te Busca" [ref=e62] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltu000011qc7u61oy88
+            - generic [ref=e63]:
+              - generic [ref=e64]:
+                - paragraph [ref=e65]: Venezuela Te Busca
+                - paragraph [ref=e66]: Base de datos centralizada con +50.000 reportes. Busca por nombre o cédula desde cualquier país.
+                - generic [ref=e67]:
+                  - generic [ref=e68]: Gratuito
+                  - link "Visitar ↗" [ref=e69] [cursor=pointer]:
+                    - /url: https://venezuelatebusca.com
+              - generic [ref=e70]: ›
+          - generic [ref=e71]:
+            - link "Desaparecidos Terremoto Venezuela" [ref=e72] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000111qca5ftb14x
+            - generic [ref=e73]:
+              - generic [ref=e74]:
+                - paragraph [ref=e75]: Desaparecidos Terremoto Venezuela
+                - paragraph [ref=e76]: Portal ciudadano con +58.000 reportes. Busca por nombre, cédula o apellido. Disponible desde cualquier país.
+                - generic [ref=e77]:
+                  - generic [ref=e78]: Gratuito
+                  - link "Visitar ↗" [ref=e79] [cursor=pointer]:
+                    - /url: https://desaparecidosterremotovenezuela.com
+              - generic [ref=e80]: ›
+      - generic [ref=e81]:
+        - button "Llamar gratis a Venezuela 2 −" [ref=e83]:
+          - generic [ref=e84]:
+            - img [ref=e86]
+            - generic [ref=e88]: Llamar gratis a Venezuela
+            - generic [ref=e89]: "2"
+          - generic [ref=e90]: −
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - link "Movistar España" [ref=e93] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92s000d4l1vrer43u3f
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - paragraph [ref=e96]: Movistar España
+                - paragraph [ref=e97]: Llamadas gratuitas a Venezuela habilitadas para clientes Movistar desde el 25 de junio.
+              - generic [ref=e98]: ›
+          - generic [ref=e99]:
+            - link "MasOrange" [ref=e100] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92t000f4l1vts0ioyxs
+            - generic [ref=e101]:
+              - generic [ref=e102]:
+                - paragraph [ref=e103]: MasOrange
+                - paragraph [ref=e104]: Llamadas gratuitas a Venezuela habilitadas para clientes MasOrange desde el 25 de junio.
+              - generic [ref=e105]: ›
+      - generic [ref=e106]:
+        - button "Donar dinero 10 −" [ref=e108]:
+          - generic [ref=e109]:
+            - img [ref=e111]
+            - generic [ref=e113]: Donar dinero
+            - generic [ref=e114]: "10"
+          - generic [ref=e115]: −
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - link "World Central Kitchen" [ref=e118] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92n00074l1vdzx7vsoi
+            - generic [ref=e119]:
+              - generic [ref=e120]:
+                - paragraph [ref=e121]: World Central Kitchen
+                - paragraph [ref=e122]: Desplegada en Venezuela distribuyendo comidas. Bizum disponible desde España.
+                - paragraph [ref=e123]: "Bizum: 03843"
+                - link "Visitar ↗" [ref=e125] [cursor=pointer]:
+                  - /url: https://wck.org
+              - generic [ref=e126]: ›
+          - generic [ref=e127]:
+            - link "Cáritas Española — Bizum Venezuela" [ref=e128] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lud000c11qcr59obwxi
+            - generic [ref=e129]:
+              - generic [ref=e130]:
+                - paragraph [ref=e131]: Cáritas Española — Bizum Venezuela
+                - paragraph [ref=e132]: Bizum al 0089. Movilizó 300.000€ para Venezuela. Canal verificado por Revista Haz y medios nacionales.
+                - paragraph [ref=e133]: "Bizum: 0089"
+                - link "Visitar ↗" [ref=e135] [cursor=pointer]:
+                  - /url: https://www.caritas.es
+              - generic [ref=e136]: ›
+          - generic [ref=e137]:
+            - link "World Central Kitchen — Bizum" [ref=e138] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lud000d11qchs5t8r2v
+            - generic [ref=e139]:
+              - generic [ref=e140]:
+                - paragraph [ref=e141]: World Central Kitchen — Bizum
+                - paragraph [ref=e142]: Bizum al 03843. Fundación del chef José Andrés. Desplegados en Venezuela distribuyendo comidas.
+                - paragraph [ref=e143]: "Bizum: 03843"
+                - link "Visitar ↗" [ref=e145] [cursor=pointer]:
+                  - /url: https://wck.org
+              - generic [ref=e146]: ›
+          - generic [ref=e147]:
+            - link "We Love Foundation — GoFundMe" [ref=e148] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lud000e11qcvbgyxz8z
+            - generic [ref=e149]:
+              - generic [ref=e150]:
+                - paragraph [ref=e151]: We Love Foundation — GoFundMe
+                - paragraph [ref=e152]: Fundación con 13 años de trayectoria, aliada de GEM. Campaña superó su meta inicial varias veces.
+                - link "Visitar ↗" [ref=e154] [cursor=pointer]:
+                  - /url: https://gofundme.com/f/emergency-relief-for-venezuela-earthquake-victims
+              - generic [ref=e155]: ›
+          - generic [ref=e156]:
+            - link "UNICEF — Fondo Emergencia Venezuela" [ref=e157] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000211qcpjpcrsg4
+            - generic [ref=e158]:
+              - generic [ref=e159]:
+                - paragraph [ref=e160]: UNICEF — Fondo Emergencia Venezuela
+                - paragraph [ref=e161]: Agencia ONU para la infancia. Appeal dedicado al sismo del 24-jun-2026. Estima necesitar $52M. Donaciones aceptadas desde cualquier país vía web local de UNICEF.
+                - link "Visitar ↗" [ref=e163] [cursor=pointer]:
+                  - /url: https://unicef.org
+              - generic [ref=e164]: ›
+          - generic [ref=e165]:
+            - link "Cáritas Internationalis — Venezuela" [ref=e166] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000311qczopq579o
+            - generic [ref=e167]:
+              - generic [ref=e168]:
+                - paragraph [ref=e169]: Cáritas Internationalis — Venezuela
+                - paragraph [ref=e170]: Red Cáritas desplegada en Venezuela desde el 25-jun. Canal de donación internacional activo con IBAN para transferencias y opción online. Fundada 1997, presencia territorial real.
+                - link "Visitar ↗" [ref=e172] [cursor=pointer]:
+                  - /url: https://donate.caritas.org/venezuela/
+              - generic [ref=e173]: ›
+          - generic [ref=e174]:
+            - link "International Rescue Committee (IRC)" [ref=e175] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000411qcrs8ggi2f
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - paragraph [ref=e178]: International Rescue Committee (IRC)
+                - paragraph [ref=e179]: 90+ años de experiencia humanitaria. Equipos en terreno en Venezuela entregando salud, agua, nutrición y protección. Máximas calificaciones en Charity Navigator.
+                - link "Visitar ↗" [ref=e181] [cursor=pointer]:
+                  - /url: https://rescue.org
+              - generic [ref=e182]: ›
+          - generic [ref=e183]:
+            - link "GlobalGiving — Venezuela Earthquake Relief Fund" [ref=e184] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000511qc7wnamotb
+            - generic [ref=e185]:
+              - generic [ref=e186]:
+                - paragraph [ref=e187]: GlobalGiving — Venezuela Earthquake Relief Fund
+                - paragraph [ref=e188]: Canaliza donaciones a ONGs locales verificadas. Donaciones en USD desde cualquier país.
+                - link "Visitar ↗" [ref=e190] [cursor=pointer]:
+                  - /url: https://globalgiving.org/projects/venezuela-earthquake-relief-fund
+              - generic [ref=e191]: ›
+          - generic [ref=e192]:
+            - link "Direct Relief — Venezuela" [ref=e193] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000611qcnrb6elet
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - paragraph [ref=e196]: Direct Relief — Venezuela
+                - paragraph [ref=e197]: 100% de donaciones designadas a Venezuela van a esa respuesta. Activos en Venezuela con historial verificado.
+                - link "Visitar ↗" [ref=e199] [cursor=pointer]:
+                  - /url: https://directrelief.org
+              - generic [ref=e200]: ›
+          - generic [ref=e201]:
+            - link "World Central Kitchen — Venezuela" [ref=e202] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000711qc6f32yj6t
+            - generic [ref=e203]:
+              - generic [ref=e204]:
+                - paragraph [ref=e205]: World Central Kitchen — Venezuela
+                - paragraph [ref=e206]: Fundación del chef José Andrés. Desplegados en Venezuela distribuyendo comidas. Fondo dedicado al terremoto activo en wck.org.
+                - link "Visitar ↗" [ref=e208] [cursor=pointer]:
+                  - /url: https://wck.org
+              - generic [ref=e209]: ›
+      - generic [ref=e210]:
+        - button "Enviar dinero a familia 2 −" [ref=e212]:
+          - generic [ref=e213]:
+            - img [ref=e215]
+            - generic [ref=e218]: Enviar dinero a familia
+            - generic [ref=e219]: "2"
+          - generic [ref=e220]: −
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - link "Fonmoney" [ref=e223] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92o00094l1vxfg54mdg
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - paragraph [ref=e226]: Fonmoney
+                - paragraph [ref=e227]: Opera desde cuentas bancarias españolas. Revisar tarifas actuales en su web.
+                - link "Visitar ↗" [ref=e229] [cursor=pointer]:
+                  - /url: https://fonmoney.com
+              - generic [ref=e230]: ›
+          - generic [ref=e231]:
+            - link "Retorna" [ref=e232] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92q000b4l1vqp4ef643
+            - generic [ref=e233]:
+              - generic [ref=e234]:
+                - paragraph [ref=e235]: Retorna
+                - paragraph [ref=e236]: "App española para remesas a Venezuela. Alerta: han proliferado estafas — usar solo servicios con historial documentado."
+                - link "Visitar ↗" [ref=e238] [cursor=pointer]:
+                  - /url: https://retorna.app
+              - generic [ref=e239]: ›
+      - generic [ref=e240]:
+        - button "Donar físicamente 4 −" [ref=e242]:
+          - generic [ref=e243]:
+            - img [ref=e245]
+            - generic [ref=e249]: Donar físicamente
+            - generic [ref=e250]: "4"
+          - generic [ref=e251]: −
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - link "Fundación Madrina — Madrid" [ref=e254] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92v000h4l1vi1ff4qky
+            - generic [ref=e255]:
+              - generic [ref=e256]:
+                - paragraph [ref=e257]: Fundación Madrina — Madrid
+                - paragraph [ref=e258]: Canalizado a través de la Diócesis de Caracas. Punto activo con envíos verificados.
+              - generic [ref=e259]: ›
+          - generic [ref=e260]:
+            - link "Asocaven — Barcelona" [ref=e261] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92w000j4l1vyw4t2zda
+            - generic [ref=e262]:
+              - generic [ref=e263]:
+                - paragraph [ref=e264]: Asocaven — Barcelona
+                - paragraph [ref=e265]: Recogida de productos básicos. Confirmar horario antes de ir.
+              - generic [ref=e266]: ›
+          - generic [ref=e267]:
+            - link "AVEC — Valencia" [ref=e268] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm92y000l4l1vs3u15tdp
+            - generic [ref=e269]:
+              - generic [ref=e270]:
+                - paragraph [ref=e271]: AVEC — Valencia
+                - paragraph [ref=e272]: Asociación Venezolanos Comunitat Valenciana. Coordinación con autoridades locales activa.
+              - generic [ref=e273]: ›
+          - generic [ref=e274]:
+            - link "Madrid — Refugiados Sin Fronteras / Diáspora en Movimiento" [ref=e275] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lud000f11qce7wsnwjl
+            - generic [ref=e276]:
+              - generic [ref=e277]:
+                - paragraph [ref=e278]: Madrid — Refugiados Sin Fronteras / Diáspora en Movimiento
+                - paragraph [ref=e279]: Calle Matilde Landa 26, Madrid. Sáb 27 y dom 28 junio, 11:00–18:00h.
+                - generic [ref=e281]: Gratuito
+              - generic [ref=e282]: ›
+      - button "Cómo ser puente digital Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela ▼" [ref=e287]:
+        - generic [ref=e288]:
+          - paragraph [ref=e289]: Cómo ser puente digital
+          - paragraph [ref=e290]: Si tienes conexión estable, puedes ayudar a familiares sin internet en Venezuela
+        - generic [ref=e291]: ▼
+      - generic [ref=e292]:
+        - button "Trámites consulares 1 −" [ref=e294]:
+          - generic [ref=e295]:
+            - img [ref=e297]
+            - generic [ref=e299]: Trámites consulares
+            - generic [ref=e300]: "1"
+          - generic [ref=e301]: −
+        - generic [ref=e303]:
+          - link "Consulado de Venezuela en Madrid" [ref=e304] [cursor=pointer]:
+            - /url: /es/recursos/cmqwnm92z000n4l1vqhy2y3rh
+          - generic [ref=e305]:
+            - generic [ref=e306]:
+              - paragraph [ref=e307]: Consulado de Venezuela en Madrid
+              - paragraph [ref=e308]: "Gestión de documentos de emergencia: certificados de defunción, pasaportes perdidos. Tiempos extendidos por colapso administrativo."
+              - link "Visitar ↗" [ref=e310] [cursor=pointer]:
+                - /url: https://embavenez.es
+            - generic [ref=e311]: ›
+      - generic [ref=e312]:
+        - button "Apoyo psicológico 3 −" [ref=e314]:
+          - generic [ref=e315]:
+            - img [ref=e317]
+            - generic [ref=e325]: Apoyo psicológico
+            - generic [ref=e326]: "3"
+          - generic [ref=e327]: −
+        - generic [ref=e328]:
+          - generic [ref=e329]:
+            - link "Teléfono de la Esperanza" [ref=e330] [cursor=pointer]:
+              - /url: /es/recursos/cmqwnm930000p4l1vn4jm3947
+            - generic [ref=e331]:
+              - generic [ref=e332]:
+                - paragraph [ref=e333]: Teléfono de la Esperanza
+                - paragraph [ref=e334]: Crisis emocionales, 24 horas, gratuito desde cualquier operadora en España.
+                - generic [ref=e335]:
+                  - generic [ref=e336]: Gratuito
+                  - link "Llamar" [ref=e337] [cursor=pointer]:
+                    - /url: tel:717003717
+              - generic [ref=e338]: ›
+          - generic [ref=e339]:
+            - link "Teléfono de la Esperanza" [ref=e340] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34lud000g11qcg15fo8cn
+            - generic [ref=e341]:
+              - generic [ref=e342]:
+                - paragraph [ref=e343]: Teléfono de la Esperanza
+                - paragraph [ref=e344]: Atención psicológica gratuita 24 horas en España. Atiende crisis emocionales y duelo.
+                - generic [ref=e345]:
+                  - generic [ref=e346]: Gratuito
+                  - link "Visitar ↗" [ref=e347] [cursor=pointer]:
+                    - /url: https://telefonodelaesperanza.org
+                  - link "Llamar" [ref=e348] [cursor=pointer]:
+                    - /url: tel:717003717
+              - generic [ref=e349]: ›
+          - generic [ref=e350]:
+            - link "PsicoLínea Venezuela (apoyo desde exterior)" [ref=e351] [cursor=pointer]:
+              - /url: /es/recursos/cmqy34ltv000811qcr21fbgc5
+            - generic [ref=e352]:
+              - generic [ref=e353]:
+                - paragraph [ref=e354]: PsicoLínea Venezuela (apoyo desde exterior)
+                - paragraph [ref=e355]: Canal de asistencia psicológica gratuita operado desde Venezuela. Accesible por llamada internacional para quien tenga familia allá y necesite orientación.
+                - generic [ref=e356]:
+                  - generic [ref=e357]: Gratuito
+                  - link "Llamar" [ref=e358] [cursor=pointer]:
+                    - /url: tel:0414121788204241723981
+              - generic [ref=e359]: ›
+      - button "Reportar información desactualizada" [ref=e363]
+    - contentinfo [ref=e364]:
+      - paragraph [ref=e365]: VeConecta es una iniciativa ciudadana independiente. Verificamos la información antes de publicarla, pero los recursos cambian rápido. Confirma siempre antes de actuar.
+      - paragraph [ref=e366]:
+        - text: ¿Tienes un recurso para agregar?
+        - link "veconecta.org@gmail.com" [ref=e367] [cursor=pointer]:
+          - /url: mailto:veconecta.org@gmail.com
+  - navigation [ref=e369]:
+    - link "Inicio" [ref=e370] [cursor=pointer]:
+      - /url: /es
+      - img [ref=e371]
+      - generic [ref=e373]: Inicio
+    - generic [ref=e374]:
+      - button "Cambiar idioma" [ref=e376]:
+        - img [ref=e377]
+      - generic [ref=e379]: Idioma
+    - generic [ref=e380]:
+      - button "Compartir" [ref=e381]:
+        - img [ref=e382]
+      - generic [ref=e384]: Compartir
+  - button "Open Next.js Dev Tools" [ref=e390] [cursor=pointer]:
+    - img [ref=e391]
