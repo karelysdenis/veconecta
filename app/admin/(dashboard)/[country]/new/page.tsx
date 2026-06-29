@@ -4,6 +4,8 @@ import { getSession } from '@/lib/lucia'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
+import { UrlField } from '@/components/admin/UrlField'
+import { LanguageTabs } from '@/components/admin/LanguageTabs'
 
 const CATEGORIES = Object.values(ResourceCategory)
 
@@ -16,6 +18,8 @@ export default async function NewResourcePage({
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
   if (user.role !== 'ADMIN') redirect('/admin')
+
+  const countryRecord = await prisma.country.findUnique({ where: { slug: country } })
 
   async function create(fd: FormData) {
     'use server'
@@ -37,6 +41,7 @@ export default async function NewResourcePage({
         free: fd.get('free') === 'on',
         notesEs: (fd.get('notesEs') as string).trim() || null,
         notesEn: (fd.get('notesEn') as string).trim() || null,
+        notesPt: (fd.get('notesPt') as string).trim() || null,
         expiresAt: expiresRaw ? new Date(expiresRaw) : null,
         verifiedAt: new Date(),
         verifiedBy: user.email,
@@ -46,30 +51,35 @@ export default async function NewResourcePage({
     redirect(`/admin/${country}`)
   }
 
+  const countryName = countryRecord?.nameEs ?? country
+
   return (
     <div className="max-w-2xl">
-      <div className="flex items-center gap-2 mb-6 text-sm">
-        <Link href={`/admin/${country}`} className="text-gray-500 hover:underline">
-          ← {country}
+      <nav className="flex items-center gap-2 mb-6 text-sm">
+        <Link href="/admin" className="text-gray-400 hover:text-gray-700">Inicio</Link>
+        <span className="text-gray-300">/</span>
+        <Link href={`/admin/${country}`} className="text-gray-400 hover:text-gray-700">
+          {countryRecord?.flag} {countryName}
         </Link>
         <span className="text-gray-300">/</span>
         <span className="text-gray-900 font-medium">Nuevo recurso</span>
-      </div>
+      </nav>
 
       <form action={create} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
         <F label="Nombre" name="name" required />
 
         <div className="grid grid-cols-2 gap-4">
           <Sel label="Categoría" name="category" opts={CATEGORIES} />
+          <F label="Ciudad / Región" name="city" />
         </div>
 
+        <UrlField />
+
         <div className="grid grid-cols-2 gap-4">
-          <F label="Ciudad" name="city" />
+          <F label="Teléfono / WhatsApp" name="phone" />
           <F label="Bizum" name="bizum" />
         </div>
 
-        <F label="URL" name="url" type="url" />
-        <F label="Teléfono / WhatsApp" name="phone" />
         <F label="Dirección" name="address" />
         <F label="Horario" name="schedule" />
         <F label="Vence (fecha)" name="expiresAt" type="date" />
@@ -79,8 +89,10 @@ export default async function NewResourcePage({
           <span className="text-sm text-gray-700">Gratuito</span>
         </label>
 
-        <TA label="Notas ES" name="notesEs" />
-        <TA label="Notas EN" name="notesEn" />
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-2">Descripción por idioma</p>
+          <LanguageTabs />
+        </div>
 
         <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
           El recurso se crea como borrador. Publícalo desde la página del país cuando esté listo.
@@ -132,19 +144,6 @@ function Sel({ label, name, opts }: { label: string; name: string; opts: string[
           <option key={o} value={o}>{o}</option>
         ))}
       </select>
-    </div>
-  )
-}
-
-function TA({ label, name }: { label: string; name: string }) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      <textarea
-        name={name}
-        rows={3}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
-      />
     </div>
   )
 }

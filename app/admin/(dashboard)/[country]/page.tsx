@@ -69,6 +69,11 @@ export default async function AdminCountryPage({
 
   return (
     <div className="space-y-8">
+      <div>
+        <Link href="/admin" className="text-sm text-gray-500 hover:underline">
+          ← Inicio
+        </Link>
+      </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="text-3xl">{countryRecord.flag}</span>

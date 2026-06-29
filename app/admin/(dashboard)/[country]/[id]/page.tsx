@@ -4,6 +4,8 @@ import { getSession } from '@/lib/lucia'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
+import { UrlField } from '@/components/admin/UrlField'
+import { LanguageTabs } from '@/components/admin/LanguageTabs'
 
 const CATEGORIES = Object.values(ResourceCategory)
 const STATUSES = Object.values(ResourceStatus)
@@ -18,7 +20,10 @@ export default async function EditResourcePage({
   if (!user) redirect('/admin/login')
   if (user.role === 'EDITOR' && user.countrySlug !== country) redirect('/admin')
 
-  const resource = await prisma.resource.findUnique({ where: { id } })
+  const [resource, countryRecord] = await Promise.all([
+    prisma.resource.findUnique({ where: { id } }),
+    prisma.country.findUnique({ where: { slug: country } }),
+  ])
   if (!resource || resource.countrySlug !== country) notFound()
 
   async function save(fd: FormData) {
@@ -41,6 +46,7 @@ export default async function EditResourcePage({
         free: fd.get('free') === 'on',
         notesEs: (fd.get('notesEs') as string).trim() || null,
         notesEn: (fd.get('notesEn') as string).trim() || null,
+        notesPt: (fd.get('notesPt') as string).trim() || null,
         expiresAt: expiresRaw ? new Date(expiresRaw) : null,
       },
     })
@@ -57,13 +63,15 @@ export default async function EditResourcePage({
 
   return (
     <div className="max-w-2xl">
-      <div className="flex items-center gap-2 mb-6 text-sm">
-        <Link href={`/admin/${country}`} className="text-gray-500 hover:underline">
-          ← {country}
+      <nav className="flex items-center gap-2 mb-6 text-sm">
+        <Link href="/admin" className="text-gray-400 hover:text-gray-700">Inicio</Link>
+        <span className="text-gray-300">/</span>
+        <Link href={`/admin/${country}`} className="text-gray-400 hover:text-gray-700">
+          {countryRecord?.flag} {countryRecord?.nameEs ?? country}
         </Link>
         <span className="text-gray-300">/</span>
         <span className="text-gray-900 font-medium truncate">{resource.name}</span>
-      </div>
+      </nav>
 
       <form action={save} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
         <F label="Nombre" name="name" defaultValue={resource.name} required />
@@ -78,7 +86,7 @@ export default async function EditResourcePage({
           <F label="Bizum" name="bizum" defaultValue={resource.bizum ?? ''} />
         </div>
 
-        <F label="URL" name="url" type="url" defaultValue={resource.url ?? ''} />
+        <UrlField defaultValue={resource.url ?? ''} />
         <F label="Teléfono / WhatsApp" name="phone" defaultValue={resource.phone ?? ''} />
         <F label="Dirección" name="address" defaultValue={resource.address ?? ''} />
         <F label="Horario" name="schedule" defaultValue={resource.schedule ?? ''} />
@@ -89,8 +97,14 @@ export default async function EditResourcePage({
           <span className="text-sm text-gray-700">Gratuito</span>
         </label>
 
-        <TA label="Notas ES" name="notesEs" defaultValue={resource.notesEs ?? ''} />
-        <TA label="Notas EN" name="notesEn" defaultValue={resource.notesEn ?? ''} />
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-2">Descripción por idioma</p>
+          <LanguageTabs defaultValues={{
+            es: resource.notesEs ?? '',
+            en: resource.notesEn ?? '',
+            pt: resource.notesPt ?? '',
+          }} />
+        </div>
 
         <div className="flex justify-end gap-3 pt-2">
           <Link href={`/admin/${country}`} className="text-sm text-gray-600 hover:underline px-4 py-2">

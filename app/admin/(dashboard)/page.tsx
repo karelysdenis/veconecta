@@ -43,23 +43,45 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-bold text-gray-900 mb-4">Países</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold text-gray-900">Países</h1>
+          {user!.role === 'ADMIN' && (
+            <Link
+              href="/admin/countries/new"
+              className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+            >
+              + Nuevo país
+            </Link>
+          )}
+        </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {countries.map((country) => (
-            <Link
-              key={country.slug}
-              href={`/admin/${country.slug}`}
-              className="border border-gray-200 rounded-lg p-4 hover:border-red-300 hover:bg-red-50 transition-colors"
-            >
-              <div className="text-2xl mb-1">{country.flag}</div>
-              <div className="text-sm font-medium text-gray-900">{country.nameEs}</div>
-              {country._count.resources > 0 && (
-                <div className="text-xs text-amber-700 mt-1">
-                  {country._count.resources} borrador
-                  {country._count.resources !== 1 ? 'es' : ''}
-                </div>
+            <div key={country.slug} className="relative group">
+              <Link
+                href={`/admin/${country.slug}`}
+                className="block border border-gray-200 rounded-lg p-4 hover:border-red-300 hover:bg-red-50 transition-colors"
+              >
+                <div className="text-2xl mb-1">{country.flag}</div>
+                <div className="text-sm font-medium text-gray-900">{country.nameEs}</div>
+                {!country.active && (
+                  <div className="text-xs text-gray-400 mt-1">Inactivo</div>
+                )}
+                {country._count.resources > 0 && (
+                  <div className="text-xs text-amber-700 mt-1">
+                    {country._count.resources} borrador
+                    {country._count.resources !== 1 ? 'es' : ''}
+                  </div>
+                )}
+              </Link>
+              {user!.role === 'ADMIN' && (
+                <Link
+                  href={`/admin/countries/${country.slug}`}
+                  className="absolute top-2 right-2 text-xs text-gray-400 hover:text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  ⚙
+                </Link>
               )}
-            </Link>
+            </div>
           ))}
         </div>
       </div>
