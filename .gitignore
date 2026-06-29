@@ -44,6 +44,9 @@ next-env.d.ts
 # superpowers (implementation plan tooling)
 .superpowers/
 
+# playwright mcp
+.playwright-mcp/
+
 /app/generated/prisma
 
 .vercel
