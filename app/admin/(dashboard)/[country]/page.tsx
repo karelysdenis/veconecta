@@ -67,7 +67,8 @@ export default async function AdminCountryPage({
     'use server'
     const id = formData.get('id') as string
     const { user } = await getSession()
-    if (!user || user.role !== 'ADMIN') return
+    if (!user) return
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const now = new Date()
     await prisma.resource.update({
       where: { id },
@@ -88,7 +89,8 @@ export default async function AdminCountryPage({
     'use server'
     const id = formData.get('id') as string
     const { user } = await getSession()
-    if (!user || user.role !== 'ADMIN') return
+    if (!user) return
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     await prisma.resource.update({ where: { id }, data: { status: 'ARCHIVED' } })
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
@@ -108,14 +110,12 @@ export default async function AdminCountryPage({
           <Flag cca2={countryRecord.cca2} slug={countryRecord.slug} flag={countryRecord.flag} size={36} />
           <h1 className="text-xl font-bold text-gray-900">{countryRecord.nameEs}</h1>
         </div>
-        {user.role === 'ADMIN' && (
-          <Link
-            href={`/admin/${country}/new`}
-            className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
-          >
-            + Añadir recurso
-          </Link>
-        )}
+        <Link
+          href={`/admin/${country}/new`}
+          className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+        >
+          + Añadir recurso
+        </Link>
       </div>
 
       {drafts.length > 0 && (

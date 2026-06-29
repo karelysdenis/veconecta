@@ -47,7 +47,8 @@ export default async function EditResourcePage({
   async function save(fd: FormData) {
     'use server'
     const { user } = await getSession()
-    if (!user || user.role !== 'ADMIN') return
+    if (!user) return
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const expiresRaw = fd.get('expiresAt') as string
     await prisma.resource.update({
       where: { id },

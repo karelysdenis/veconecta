@@ -29,14 +29,15 @@ export default async function NewResourcePage({
   const { country } = await params
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
-  if (user.role !== 'ADMIN') redirect('/admin')
+  if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
 
   const countryRecord = await prisma.country.findUnique({ where: { slug: country } })
 
   async function create(fd: FormData) {
     'use server'
     const { user } = await getSession()
-    if (!user || user.role !== 'ADMIN') return
+    if (!user) return
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const expiresRaw = fd.get('expiresAt') as string
     await prisma.resource.create({
       data: {
