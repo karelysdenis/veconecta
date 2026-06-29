@@ -152,9 +152,6 @@ export default async function CountryPage({
               {name}
             </h1>
           </div>
-          <p className="font-sans font-light text-base text-[#808080]">
-            {locale === 'en' ? 'Select your city or region' : 'Selecciona tu ciudad o región'}
-          </p>
         </div>
 
         <CityList cities={realCities} countrySlug={slug} locale={locale} />
@@ -206,13 +203,6 @@ export default async function CountryPage({
             {name}
           </h1>
         </div>
-        {(totalResources > 0 || lastUpdated) && (
-          <p className="font-sans font-light text-base text-[#808080]">
-            {totalResources > 0 && `${totalResources} recursos verificados`}
-            {totalResources > 0 && lastUpdated && ' · '}
-            {lastUpdated && `actualizado ${lastUpdated}`}
-          </p>
-        )}
       </div>
 
       {CATEGORY_ORDER.map((category) => (
