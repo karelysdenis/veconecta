@@ -65,11 +65,6 @@ export default async function GlobalPage({
         <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
           {tHomepage('globalSection')}
         </h1>
-        {resources.length > 0 && (
-          <p className="font-sans font-light text-base text-[#808080] mt-1">
-            {resources.length} {locale === 'en' ? 'verified resources' : 'recursos verificados'}
-          </p>
-        )}
       </div>
 
       {CATEGORY_ORDER.map((cat) => (
