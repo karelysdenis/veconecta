@@ -71,25 +71,13 @@ export default async function HomePage({
         </h1>
       </div>
 
-      {/* Resource count */}
-      {totalResources > 0 && (
-        <div className="flex flex-col items-center gap-1 py-3 px-5">
-          <span className="font-sans font-semibold text-sm text-caribe">
-            {t('verifiedResources', { count: totalResources })}
-          </span>
-          {formattedDate && (
-            <span className="font-sans font-light text-sm text-[#808080]">
-              {t('updatedAt', { date: formattedDate })}
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Section label */}
-      <div className="bg-coco h-9 flex items-center px-5">
-        <p className="font-sans font-light text-[11px] text-[#808080] tracking-[0.02em] uppercase">
-          {t('sectionLabel')}
-        </p>
+      {/* Date band */}
+      <div className="bg-coco h-9 flex items-center justify-center px-5">
+        {formattedDate && (
+          <p className="font-sans font-light text-[11px] text-[#808080] tracking-[0.02em]">
+            {t('updatedAt', { date: formattedDate })}
+          </p>
+        )}
       </div>
 
       {/* Global resources row */}
