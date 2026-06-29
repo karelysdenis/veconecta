@@ -99,6 +99,9 @@ export default async function AdminCountryPage({
     await logAction({ userEmail: user.email, action: 'RESOURCE_CONFIRM', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
     revalidatePath(`/admin/${country}`)
     revalidatePath('/admin')
+    revalidatePath(`/es/${country}`)
+    revalidatePath(`/en/${country}`)
+    revalidatePath(`/pt/${country}`)
   }
 
   async function archiveResource(formData: FormData) {
