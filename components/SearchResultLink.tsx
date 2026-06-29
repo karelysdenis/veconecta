@@ -1,15 +1,20 @@
 import Link from 'next/link'
-import type { Resource } from '@prisma/client'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 
-type CountryFields = {
-  nameEs: string
-  nameEn: string
-  namePt: string | null
-  cca2: string | null
+type ResourceWithCountry = {
+  id: string
+  name: string
+  notesEs: string | null
+  notesEn: string | null
+  notesPt: string | null
+  countrySlug: string
+  country: {
+    nameEs: string
+    nameEn: string
+    namePt: string | null
+    cca2: string | null
+  }
 }
-
-type ResourceWithCountry = Resource & { country: CountryFields }
 
 export function SearchResultLink({
   resource,

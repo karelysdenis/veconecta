@@ -7,6 +7,17 @@ import { SearchInput } from '@/components/SearchInput'
 import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, type LucideIcon } from 'lucide-react'
 import type { Metadata } from 'next'
 
+const GLOBAL_SELECT = {
+  id: true,
+  name: true,
+  category: true,
+  countrySlug: true,
+  notesEs: true,
+  notesEn: true,
+  notesPt: true,
+  country: { select: { nameEs: true, nameEn: true, namePt: true, cca2: true } },
+} as const
+
 const CATEGORY_ORDER: ResourceCategory[] = [
   'FIND_FAMILY',
   'CALL_FREE',
@@ -99,6 +110,15 @@ export default async function SearchPage({
       })
     : []
 
+  const fallback = query.length >= 2 && results.length === 0
+    ? await prisma.resource.findMany({
+        where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global' },
+        select: GLOBAL_SELECT,
+        orderBy: { createdAt: 'asc' },
+        take: 50,
+      })
+    : []
+
   const byCategory = CATEGORY_ORDER.reduce(
     (acc, cat) => {
       acc[cat] = results.filter((r) => r.category === cat)
@@ -145,11 +165,9 @@ export default async function SearchPage({
       </div>
 
       {/* Status */}
-      {query.length >= 2 && (
+      {query.length >= 2 && total > 0 && (
         <div className="px-5 py-3">
-          <p className="font-sans font-light text-[13px] text-[#808080]">
-            {total === 0 ? noResultsText : resultsText}
-          </p>
+          <p className="font-sans font-light text-[13px] text-[#808080]">{resultsText}</p>
         </div>
       )}
 
@@ -191,6 +209,29 @@ export default async function SearchPage({
       })}
 
       {total > 0 && <div className="h-px bg-[rgba(20,20,20,0.12)]" />}
+
+      {/* Fallback: globales cuando no hay resultados */}
+      {fallback.length > 0 && (
+        <>
+          <div className="px-5 py-3">
+            <p className="font-sans font-light text-[13px] text-[#808080]">
+              {lang === 'en'
+                ? `No results for "${query}". These resources are available from any country:`
+                : `Sin resultados para "${query}". Estos recursos están disponibles desde cualquier país:`}
+            </p>
+          </div>
+          <div className="px-5 pt-4 pb-6 flex justify-center">
+            <div className="flex items-center gap-3">
+              <Globe className="w-[22px] h-[22px] text-[#184e68]" strokeWidth={1.5} />
+              <span className="font-display font-bold text-[22px] text-[#141414]">Internacional</span>
+            </div>
+          </div>
+          {fallback.map((r) => (
+            <SearchResultLink key={r.id} resource={r} locale={locale} />
+          ))}
+          <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+        </>
+      )}
     </main>
   )
 }

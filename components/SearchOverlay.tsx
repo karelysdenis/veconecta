@@ -39,6 +39,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Result[]>([])
+  const [fallback, setFallback] = useState<Result[]>([])
   const [loading, setLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -64,12 +65,14 @@ export function SearchOverlay({ locale }: { locale: string }) {
   function handleChange(v: string) {
     setQuery(v)
     if (debounceRef.current) clearTimeout(debounceRef.current)
-    if (v.trim().length < 2) { setResults([]); return }
+    if (v.trim().length < 2) { setResults([]); setFallback([]); return }
     debounceRef.current = setTimeout(async () => {
       setLoading(true)
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(v.trim())}`)
-        setResults(await res.json())
+        const data = await res.json()
+        setResults(data.results)
+        setFallback(data.fallback)
       } finally {
         setLoading(false)
       }
@@ -80,6 +83,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
     setOpen(false)
     setQuery('')
     setResults([])
+    setFallback([])
   }
 
   const byCategory = CATEGORY_ORDER.reduce((acc, cat) => {
@@ -88,6 +92,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
   }, {} as Record<ResourceCategory, Result[]>)
 
   const total = results.length
+  const showFallback = !loading && query.length >= 2 && total === 0 && fallback.length > 0
 
   return (
     <>
@@ -147,7 +152,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
               )}
 
               {/* Estado: sin resultados */}
-              {!loading && query.length >= 2 && total === 0 && (
+              {!loading && query.length >= 2 && total === 0 && !showFallback && (
                 <p className="px-5 py-10 text-center font-sans font-light text-[15px] text-[#808080]">
                   {lang === 'en' ? `No results for "${query}"`
                     : lang === 'pt' ? `Sem resultados para "${query}"`
@@ -180,6 +185,31 @@ export function SearchOverlay({ locale }: { locale: string }) {
               })}
 
               {total > 0 && <div className="h-px bg-[rgba(20,20,20,0.12)]" />}
+
+              {/* Fallback: recursos globales cuando no hay resultados */}
+              {showFallback && (
+                <>
+                  <div className="px-5 py-4">
+                    <p className="font-sans font-light text-[13px] text-[#808080]">
+                      {lang === 'en'
+                        ? `No results for "${query}". These resources are available from any country:`
+                        : lang === 'pt'
+                        ? `Sem resultados para "${query}". Estes recursos estão disponíveis de qualquer país:`
+                        : `Sin resultados para "${query}". Estos recursos están disponibles desde cualquier país:`}
+                    </p>
+                  </div>
+                  <div className="px-5 pt-4 pb-6 flex justify-center">
+                    <div className="flex items-center gap-3">
+                      <Globe className="w-[22px] h-[22px] text-[#184e68]" strokeWidth={1.5} />
+                      <span className="font-display font-bold text-[22px] text-[#141414]">Internacional</span>
+                    </div>
+                  </div>
+                  {fallback.map(r => (
+                    <ResultRow key={r.id} result={r} locale={locale} lang={lang} onClose={close} />
+                  ))}
+                  <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+                </>
+              )}
             </div>
           </div>
         </div>

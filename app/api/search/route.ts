@@ -42,5 +42,26 @@ export async function GET(request: Request) {
     take: 100,
   })
 
-  return Response.json(results)
+  let fallback: typeof results = []
+  if (results.length === 0) {
+    fallback = await prisma.resource.findMany({
+      where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global' },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        countrySlug: true,
+        notesEs: true,
+        notesEn: true,
+        notesPt: true,
+        country: {
+          select: { nameEs: true, nameEn: true, namePt: true, flag: true, cca2: true },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+      take: 50,
+    })
+  }
+
+  return Response.json({ results, fallback })
 }
