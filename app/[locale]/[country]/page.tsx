@@ -136,22 +136,20 @@ export default async function CountryPage({
         </div>
 
         {/* Hero */}
-        <div className="px-5 pt-5 pb-4 flex flex-col gap-2">
-          <div className="flex items-center gap-3">
-            {flag40 && (
-              <img
-                src={flag40}
-                srcSet={flag80 ? `${flag80} 2x` : undefined}
-                width={30}
-                height={20}
-                alt=""
-                className="object-cover shrink-0"
-              />
-            )}
-            <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
-              {name}
-            </h1>
-          </div>
+        <div className="px-5 pt-6 pb-8 flex flex-col items-center gap-3 text-center">
+          {flag40 && (
+            <img
+              src={flag40}
+              srcSet={flag80 ? `${flag80} 2x` : undefined}
+              width={40}
+              height={27}
+              alt=""
+              className="object-cover shrink-0"
+            />
+          )}
+          <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
+            {name}
+          </h1>
         </div>
 
         <CityList cities={realCities} countrySlug={slug} locale={locale} />
@@ -196,22 +194,20 @@ export default async function CountryPage({
       </div>
 
       {/* Hero */}
-      <div className="px-5 pt-5 pb-4 flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          {flag40 && (
-            <img
-              src={flag40}
-              srcSet={flag80 ? `${flag80} 2x` : undefined}
-              width={30}
-              height={20}
-              alt=""
-              className="object-cover shrink-0"
-            />
-          )}
-          <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
-            {name}
-          </h1>
-        </div>
+      <div className="px-5 pt-6 pb-8 flex flex-col items-center gap-3 text-center">
+        {flag40 && (
+          <img
+            src={flag40}
+            srcSet={flag80 ? `${flag80} 2x` : undefined}
+            width={40}
+            height={27}
+            alt=""
+            className="object-cover shrink-0"
+          />
+        )}
+        <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
+          {name}
+        </h1>
       </div>
 
       {/* Sección del país */}
