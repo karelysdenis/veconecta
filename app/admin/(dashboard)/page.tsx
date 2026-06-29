@@ -74,20 +74,20 @@ export default async function AdminDashboard() {
             <div key={country.slug} className="relative group">
               <Link
                 href={`/admin/${country.slug}`}
-                className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 pr-10 hover:border-selva transition-colors"
+                className="flex items-center gap-3 h-[52px] border border-gray-200 rounded-lg px-4 pr-10 hover:border-selva transition-colors"
               >
                 <Flag cca2={country.cca2} slug={country.slug} flag={country.flag} size={28} />
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5 min-w-0">
+                  <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
                     <span className="text-sm font-medium text-gray-900 truncate">{country.nameEs}</span>
                     {!country.active && (
                       <span className="shrink-0 text-[10px] text-gray-400 border border-gray-200 rounded px-1 leading-4">off</span>
                     )}
                   </div>
                   {country._count.resources > 0 && (
-                    <div className="text-xs text-amber-700 mt-0.5">
-                      {country._count.resources} borrador{country._count.resources !== 1 ? 'es' : ''}
-                    </div>
+                    <span className="text-[10px] text-amber-700 border border-amber-200 rounded px-1 leading-4 shrink-0">
+                      {country._count.resources}
+                    </span>
                   )}
                 </div>
               </Link>
