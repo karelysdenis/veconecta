@@ -54,7 +54,7 @@ export function CountrySearch() {
     if (cache.data) { setAll(cache.data); return }
     setLoading(true)
     setError(false)
-    fetch('https://restcountries.com/v3.1/all?fields=name,translations,flag,cca2')
+    fetch('/api/countries')
       .then(r => {
         if (!r.ok) throw new Error('fetch failed')
         return r.json()
