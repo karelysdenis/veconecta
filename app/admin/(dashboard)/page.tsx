@@ -55,6 +55,12 @@ export default async function AdminDashboard() {
           {user!.role === 'ADMIN' && (
             <div className="flex items-center gap-2">
               <Link
+                href="/admin/users"
+                className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+              >
+                Usuarios
+              </Link>
+              <Link
                 href="/admin/translations"
                 className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
               >
