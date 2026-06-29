@@ -10,6 +10,17 @@ import { NameTabs } from '@/components/admin/NameTabs'
 
 const CATEGORIES = Object.values(ResourceCategory)
 
+const CATEGORY_LABELS: Record<string, string> = {
+  FIND_FAMILY: 'Encontrar familia',
+  DONATE_MONEY: 'Donar dinero',
+  SEND_MONEY: 'Enviar dinero',
+  CALL_FREE: 'Llamada gratuita',
+  DONATE_PHYSICALLY: 'Donación física',
+  DIGITAL_BRIDGE: 'Puente digital',
+  CONSULAR: 'Consular',
+  MENTAL_HEALTH: 'Salud mental',
+}
+
 export default async function NewResourcePage({
   params,
 }: {
@@ -75,7 +86,7 @@ export default async function NewResourcePage({
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Sel label="Categoría" name="category" opts={CATEGORIES} />
+          <Sel label="Categoría" name="category" opts={CATEGORIES} labels={CATEGORY_LABELS} />
           <F label="Ciudad / Región" name="city" />
         </div>
 
@@ -138,7 +149,7 @@ function F({
   )
 }
 
-function Sel({ label, name, opts }: { label: string; name: string; opts: string[] }) {
+function Sel({ label, name, opts, labels }: { label: string; name: string; opts: string[]; labels?: Record<string, string> }) {
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
@@ -147,7 +158,7 @@ function Sel({ label, name, opts }: { label: string; name: string; opts: string[
         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
       >
         {opts.map((o) => (
-          <option key={o} value={o}>{o}</option>
+          <option key={o} value={o}>{labels?.[o] ?? o}</option>
         ))}
       </select>
     </div>

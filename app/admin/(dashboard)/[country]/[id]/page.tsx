@@ -11,6 +11,23 @@ import { NameTabs } from '@/components/admin/NameTabs'
 const CATEGORIES = Object.values(ResourceCategory)
 const STATUSES = Object.values(ResourceStatus)
 
+const CATEGORY_LABELS: Record<string, string> = {
+  FIND_FAMILY: 'Encontrar familia',
+  DONATE_MONEY: 'Donar dinero',
+  SEND_MONEY: 'Enviar dinero',
+  CALL_FREE: 'Llamada gratuita',
+  DONATE_PHYSICALLY: 'Donación física',
+  DIGITAL_BRIDGE: 'Puente digital',
+  CONSULAR: 'Consular',
+  MENTAL_HEALTH: 'Salud mental',
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  DRAFT: 'Borrador',
+  PUBLISHED: 'Publicado',
+  ARCHIVED: 'Archivado',
+}
+
 export default async function EditResourcePage({
   params,
 }: {
@@ -83,17 +100,18 @@ export default async function EditResourcePage({
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Sel label="Categoría" name="category" value={resource.category} opts={CATEGORIES} />
-          <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <F label="Ciudad" name="city" defaultValue={resource.city ?? ''} />
-          <F label="Bizum" name="bizum" defaultValue={resource.bizum ?? ''} />
+          <Sel label="Categoría" name="category" value={resource.category} opts={CATEGORIES} labels={CATEGORY_LABELS} />
+          <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} labels={STATUS_LABELS} />
         </div>
 
         <UrlField defaultValue={resource.url ?? ''} />
-        <F label="Teléfono / WhatsApp" name="phone" defaultValue={resource.phone ?? ''} />
+
+        <div className="grid grid-cols-2 gap-4">
+          <F label="Teléfono / WhatsApp" name="phone" defaultValue={resource.phone ?? ''} />
+          <F label="Bizum" name="bizum" defaultValue={resource.bizum ?? ''} />
+        </div>
+
+        <F label="Ciudad / Región" name="city" defaultValue={resource.city ?? ''} />
         <F label="Dirección" name="address" defaultValue={resource.address ?? ''} />
         <F label="Horario" name="schedule" defaultValue={resource.schedule ?? ''} />
         <F label="Vence (fecha)" name="expiresAt" type="date" defaultValue={expFormatted} />
@@ -148,9 +166,9 @@ function F({
 }
 
 function Sel({
-  label, name, value, opts,
+  label, name, value, opts, labels,
 }: {
-  label: string; name: string; value: string; opts: string[]
+  label: string; name: string; value: string; opts: string[]; labels?: Record<string, string>
 }) {
   return (
     <div>
@@ -161,7 +179,7 @@ function Sel({
         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
       >
         {opts.map((o) => (
-          <option key={o} value={o}>{o}</option>
+          <option key={o} value={o}>{labels?.[o] ?? o}</option>
         ))}
       </select>
     </div>

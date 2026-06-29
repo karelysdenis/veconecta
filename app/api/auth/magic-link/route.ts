@@ -48,12 +48,19 @@ export async function POST(req: NextRequest) {
     },
   })
 
+  if (process.env.NODE_ENV === 'development') {
+    const url = `${process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000'}/api/auth/verify?token=${token}`
+    console.log(`\n🔑 MAGIC LINK (dev)\n${url}\n`)
+  }
+
   try {
     await sendMagicLink(email, token)
   } catch (err) {
     console.error('[magic-link] Resend error:', err)
-    // Roll back: token is useless if the user never receives the email
-    await prisma.magicToken.delete({ where: { token } })
+    if (process.env.NODE_ENV !== 'development') {
+      // Roll back: token is useless if the user never receives the email
+      await prisma.magicToken.delete({ where: { token } })
+    }
     return NextResponse.json({ ok: true })
   }
 

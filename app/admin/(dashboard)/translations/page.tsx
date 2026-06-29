@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/lucia'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { flagUrl } from '@/lib/country-iso'
 
 export default async function TranslationsPage() {
   const { user } = await getSession()
@@ -95,17 +96,11 @@ export default async function TranslationsPage() {
         <div className="space-y-8">
           {Object.entries(byCountry).map(([countrySlug, items]) => {
             const country = items[0].country
-            const flagSrc = items[0].country.cca2
-              ? `https://flagcdn.com/w40/${items[0].country.cca2}.png`
-              : null
 
             return (
               <div key={countrySlug}>
-                {/* Country header */}
                 <div className="flex items-center gap-2 mb-2">
-                  {flagSrc
-                    ? <img src={flagSrc} width={24} height={16} alt="" className="object-cover rounded-[2px] shrink-0" />
-                    : <span className="text-base">{country.flag}</span>}
+                  {(() => { const src = country.cca2 ? `https://flagcdn.com/w40/${country.cca2}.png` : flagUrl(countrySlug); return src ? <img src={src} width={20} height={14} alt="" className="rounded-[2px] object-cover shrink-0" /> : <span className="text-base leading-none">{country.flag}</span> })()}
                   <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
                     {country.nameEs}
                   </h2>

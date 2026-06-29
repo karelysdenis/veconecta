@@ -4,6 +4,12 @@ import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
 import { flagUrl } from '@/lib/country-iso'
 
+function Flag({ cca2, slug, flag, size = 24 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
+  const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
+  if (src) return <img src={src} width={size} height={Math.round(size * 0.67)} alt="" className="rounded-[2px] shrink-0 object-cover" />
+  return <span className="leading-none" style={{ fontSize: size }}>{flag}</span>
+}
+
 export default async function AdminDashboard() {
   const { user } = await getSession()
 
@@ -68,38 +74,31 @@ export default async function AdminDashboard() {
             <div key={country.slug} className="relative group">
               <Link
                 href={`/admin/${country.slug}`}
-                className="block border border-gray-200 rounded-lg p-4 hover:border-red-300 hover:bg-red-50 transition-colors"
+                className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 pr-10 hover:border-selva transition-colors"
               >
-                <div className="mb-2">
-                  {flagUrl(country.slug) || country.cca2 ? (
-                    <img
-                      src={country.cca2 ? `https://flagcdn.com/w40/${country.cca2}.png` : flagUrl(country.slug)!}
-                      width={36}
-                      height={24}
-                      alt=""
-                      className="object-cover rounded shadow-sm"
-                    />
-                  ) : (
-                    <span className="text-2xl">{country.flag}</span>
+                <Flag cca2={country.cca2} slug={country.slug} flag={country.flag} size={28} />
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-gray-900 truncate">{country.nameEs}</div>
+                  {!country.active && (
+                    <div className="text-xs text-gray-400">Inactivo</div>
+                  )}
+                  {country._count.resources > 0 && (
+                    <div className="text-xs text-amber-700">
+                      {country._count.resources} borrador{country._count.resources !== 1 ? 'es' : ''}
+                    </div>
                   )}
                 </div>
-                <div className="text-sm font-medium text-gray-900">{country.nameEs}</div>
-                {!country.active && (
-                  <div className="text-xs text-gray-400 mt-1">Inactivo</div>
-                )}
-                {country._count.resources > 0 && (
-                  <div className="text-xs text-amber-700 mt-1">
-                    {country._count.resources} borrador
-                    {country._count.resources !== 1 ? 'es' : ''}
-                  </div>
-                )}
               </Link>
               {user!.role === 'ADMIN' && (
                 <Link
                   href={`/admin/countries/${country.slug}`}
-                  className="absolute top-2 right-2 text-xs text-gray-400 hover:text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Configurar país"
+                  className="absolute top-1/2 -translate-y-1/2 right-2 w-7 h-7 flex items-center justify-center rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-all"
                 >
-                  ⚙
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
                 </Link>
               )}
             </div>
@@ -120,9 +119,15 @@ export default async function AdminDashboard() {
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="text-xs text-gray-500 uppercase">
-                      {report.countrySlug}
-                    </span>
+                    {(() => {
+                      const c = countries.find(x => x.slug === report.countrySlug)
+                      return (
+                        <span className="text-xs text-gray-500 flex items-center gap-1.5">
+                          {c && <Flag cca2={c.cca2} slug={c.slug} flag={c.flag} size={16} />}
+                          {c?.nameEs ?? report.countrySlug}
+                        </span>
+                      )
+                    })()}
                     <p className="text-sm text-gray-900 mt-0.5">{report.message}</p>
                     {report.url && (
                       <a
