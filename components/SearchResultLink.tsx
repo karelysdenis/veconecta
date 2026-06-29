@@ -1,7 +1,15 @@
 import Link from 'next/link'
-import type { Country, Resource } from '@prisma/client'
+import type { Resource } from '@prisma/client'
+import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 
-type ResourceWithCountry = Resource & { country: Country }
+type CountryFields = {
+  nameEs: string
+  nameEn: string
+  namePt: string | null
+  cca2: string | null
+}
+
+type ResourceWithCountry = Resource & { country: CountryFields }
 
 export function SearchResultLink({
   resource,
@@ -25,9 +33,10 @@ export function SearchResultLink({
         : resource.country.nameEs
 
   const isGlobal = resource.countrySlug === 'global'
+
   const flagSrc = resource.country.cca2
     ? `https://flagcdn.com/w40/${resource.country.cca2}.png`
-    : null
+    : isoFlagUrl(resource.countrySlug, 'w40')
 
   return (
     <Link

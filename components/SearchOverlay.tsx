@@ -2,7 +2,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { Search, X, Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain } from 'lucide-react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import type { ResourceCategory } from '@prisma/client'
+import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 
 type Result = {
   id: string
@@ -32,18 +34,8 @@ const CATEGORY_ICONS = {
   CONSULAR: Landmark, MENTAL_HEALTH: Brain,
 } as const
 
-const CATEGORY_LABELS: Record<ResourceCategory, { es: string; en: string; pt: string }> = {
-  FIND_FAMILY:       { es: 'Buscar familiar',     en: 'Find family',        pt: 'Encontrar familiar' },
-  CALL_FREE:         { es: 'Llamadas gratis',      en: 'Free calls',         pt: 'Ligações grátis' },
-  DONATE_MONEY:      { es: 'Donar dinero',         en: 'Donate money',       pt: 'Doar dinheiro' },
-  SEND_MONEY:        { es: 'Enviar dinero',        en: 'Send money',         pt: 'Enviar dinheiro' },
-  DONATE_PHYSICALLY: { es: 'Donación física',      en: 'Physical donation',  pt: 'Doação física' },
-  DIGITAL_BRIDGE:    { es: 'Puente digital',       en: 'Digital bridge',     pt: 'Ponte digital' },
-  CONSULAR:          { es: 'Servicios consulares', en: 'Consular services',  pt: 'Serviços consulares' },
-  MENTAL_HEALTH:     { es: 'Salud mental',         en: 'Mental health',      pt: 'Saúde mental' },
-}
-
 export function SearchOverlay({ locale }: { locale: string }) {
+  const tCat = useTranslations('categories')
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Result[]>([])
@@ -168,8 +160,6 @@ export function SearchOverlay({ locale }: { locale: string }) {
                 const catResults = byCategory[cat]
                 if (!catResults.length) return null
                 const Icon = CATEGORY_ICONS[cat]
-                const label = CATEGORY_LABELS[cat][lang]
-
                 return (
                   <div key={cat}>
                     <div className="h-px bg-[rgba(20,20,20,0.12)]" />
@@ -177,7 +167,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
                       <div className="w-9 h-9 rounded-full bg-coco flex items-center justify-center shrink-0">
                         <Icon className="w-[18px] h-[18px] text-[#184e68]" strokeWidth={1.5} />
                       </div>
-                      <span className="font-sans font-semibold text-base text-[#141414]">{label}</span>
+                      <span className="font-sans font-semibold text-base text-[#141414]">{tCat(cat)}</span>
                       <span className="font-sans text-[12px] font-semibold text-caribe bg-caribe/10 rounded-full px-2 py-0.5 leading-none">
                         {catResults.length}
                       </span>
@@ -219,7 +209,7 @@ function ResultRow({
   const isGlobal = result.countrySlug === 'global'
   const flagSrc = result.country.cca2
     ? `https://flagcdn.com/w40/${result.country.cca2}.png`
-    : null
+    : isoFlagUrl(result.countrySlug, 'w40')
 
   return (
     <Link
