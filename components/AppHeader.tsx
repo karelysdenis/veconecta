@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Search, Menu } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { LangPopover } from './LangPopover'
 
 export function AppHeader({ locale }: { locale: string }) {
@@ -14,9 +14,6 @@ export function AppHeader({ locale }: { locale: string }) {
             <Search size={18} strokeWidth={1.5} />
           </button>
           <LangPopover direction="down" />
-          <button type="button" className="p-0.5" aria-label="Menú">
-            <Menu size={18} strokeWidth={1.5} />
-          </button>
         </div>
       </div>
     </header>
