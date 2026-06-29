@@ -108,14 +108,23 @@ export default async function CityPage({
     (r) => r.city === cityName || !r.city || r.city.toLowerCase() === 'nacional',
   )
 
-  const serializedResources = [...cityResources, ...globalResources].map(serializeResource)
+  const serializedCity = cityResources.map(serializeResource)
+  const serializedGlobal = globalResources.map(serializeResource)
 
-  const resourcesByCategory = CATEGORY_ORDER.reduce(
+  const cityByCategory = CATEGORY_ORDER.reduce(
     (acc, cat) => {
-      acc[cat] = serializedResources.filter((r) => r.category === cat)
+      acc[cat] = serializedCity.filter((r) => r.category === cat)
       return acc
     },
-    {} as Record<ResourceCategory, typeof serializedResources>,
+    {} as Record<ResourceCategory, typeof serializedCity>,
+  )
+
+  const globalByCategory = CATEGORY_ORDER.reduce(
+    (acc, cat) => {
+      acc[cat] = serializedGlobal.filter((r) => r.category === cat)
+      return acc
+    },
+    {} as Record<ResourceCategory, typeof serializedGlobal>,
   )
 
   const totalResources = cityResources.length + globalResources.length
@@ -170,7 +179,8 @@ export default async function CityPage({
         <ActionCard
           key={category}
           category={category}
-          resources={resourcesByCategory[category] ?? []}
+          resources={cityByCategory[category] ?? []}
+          globalResources={globalByCategory[category] ?? []}
           locale={locale as 'es' | 'en' | 'pt'}
         />
       ))}

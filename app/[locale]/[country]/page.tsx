@@ -160,17 +160,26 @@ export default async function CountryPage({
   }
 
   // No city selector: show all resources directly
-  const serializedResources = [...country.resources, ...globalResources].map(serializeResource)
+  const serializedCountry = country.resources.map(serializeResource)
+  const serializedGlobal = globalResources.map(serializeResource)
 
-  const resourcesByCategory = CATEGORY_ORDER.reduce(
+  const countryByCategory = CATEGORY_ORDER.reduce(
     (acc, cat) => {
-      acc[cat] = serializedResources.filter((r) => r.category === cat)
+      acc[cat] = serializedCountry.filter((r) => r.category === cat)
       return acc
     },
-    {} as Record<ResourceCategory, typeof serializedResources>,
+    {} as Record<ResourceCategory, typeof serializedCountry>,
   )
 
-  const totalResources = serializedResources.length
+  const globalByCategory = CATEGORY_ORDER.reduce(
+    (acc, cat) => {
+      acc[cat] = serializedGlobal.filter((r) => r.category === cat)
+      return acc
+    },
+    {} as Record<ResourceCategory, typeof serializedGlobal>,
+  )
+
+  const totalResources = serializedCountry.length + serializedGlobal.length
 
   return (
     <main className="min-h-screen bg-white">
@@ -209,7 +218,8 @@ export default async function CountryPage({
         <ActionCard
           key={category}
           category={category}
-          resources={resourcesByCategory[category] ?? []}
+          resources={countryByCategory[category] ?? []}
+          globalResources={globalByCategory[category] ?? []}
           locale={locale as 'es' | 'en' | 'pt'}
         />
       ))}
