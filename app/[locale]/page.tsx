@@ -52,7 +52,7 @@ export default async function HomePage({
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
-      <div className="px-5 pt-5 pb-4 text-center">
+      <div className="px-5 pt-6 pb-8 text-center">
         <h1 className="font-display font-extrabold text-[28px] leading-[1.15] tracking-[-0.01em] text-[#141414]">
           {t('heroPre')}{' '}
           <span className="inline-flex items-center gap-1.5 align-baseline">
@@ -72,9 +72,9 @@ export default async function HomePage({
       </div>
 
       {/* Date band */}
-      <div className="bg-coco h-9 flex items-center justify-center px-5">
+      <div className="bg-coco h-10 flex items-center justify-center px-5">
         {formattedDate && (
-          <p className="font-sans font-light text-[11px] text-[#808080] tracking-[0.02em]">
+          <p className="font-sans font-light text-[13px] text-[#808080]">
             {t('updatedAt', { date: formattedDate })}
           </p>
         )}

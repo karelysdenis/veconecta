@@ -27,8 +27,10 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages}>
       <AppHeader locale={locale} />
       <div className="pt-14">
-        {children}
-        <AppFooter />
+        <div className="max-w-xl mx-auto">
+          {children}
+          <AppFooter />
+        </div>
       </div>
       <div className="pb-20 md:pb-0" />
       <BottomNav locale={locale} />

@@ -32,7 +32,7 @@ export function CityList({
     <div>
       {/* Section label */}
       <div className="px-5 pt-4 pb-2">
-        <p className="font-sans font-semibold text-[11px] tracking-[0.08em] uppercase text-[#808080]">
+        <p className="font-sans font-semibold text-[12px] tracking-[0.08em] uppercase text-[#808080]">
           {t('activeSection')}
         </p>
       </div>
