@@ -121,32 +121,35 @@ export default async function EditUserPage({
           {isSelf && <span className="text-xs text-gray-400">(no podés desactivar tu propia cuenta)</span>}
         </label>
 
-        <div className="flex items-center justify-between pt-2">
-          {!isSelf ? (
-            <form action={deleteUser}>
-              <button
-                type="submit"
-                className="text-sm text-red-600 hover:underline"
-              >
-                Eliminar usuario
-              </button>
-            </form>
-          ) : (
-            <span />
-          )}
-          <div className="flex gap-3">
-            <Link href="/admin/users" className="text-sm text-gray-600 hover:underline px-4 py-2">
-              Cancelar
-            </Link>
-            <button
-              type="submit"
-              className="bg-red-700 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-red-800"
-            >
-              Guardar
-            </button>
-          </div>
+        <div className="flex justify-end gap-3 pt-2">
+          <Link href="/admin/users" className="text-sm text-gray-600 hover:underline px-4 py-2">
+            Cancelar
+          </Link>
+          <button
+            type="submit"
+            className="bg-red-700 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-red-800"
+          >
+            Guardar
+          </button>
         </div>
       </form>
+
+      {!isSelf && (
+        <form action={deleteUser} className="mt-8 pt-6 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-700">Eliminar usuario</p>
+              <p className="text-xs text-gray-400 mt-0.5">Esta acción no se puede deshacer.</p>
+            </div>
+            <button
+              type="submit"
+              className="text-sm text-red-600 border border-red-200 rounded-lg px-4 py-2 hover:bg-red-50"
+            >
+              Eliminar
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   )
 }
