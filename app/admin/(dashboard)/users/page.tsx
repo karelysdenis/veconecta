@@ -70,12 +70,12 @@ export default async function UsersPage() {
               </span>
             </div>
             <div className="px-4 text-center">
-              {u.countrySlugs.length === 0 ? (
+              {(u.countrySlugs ?? []).length === 0 ? (
                 <span className="text-gray-300">—</span>
-              ) : u.countrySlugs.length === 1 ? (
+              ) : (u.countrySlugs ?? []).length === 1 ? (
                 <span className="text-sm text-gray-500">{countryMap[u.countrySlugs[0]] ?? u.countrySlugs[0]}</span>
               ) : (
-                <span className="text-sm text-gray-500">{u.countrySlugs.length} países</span>
+                <span className="text-sm text-gray-500">{(u.countrySlugs ?? []).length} países</span>
               )}
             </div>
             <div className="px-4 text-center">
