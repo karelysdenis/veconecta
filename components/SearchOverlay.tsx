@@ -120,7 +120,7 @@ export function SearchOverlay({ locale }: { locale: string }) {
         <div className="fixed inset-0 z-50 bg-white flex flex-col">
           {/* Search bar */}
           <div className="shrink-0 border-b border-[rgba(20,20,20,0.08)]">
-            <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
+            <div className="max-w-2xl mx-auto px-4 h-[68px] flex items-center gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#808080] shrink-0" strokeWidth={1.5} />
                 <input
