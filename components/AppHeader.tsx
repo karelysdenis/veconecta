@@ -5,7 +5,7 @@ import { LangPopover } from './LangPopover'
 export function AppHeader({ locale }: { locale: string }) {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 h-14 bg-white border-b border-black/[0.08]">
-      <div className="max-w-xl mx-auto h-full flex items-center justify-between px-5">
+      <div className="max-w-2xl mx-auto h-full flex items-center justify-between px-5">
         <Link href={`/${locale}`}>
           <VeConectaLogo />
         </Link>
