@@ -10,9 +10,9 @@ export function AppHeader({ locale }: { locale: string }) {
           <VeConectaLogo />
         </Link>
         <div className="flex items-center gap-3.5 text-[#141414]">
-          <button type="button" className="p-0.5" aria-label="Buscar">
+          <Link href={`/${locale}/buscar`} className="p-0.5" aria-label="Buscar">
             <Search size={18} strokeWidth={1.5} />
-          </button>
+          </Link>
           <LangPopover direction="down" />
         </div>
       </div>
