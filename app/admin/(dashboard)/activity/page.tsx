@@ -4,15 +4,16 @@ import { getSession } from '@/lib/lucia'
 import { prisma } from '@/lib/prisma'
 
 const ACTION_LABELS: Record<string, { label: string; color: string }> = {
-  RESOURCE_CREATE:  { label: 'Creó recurso',    color: 'bg-caribe/10 text-caribe' },
-  RESOURCE_UPDATE:  { label: 'Editó recurso',   color: 'bg-gray-100 text-gray-600' },
-  RESOURCE_PUBLISH: { label: 'Publicó recurso', color: 'bg-green-100 text-green-700' },
-  RESOURCE_ARCHIVE: { label: 'Archivó recurso', color: 'bg-amber-100 text-amber-700' },
-  USER_INVITE:      { label: 'Invitó usuario',  color: 'bg-purple-100 text-purple-700' },
-  USER_UPDATE:      { label: 'Editó usuario',   color: 'bg-gray-100 text-gray-600' },
-  USER_DELETE:      { label: 'Eliminó usuario', color: 'bg-red-100 text-red-600' },
-  COUNTRY_CREATE:   { label: 'Creó país',       color: 'bg-selva/10 text-selva' },
-  COUNTRY_UPDATE:   { label: 'Editó país',      color: 'bg-gray-100 text-gray-600' },
+  RESOURCE_CREATE:  { label: 'Creó',      color: 'bg-caribe/10 text-caribe' },
+  RESOURCE_UPDATE:  { label: 'Editó',     color: 'bg-gray-100 text-gray-600' },
+  RESOURCE_CONFIRM: { label: 'Confirmó',  color: 'bg-orange-100 text-orange-700' },
+  RESOURCE_PUBLISH: { label: 'Publicó',   color: 'bg-green-100 text-green-700' },
+  RESOURCE_ARCHIVE: { label: 'Archivó',   color: 'bg-amber-100 text-amber-700' },
+  USER_INVITE:      { label: 'Invitó',    color: 'bg-purple-100 text-purple-700' },
+  USER_UPDATE:      { label: 'Editó',     color: 'bg-gray-100 text-gray-600' },
+  USER_DELETE:      { label: 'Eliminó',   color: 'bg-red-100 text-red-600' },
+  COUNTRY_CREATE:   { label: 'Creó país', color: 'bg-selva/10 text-selva' },
+  COUNTRY_UPDATE:   { label: 'Editó',     color: 'bg-gray-100 text-gray-600' },
 }
 
 function timeAgo(date: Date) {

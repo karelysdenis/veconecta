@@ -52,7 +52,8 @@ export default async function EditResourcePage({
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const expiresRaw = fd.get('expiresAt') as string
     const name = (fd.get('name') as string).trim()
-    const newStatus = fd.get('status') as ResourceStatus
+    const isAdmin = user.role === 'ADMIN'
+    const newStatus = isAdmin ? fd.get('status') as ResourceStatus : undefined
     await prisma.resource.update({
       where: { id },
       data: {
@@ -60,7 +61,7 @@ export default async function EditResourcePage({
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
-        status: newStatus,
+        ...(newStatus !== undefined ? { status: newStatus } : {}),
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
@@ -72,6 +73,8 @@ export default async function EditResourcePage({
         notesEn: (fd.get('notesEn') as string).trim() || null,
         notesPt: (fd.get('notesPt') as string).trim() || null,
         expiresAt: expiresRaw ? new Date(expiresRaw) : null,
+        verifiedAt: isAdmin ? new Date() : null,
+        verifiedBy: isAdmin ? user.email : null,
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_UPDATE', entityType: 'resource', entityId: id, entityName: name, countrySlug: country, detail: newStatus })
@@ -106,7 +109,16 @@ export default async function EditResourcePage({
 
         <div className="grid grid-cols-2 gap-4">
           <Sel label="Categoría" name="category" value={resource.category} opts={CATEGORIES} labels={CATEGORY_LABELS} />
-          <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} labels={STATUS_LABELS} />
+          {user.role === 'ADMIN' ? (
+            <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} labels={STATUS_LABELS} />
+          ) : (
+            <div>
+              <p className="block text-sm font-medium text-gray-700 mb-1">Estado</p>
+              <p className="border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500">
+                {STATUS_LABELS[resource.status] ?? resource.status}
+              </p>
+            </div>
+          )}
         </div>
 
         <UrlField defaultValue={resource.url ?? ''} />

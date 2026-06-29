@@ -38,6 +38,15 @@ export default async function AdminDashboard() {
     orderBy: { slug: 'asc' },
   })
 
+  const pendingGroups = user!.role === 'ADMIN'
+    ? await prisma.resource.groupBy({
+        by: ['countrySlug'],
+        where: { status: 'PUBLISHED', verifiedAt: null },
+        _count: { _all: true },
+      })
+    : []
+  const pendingMap = Object.fromEntries(pendingGroups.map(g => [g.countrySlug, g._count._all]))
+
   const reports = await prisma.communityReport.findMany({
     where: {
       resolved: false,
@@ -97,11 +106,18 @@ export default async function AdminDashboard() {
                       <span className="shrink-0 text-[10px] text-gray-400 border border-gray-200 rounded px-1 leading-4">off</span>
                     )}
                   </div>
-                  {country._count.resources > 0 && (
-                    <span className="text-[10px] text-amber-700 border border-amber-200 rounded px-1 leading-4 shrink-0">
-                      {country._count.resources}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1">
+                    {country._count.resources > 0 && (
+                      <span className="text-[10px] text-amber-700 border border-amber-200 rounded px-1 leading-4 shrink-0">
+                        {country._count.resources}
+                      </span>
+                    )}
+                    {(pendingMap[country.slug] ?? 0) > 0 && (
+                      <span className="text-[10px] text-orange-700 border border-orange-300 bg-orange-50 rounded px-1 leading-4 shrink-0">
+                        {pendingMap[country.slug]} ●
+                      </span>
+                    )}
+                  </div>
                 </div>
               </Link>
               {user!.role === 'ADMIN' && (

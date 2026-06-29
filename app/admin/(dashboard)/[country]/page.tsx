@@ -75,8 +75,8 @@ export default async function AdminCountryPage({
       where: { id },
       data: {
         status: 'PUBLISHED',
-        verifiedAt: now,
-        verifiedBy: user.email,
+        verifiedAt: user.role === 'ADMIN' ? now : null,
+        verifiedBy: user.role === 'ADMIN' ? user.email : null,
         expiresAt: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000),
       },
     })
@@ -84,6 +84,20 @@ export default async function AdminCountryPage({
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
+    revalidatePath('/admin')
+  }
+
+  async function confirmResource(formData: FormData) {
+    'use server'
+    const id = formData.get('id') as string
+    const { user } = await getSession()
+    if (!user || user.role !== 'ADMIN') return
+    const resource = await prisma.resource.update({
+      where: { id },
+      data: { verifiedAt: new Date(), verifiedBy: user.email },
+    })
+    await logAction({ userEmail: user.email, action: 'RESOURCE_CONFIRM', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
+    revalidatePath(`/admin/${country}`)
     revalidatePath('/admin')
   }
 
@@ -197,18 +211,34 @@ export default async function AdminCountryPage({
                     </span>
                     {r.city && <span className="text-xs text-gray-400">{r.city}</span>}
                     <DaysLeft date={r.expiresAt} />
+                    {!r.verifiedAt && (
+                      <span className="text-[10px] font-medium text-orange-700 border border-orange-200 bg-orange-50 px-1.5 py-0.5 rounded">
+                        Sin confirmar
+                      </span>
+                    )}
                   </div>
                   <p className="font-medium text-sm text-gray-900">{r.name}</p>
                   <div className="flex flex-wrap gap-x-3 mt-1">
                     {r.phone && <span className="text-xs text-gray-500">📞 {r.phone}</span>}
                     {r.verifiedAt && (
                       <span className="text-xs text-gray-400">
-                        Verificado {new Intl.DateTimeFormat('es-ES').format(r.verifiedAt)}
+                        Confirmado {new Intl.DateTimeFormat('es-ES').format(r.verifiedAt)}
                       </span>
                     )}
                   </div>
                 </div>
                 <div className="flex gap-2 shrink-0">
+                  {user.role === 'ADMIN' && !r.verifiedAt && (
+                    <form action={confirmResource}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button
+                        type="submit"
+                        className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded hover:bg-orange-600"
+                      >
+                        Confirmar
+                      </button>
+                    </form>
+                  )}
                   <Link
                     href={`/admin/${country}/${r.id}`}
                     className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"

@@ -60,8 +60,8 @@ export default async function NewResourcePage({
         notesEn: (fd.get('notesEn') as string).trim() || null,
         notesPt: (fd.get('notesPt') as string).trim() || null,
         expiresAt: expiresRaw ? new Date(expiresRaw) : null,
-        verifiedAt: new Date(),
-        verifiedBy: user.email,
+        verifiedAt: user.role === 'ADMIN' ? new Date() : null,
+        verifiedBy: user.role === 'ADMIN' ? user.email : null,
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: resource.id, entityName: name, countrySlug: country })

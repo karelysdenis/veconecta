@@ -3,6 +3,7 @@ import { prisma } from './prisma'
 export type AuditAction =
   | 'RESOURCE_CREATE'
   | 'RESOURCE_UPDATE'
+  | 'RESOURCE_CONFIRM'
   | 'RESOURCE_PUBLISH'
   | 'RESOURCE_ARCHIVE'
   | 'USER_INVITE'
