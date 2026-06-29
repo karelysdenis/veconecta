@@ -1,5 +1,11 @@
+import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Source_Sans_3 } from 'next/font/google'
 import './globals.css'
+
+export const metadata: Metadata = {
+  title: 'VeConecta',
+  description: 'Recursos para la diáspora venezolana',
+}
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
