@@ -48,7 +48,7 @@ export default async function NewResourcePage({
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
-        status: ResourceStatus.DRAFT,
+        status: ResourceStatus.PUBLISHED,
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
@@ -66,6 +66,9 @@ export default async function NewResourcePage({
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: resource.id, entityName: name, countrySlug: country })
     revalidatePath(`/admin/${country}`)
+    revalidatePath(`/es/${country}`)
+    revalidatePath(`/en/${country}`)
+    revalidatePath(`/pt/${country}`)
     redirect(`/admin/${country}`)
   }
 
@@ -115,10 +118,6 @@ export default async function NewResourcePage({
           <LanguageTabs />
         </div>
 
-        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-          El recurso se crea como borrador. Publícalo desde la página del país cuando esté listo.
-        </p>
-
         <div className="flex justify-end gap-3 pt-2">
           <Link href={`/admin/${country}`} className="text-sm text-gray-600 hover:underline px-4 py-2">
             Cancelar
@@ -127,7 +126,7 @@ export default async function NewResourcePage({
             type="submit"
             className="bg-red-700 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-red-800"
           >
-            Crear borrador
+            Crear recurso
           </button>
         </div>
       </form>
