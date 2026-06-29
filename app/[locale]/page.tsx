@@ -102,14 +102,9 @@ export default async function HomePage({
             <div className="w-[30px] h-[20px] flex items-center justify-center shrink-0">
               <Globe className="w-5 h-5 text-[#808080]" strokeWidth={1.5} />
             </div>
-            <div>
-              <p className="font-sans font-semibold text-base text-[#141414] leading-tight">
-                {t('globalSection')}
-              </p>
-              <p className="font-sans font-light text-[13px] text-[#808080] leading-tight">
-                {globalCount} recursos
-              </p>
-            </div>
+            <p className="font-sans font-semibold text-base text-[#141414] leading-tight">
+              {t('globalSection')}
+            </p>
           </div>
           <span className="text-guacamaya text-sm font-sans" aria-hidden="true">›</span>
         </Link>

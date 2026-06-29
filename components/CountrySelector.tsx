@@ -24,7 +24,6 @@ export function CountrySelector({
               : country.nameEs
         const flag40 = flagUrl(country.slug, 'w40')
         const flag80 = flagUrl(country.slug, 'w80')
-        const count = country._count.resources
 
         return (
           <Link
@@ -45,14 +44,7 @@ export function CountrySelector({
               ) : (
                 <span className="text-xl shrink-0 w-[30px] text-center leading-none">{country.flag}</span>
               )}
-              <div>
-                <p className="font-sans font-semibold text-base text-[#141414] leading-tight">{name}</p>
-                {count > 0 && (
-                  <p className="font-sans font-light text-[13px] text-[#808080] leading-tight">
-                    {count} recursos
-                  </p>
-                )}
-              </div>
+              <p className="font-sans font-semibold text-base text-[#141414] leading-tight">{name}</p>
             </div>
             <span className="text-guacamaya text-sm font-sans" aria-hidden="true">›</span>
           </Link>
