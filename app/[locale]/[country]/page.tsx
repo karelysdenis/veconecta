@@ -179,7 +179,7 @@ export default async function CountryPage({
     {} as Record<ResourceCategory, typeof serializedGlobal>,
   )
 
-  const totalResources = serializedCountry.length + serializedGlobal.length
+  const hasGlobal = serializedGlobal.length > 0
 
   return (
     <main className="min-h-screen bg-white">
@@ -214,15 +214,46 @@ export default async function CountryPage({
         </div>
       </div>
 
+      {/* Sección del país */}
       {CATEGORY_ORDER.map((category) => (
         <ActionCard
           key={category}
           category={category}
           resources={countryByCategory[category] ?? []}
-          globalResources={globalByCategory[category] ?? []}
           locale={locale as 'es' | 'en' | 'pt'}
         />
       ))}
+
+      {/* Sección internacional */}
+      {hasGlobal && (
+        <>
+          <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+          <div className="bg-[#f0f6f9] px-5 py-5">
+            <div className="flex items-center gap-2 mb-0.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#184e68" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span className="font-sans font-bold text-sm text-[#184e68] uppercase tracking-widest">
+                {locale === 'en' ? 'International' : 'Internacional'}
+              </span>
+            </div>
+            <p className="font-sans text-sm text-[#184e68]/60">
+              {locale === 'en'
+                ? 'Available from any country'
+                : locale === 'pt'
+                  ? 'Disponível de qualquer país'
+                  : 'Disponible desde cualquier país'}
+            </p>
+          </div>
+          {CATEGORY_ORDER.map((category) => (
+            <ActionCard
+              key={`global-${category}`}
+              category={category}
+              resources={globalByCategory[category] ?? []}
+              locale={locale as 'es' | 'en' | 'pt'}
+            />
+          ))}
+        </>
+      )}
+
       <div className="h-px bg-[rgba(20,20,20,0.12)]" />
     </main>
   )

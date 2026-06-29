@@ -21,12 +21,10 @@ const categoryIcons: Record<ResourceCategory, LucideIcon> = {
 export function ActionCard({
   category,
   resources,
-  globalResources = [],
   locale,
 }: {
   category: ResourceCategory
   resources: SerializedResource[]
-  globalResources?: SerializedResource[]
   locale: 'es' | 'en' | 'pt'
 }) {
   const [open, setOpen] = useState(true)
@@ -43,12 +41,9 @@ export function ActionCard({
     )
   }
 
-  const total = resources.length + globalResources.length
-  if (total === 0) return null
+  if (resources.length === 0) return null
 
   const Icon = categoryIcons[category]
-  const hasCountry = resources.length > 0
-  const hasGlobal = globalResources.length > 0
 
   return (
     <div>
@@ -65,7 +60,7 @@ export function ActionCard({
             {t(category)}
           </span>
           <span className="font-sans text-[12px] font-semibold text-caribe bg-caribe/10 rounded-full px-2 py-0.5 leading-none shrink-0">
-            {total}
+            {resources.length}
           </span>
         </div>
         <span className="font-sans text-lg text-[#b8b8b8] shrink-0 ml-3 select-none">
@@ -75,28 +70,9 @@ export function ActionCard({
 
       {open && (
         <div>
-          {/* Recursos del país / ciudad */}
-          {hasCountry && resources.map((r) => (
+          {resources.map((r) => (
             <ResourceLink key={r.id} resource={r} locale={locale} />
           ))}
-
-          {/* Separador + recursos globales */}
-          {hasGlobal && (
-            <>
-              {hasCountry && (
-                <div className="flex items-center gap-3 px-5 py-2">
-                  <div className="flex-1 h-px bg-gray-100" />
-                  <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wide">
-                    {locale === 'en' ? 'International' : locale === 'pt' ? 'Internacional' : 'Internacional'}
-                  </span>
-                  <div className="flex-1 h-px bg-gray-100" />
-                </div>
-              )}
-              {globalResources.map((r) => (
-                <ResourceLink key={r.id} resource={r} locale={locale} />
-              ))}
-            </>
-          )}
         </div>
       )}
     </div>
