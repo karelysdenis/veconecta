@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { UrlField } from '@/components/admin/UrlField'
 import { LanguageTabs } from '@/components/admin/LanguageTabs'
+import { NameTabs } from '@/components/admin/NameTabs'
 
 const CATEGORIES = Object.values(ResourceCategory)
 
@@ -68,10 +69,9 @@ export default async function NewResourcePage({
       </nav>
 
       <form action={create} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
-        <F label="Nombre (español)" name="name" required />
-        <div className="grid grid-cols-2 gap-4">
-          <F label="Nombre (inglés)" name="nameEn" />
-          <F label="Nombre (portugués)" name="namePt" />
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-2">Nombre por idioma</p>
+          <NameTabs />
         </div>
 
         <div className="grid grid-cols-2 gap-4">

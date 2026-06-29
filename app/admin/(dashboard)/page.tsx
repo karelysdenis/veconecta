@@ -47,12 +47,20 @@ export default async function AdminDashboard() {
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold text-gray-900">Países</h1>
           {user!.role === 'ADMIN' && (
-            <Link
-              href="/admin/countries/new"
-              className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
-            >
-              + Nuevo país
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin/translations"
+                className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+              >
+                Traducciones
+              </Link>
+              <Link
+                href="/admin/countries/new"
+                className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+              >
+                + Nuevo país
+              </Link>
+            </div>
           )}
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
