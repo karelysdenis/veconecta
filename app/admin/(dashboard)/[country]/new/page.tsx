@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { UrlField } from '@/components/admin/UrlField'
 import { LanguageTabs } from '@/components/admin/LanguageTabs'
 import { NameTabs } from '@/components/admin/NameTabs'
+import { logAction } from '@/lib/audit'
 
 const CATEGORIES = Object.values(ResourceCategory)
 
@@ -39,10 +40,11 @@ export default async function NewResourcePage({
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const expiresRaw = fd.get('expiresAt') as string
-    await prisma.resource.create({
+    const name = (fd.get('name') as string).trim()
+    const resource = await prisma.resource.create({
       data: {
         countrySlug: country,
-        name: (fd.get('name') as string).trim(),
+        name,
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
@@ -62,6 +64,7 @@ export default async function NewResourcePage({
         verifiedBy: user.email,
       },
     })
+    await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: resource.id, entityName: name, countrySlug: country })
     revalidatePath(`/admin/${country}`)
     redirect(`/admin/${country}`)
   }

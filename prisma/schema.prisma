@@ -79,6 +79,22 @@ model Resource {
   @@index([city])
 }
 
+model AuditLog {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  userEmail   String
+  action      String
+  entityType  String
+  entityId    String?
+  entityName  String?
+  countrySlug String?
+  detail      String?
+
+  @@index([createdAt(sort: Desc)])
+  @@index([countrySlug])
+  @@index([userEmail])
+}
+
 model CommunityReport {
   id          String   @id @default(cuid())
   resourceId  String?

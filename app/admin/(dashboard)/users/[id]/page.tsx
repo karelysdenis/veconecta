@@ -4,6 +4,7 @@ import { getSession } from '@/lib/lucia'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { Role } from '@prisma/client'
+import { logAction } from '@/lib/audit'
 
 export default async function EditUserPage({
   params,
@@ -18,10 +19,13 @@ export default async function EditUserPage({
   const [target, countries] = await Promise.all([
     prisma.user.findUnique({ where: { id } }),
     prisma.country.findMany({
-      where: { active: true, slug: { not: 'global' } },
+      where: { active: true },
       select: { slug: true, nameEs: true },
       orderBy: { nameEs: 'asc' },
-    }),
+    }).then(all => [
+      ...all.filter(c => c.slug === 'global').map(c => ({ ...c, nameEs: 'Global (todos los países)' })),
+      ...all.filter(c => c.slug !== 'global'),
+    ]),
   ])
 
   if (!target) notFound()
@@ -41,6 +45,7 @@ export default async function EditUserPage({
       where: { id },
       data: { role, countrySlugs, isActive },
     })
+    await logAction({ userEmail: me.email, action: 'USER_UPDATE', entityType: 'user', entityId: id, entityName: target.email, detail: role })
 
     revalidatePath('/admin/users')
     redirect('/admin/users')
@@ -52,6 +57,7 @@ export default async function EditUserPage({
     if (!me || me.role !== 'ADMIN') return
     if (me.id === id) return
 
+    await logAction({ userEmail: me.email, action: 'USER_DELETE', entityType: 'user', entityId: id, entityName: target.email })
     await prisma.user.delete({ where: { id } })
     revalidatePath('/admin/users')
     redirect('/admin/users')

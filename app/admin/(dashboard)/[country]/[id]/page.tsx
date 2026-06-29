@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { UrlField } from '@/components/admin/UrlField'
 import { LanguageTabs } from '@/components/admin/LanguageTabs'
 import { NameTabs } from '@/components/admin/NameTabs'
+import { logAction } from '@/lib/audit'
 
 const CATEGORIES = Object.values(ResourceCategory)
 const STATUSES = Object.values(ResourceStatus)
@@ -50,14 +51,16 @@ export default async function EditResourcePage({
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const expiresRaw = fd.get('expiresAt') as string
+    const name = (fd.get('name') as string).trim()
+    const newStatus = fd.get('status') as ResourceStatus
     await prisma.resource.update({
       where: { id },
       data: {
-        name: (fd.get('name') as string).trim(),
+        name,
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
-        status: fd.get('status') as ResourceStatus,
+        status: newStatus,
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
@@ -71,6 +74,7 @@ export default async function EditResourcePage({
         expiresAt: expiresRaw ? new Date(expiresRaw) : null,
       },
     })
+    await logAction({ userEmail: user.email, action: 'RESOURCE_UPDATE', entityType: 'resource', entityId: id, entityName: name, countrySlug: country, detail: newStatus })
     revalidatePath(`/admin/${country}`)
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)

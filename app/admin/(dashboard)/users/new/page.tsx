@@ -4,17 +4,23 @@ import { getSession } from '@/lib/lucia'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { Role } from '@prisma/client'
+import { logAction } from '@/lib/audit'
 
 export default async function NewUserPage() {
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
   if (user.role !== 'ADMIN') redirect('/admin')
 
-  const countries = await prisma.country.findMany({
-    where: { active: true, slug: { not: 'global' } },
+  const allCountries = await prisma.country.findMany({
+    where: { active: true },
     select: { slug: true, nameEs: true },
     orderBy: { nameEs: 'asc' },
   })
+  const global = allCountries.find(c => c.slug === 'global')
+  const countries = [
+    ...(global ? [{ slug: 'global', nameEs: 'Global (todos los países)' }] : []),
+    ...allCountries.filter(c => c.slug !== 'global'),
+  ]
 
   async function invite(fd: FormData) {
     'use server'
@@ -29,15 +35,11 @@ export default async function NewUserPage() {
 
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
-      await prisma.user.update({
-        where: { email },
-        data: { role, countrySlugs, isActive: true },
-      })
+      await prisma.user.update({ where: { email }, data: { role, countrySlugs, isActive: true } })
     } else {
-      await prisma.user.create({
-        data: { email, role, countrySlugs },
-      })
+      await prisma.user.create({ data: { email, role, countrySlugs } })
     }
+    await logAction({ userEmail: user.email, action: 'USER_INVITE', entityType: 'user', entityName: email, detail: role })
 
     revalidatePath('/admin/users')
     redirect('/admin/users')
