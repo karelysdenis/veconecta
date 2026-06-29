@@ -18,16 +18,16 @@ async function main() {
   // Countries — 'global' is a virtual country (active:false, never shown in selector)
   await prisma.country.createMany({
     data: [
-      { slug: 'global', nameEs: 'Global', nameEn: 'Global', flag: '🌐', active: false },
-      { slug: 'spain', nameEs: 'España', nameEn: 'Spain', namePt: 'Espanha', flag: '🇪🇸', cca2: 'es', active: true },
-      { slug: 'usa', nameEs: 'Estados Unidos', nameEn: 'United States', namePt: 'Estados Unidos', flag: '🇺🇸', cca2: 'us', active: true },
-      { slug: 'colombia', nameEs: 'Colombia', nameEn: 'Colombia', namePt: 'Colômbia', flag: '🇨🇴', cca2: 'co', active: true },
-      { slug: 'brazil', nameEs: 'Brasil', nameEn: 'Brazil', namePt: 'Brasil', flag: '🇧🇷', cca2: 'br', active: true },
-      { slug: 'argentina', nameEs: 'Argentina', nameEn: 'Argentina', namePt: 'Argentina', flag: '🇦🇷', cca2: 'ar', active: true },
-      { slug: 'peru', nameEs: 'Perú', nameEn: 'Peru', namePt: 'Peru', flag: '🇵🇪', cca2: 'pe', active: true },
-      { slug: 'chile', nameEs: 'Chile', nameEn: 'Chile', namePt: 'Chile', flag: '🇨🇱', cca2: 'cl', active: true },
-      { slug: 'mexico', nameEs: 'México', nameEn: 'Mexico', namePt: 'México', flag: '🇲🇽', cca2: 'mx', active: true },
-      { slug: 'ecuador', nameEs: 'Ecuador', nameEn: 'Ecuador', namePt: 'Equador', flag: '🇪🇨', cca2: 'ec', active: true },
+      { slug: 'global',    slugEs: 'global',          slugEn: 'global',         slugPt: 'global',          nameEs: 'Global',          nameEn: 'Global',         flag: '🌐', active: false },
+      { slug: 'spain',     slugEs: 'espana',           slugEn: 'spain',          slugPt: 'espanha',         nameEs: 'España',          nameEn: 'Spain',          namePt: 'Espanha',       flag: '🇪🇸', cca2: 'es', active: true },
+      { slug: 'usa',       slugEs: 'estados-unidos',   slugEn: 'united-states',  slugPt: 'estados-unidos',  nameEs: 'Estados Unidos',  nameEn: 'United States',  namePt: 'Estados Unidos', flag: '🇺🇸', cca2: 'us', active: true },
+      { slug: 'colombia',  slugEs: 'colombia',         slugEn: 'colombia',       slugPt: 'colombia',        nameEs: 'Colombia',        nameEn: 'Colombia',       namePt: 'Colômbia',      flag: '🇨🇴', cca2: 'co', active: true },
+      { slug: 'brazil',    slugEs: 'brasil',           slugEn: 'brazil',         slugPt: 'brasil',          nameEs: 'Brasil',          nameEn: 'Brazil',         namePt: 'Brasil',        flag: '🇧🇷', cca2: 'br', active: true },
+      { slug: 'argentina', slugEs: 'argentina',        slugEn: 'argentina',      slugPt: 'argentina',       nameEs: 'Argentina',       nameEn: 'Argentina',      namePt: 'Argentina',     flag: '🇦🇷', cca2: 'ar', active: true },
+      { slug: 'peru',      slugEs: 'peru',             slugEn: 'peru',           slugPt: 'peru',            nameEs: 'Perú',            nameEn: 'Peru',           namePt: 'Peru',          flag: '🇵🇪', cca2: 'pe', active: true },
+      { slug: 'chile',     slugEs: 'chile',            slugEn: 'chile',          slugPt: 'chile',           nameEs: 'Chile',           nameEn: 'Chile',          namePt: 'Chile',         flag: '🇨🇱', cca2: 'cl', active: true },
+      { slug: 'mexico',    slugEs: 'mexico',           slugEn: 'mexico',         slugPt: 'mexico',          nameEs: 'México',          nameEn: 'Mexico',         namePt: 'México',        flag: '🇲🇽', cca2: 'mx', active: true },
+      { slug: 'ecuador',   slugEs: 'ecuador',          slugEn: 'ecuador',        slugPt: 'equador',         nameEs: 'Ecuador',         nameEn: 'Ecuador',        namePt: 'Equador',       flag: '🇪🇨', cca2: 'ec', active: true },
     ],
     skipDuplicates: true,
   })

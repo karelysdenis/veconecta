@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
@@ -7,6 +7,7 @@ import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
 import { cityToSlug } from '@/lib/slugify'
+import { getLocalizedSlug } from '@/lib/country-slug'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -26,9 +27,11 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; country: string; city: string }>
 }): Promise<Metadata> {
-  const { locale, country: countrySlug, city: citySlug } = await params
-  const country = await prisma.country.findUnique({ where: { slug: countrySlug } })
+  const { locale, country: urlSlug, city: citySlug } = await params
+  const whereLocalized = locale === 'en' ? { slugEn: urlSlug } : locale === 'pt' ? { slugPt: urlSlug } : { slugEs: urlSlug }
+  const country = await prisma.country.findFirst({ where: whereLocalized })
   if (!country) return {}
+  const countrySlug = country.slug
 
   const countryName = locale === 'en' ? country.nameEn : country.nameEs
 
@@ -68,7 +71,7 @@ export default async function CityPage({
 }: {
   params: Promise<{ locale: string; country: string; city: string }>
 }) {
-  const { locale, country: countrySlug, city: citySlug } = await params
+  const { locale, country: urlSlug, city: citySlug } = await params
   setRequestLocale(locale)
 
   const [t, tNav] = await Promise.all([
@@ -76,8 +79,22 @@ export default async function CityPage({
     getTranslations('nav'),
   ])
 
-  const [country, allCountryResources, globalResources] = await Promise.all([
-    prisma.country.findUnique({ where: { slug: countrySlug, active: true } }),
+  // Lookup by localized slug
+  const whereLocalized = locale === 'en' ? { slugEn: urlSlug, active: true } : locale === 'pt' ? { slugPt: urlSlug, active: true } : { slugEs: urlSlug, active: true }
+  let country = await prisma.country.findFirst({ where: whereLocalized })
+
+  // Fallback: try canonical slug + redirect to localized URL
+  if (!country) {
+    const byCanonical = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
+    if (byCanonical) {
+      redirect(`/${locale}/${getLocalizedSlug(byCanonical, locale)}/${citySlug}`)
+    }
+    notFound()
+  }
+
+  const countrySlug = country.slug
+
+  const [allCountryResources, globalResources] = await Promise.all([
     prisma.resource.findMany({
       where: { countrySlug, status: ResourceStatus.PUBLISHED },
       orderBy: { createdAt: 'asc' },
@@ -87,8 +104,6 @@ export default async function CityPage({
       orderBy: { createdAt: 'asc' },
     }),
   ])
-
-  if (!country) notFound()
 
   // Find canonical city name from the slug
   const cityName =
@@ -146,7 +161,7 @@ export default async function CityPage({
         </Link>
         <span className="font-sans text-sm text-[#b8b8b8] shrink-0">›</span>
         <Link
-          href={`/${locale}/${countrySlug}`}
+          href={`/${locale}/${urlSlug}`}
           className="font-sans font-normal text-sm text-caribe hover:underline shrink-0"
         >
           {countryName}

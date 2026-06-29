@@ -29,7 +29,7 @@ export async function GET(request: Request) {
         { namePt: { contains: q, mode: 'insensitive' } },
       ],
     },
-    select: { slug: true, nameEs: true, nameEn: true, namePt: true, cca2: true },
+    select: { slug: true, slugEs: true, slugEn: true, slugPt: true, nameEs: true, nameEn: true, namePt: true, cca2: true },
   })
   const countrySlugs = matchingCountries.map(c => c.slug)
 

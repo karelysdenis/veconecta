@@ -36,6 +36,9 @@ model MagicToken {
 
 model Country {
   slug          String     @id
+  slugEs        String?    @unique
+  slugEn        String?    @unique
+  slugPt        String?    @unique
   nameEs        String
   nameEn        String
   namePt        String?

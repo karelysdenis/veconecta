@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
@@ -7,6 +7,7 @@ import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
 import { cityToSlug, isVirtualCity } from '@/lib/slugify'
+import { getLocalizedSlug } from '@/lib/country-slug'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -26,14 +27,20 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; country: string }>
 }): Promise<Metadata> {
-  const { locale, country: slug } = await params
+  const { locale, country: urlSlug } = await params
+  const whereLocalized = locale === 'en'
+    ? { slugEn: urlSlug }
+    : locale === 'pt'
+      ? { slugPt: urlSlug }
+      : { slugEs: urlSlug }
+
   const [country, t] = await Promise.all([
-    prisma.country.findUnique({ where: { slug } }),
+    prisma.country.findFirst({ where: whereLocalized }),
     getTranslations({ locale, namespace: 'country' }),
   ])
   if (!country) return {}
 
-  const name = locale === 'en' ? country.nameEn : country.nameEs
+  const name = locale === 'en' ? country.nameEn : locale === 'pt' ? (country.namePt ?? country.nameEs) : country.nameEs
   const heading = t('fromCountry', { name })
 
   return {
@@ -47,6 +54,14 @@ export async function generateMetadata({
       siteName: 'VeConecta',
       images: [{ url: '/api/og', width: 1200, height: 630 }],
     },
+    alternates: {
+      canonical: `https://www.veconecta.org/${locale}/${urlSlug}`,
+      languages: {
+        'es': `https://www.veconecta.org/es/${getLocalizedSlug(country, 'es')}`,
+        'en': `https://www.veconecta.org/en/${getLocalizedSlug(country, 'en')}`,
+        'pt': `https://www.veconecta.org/pt/${getLocalizedSlug(country, 'pt')}`,
+      },
+    },
   }
 }
 
@@ -55,7 +70,7 @@ export default async function CountryPage({
 }: {
   params: Promise<{ locale: string; country: string }>
 }) {
-  const { locale, country: slug } = await params
+  const { locale, country: urlSlug } = await params
   setRequestLocale(locale)
 
   const [t, tNav] = await Promise.all([
@@ -63,16 +78,35 @@ export default async function CountryPage({
     getTranslations('nav'),
   ])
 
-  const [country, globalResources, cityGroups] = await Promise.all([
-    prisma.country.findUnique({
-      where: { slug, active: true },
-      include: {
-        resources: {
-          where: { status: ResourceStatus.PUBLISHED },
-          orderBy: { createdAt: 'asc' },
-        },
+  // Lookup by localized slug
+  const whereLocalized = locale === 'en'
+    ? { slugEn: urlSlug, active: true }
+    : locale === 'pt'
+      ? { slugPt: urlSlug, active: true }
+      : { slugEs: urlSlug, active: true }
+
+  let country = await prisma.country.findFirst({
+    where: whereLocalized,
+    include: {
+      resources: {
+        where: { status: ResourceStatus.PUBLISHED },
+        orderBy: { createdAt: 'asc' },
       },
-    }),
+    },
+  })
+
+  // Fallback: try canonical slug and redirect to localized URL
+  if (!country) {
+    const byCanonical = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
+    if (byCanonical) {
+      redirect(`/${locale}/${getLocalizedSlug(byCanonical, locale)}`)
+    }
+    notFound()
+  }
+
+  const slug = country.slug
+
+  const [globalResources, cityGroups] = await Promise.all([
     prisma.resource.findMany({
       where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
       orderBy: { createdAt: 'asc' },
@@ -87,8 +121,6 @@ export default async function CountryPage({
       _count: { _all: true },
     }),
   ])
-
-  if (!country) notFound()
 
   const name =
     locale === 'en'
@@ -154,7 +186,7 @@ export default async function CountryPage({
           </div>
         </div>
 
-        <CityList cities={realCities} countrySlug={slug} locale={locale} />
+        <CityList cities={realCities} countrySlug={urlSlug} locale={locale} />
       </main>
     )
   }
