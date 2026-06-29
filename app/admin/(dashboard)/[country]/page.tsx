@@ -151,28 +151,26 @@ export default async function AdminCountryPage({
                       )}
                     </div>
                   </div>
-                  {user.role === 'ADMIN' && (
-                    <div className="flex gap-2 shrink-0">
-                      <Link
-                        href={`/admin/${country}/${r.id}`}
-                        className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
-                      >
-                        Editar
-                      </Link>
-                      <form action={publishResource}>
-                        <input type="hidden" name="id" value={r.id} />
-                        <button type="submit" className="text-xs bg-green-700 text-white px-3 py-1.5 rounded hover:bg-green-800">
-                          Publicar
-                        </button>
-                      </form>
-                      <form action={archiveResource}>
-                        <input type="hidden" name="id" value={r.id} />
-                        <button type="submit" className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50">
-                          Archivar
-                        </button>
-                      </form>
-                    </div>
-                  )}
+                  <div className="flex gap-2 shrink-0">
+                    <Link
+                      href={`/admin/${country}/${r.id}`}
+                      className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
+                    >
+                      Editar
+                    </Link>
+                    <form action={publishResource}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button type="submit" className="text-xs bg-green-700 text-white px-3 py-1.5 rounded hover:bg-green-800">
+                        Publicar
+                      </button>
+                    </form>
+                    <form action={archiveResource}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button type="submit" className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50">
+                        Archivar
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
             ))}
@@ -210,25 +208,23 @@ export default async function AdminCountryPage({
                     )}
                   </div>
                 </div>
-                {user.role === 'ADMIN' && (
-                  <div className="flex gap-2 shrink-0">
-                    <Link
-                      href={`/admin/${country}/${r.id}`}
-                      className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
+                <div className="flex gap-2 shrink-0">
+                  <Link
+                    href={`/admin/${country}/${r.id}`}
+                    className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
+                  >
+                    Editar
+                  </Link>
+                  <form action={archiveResource}>
+                    <input type="hidden" name="id" value={r.id} />
+                    <button
+                      type="submit"
+                      className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50"
                     >
-                      Editar
-                    </Link>
-                    <form action={archiveResource}>
-                      <input type="hidden" name="id" value={r.id} />
-                      <button
-                        type="submit"
-                        className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50"
-                      >
-                        Archivar
-                      </button>
-                    </form>
-                  </div>
-                )}
+                      Archivar
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           ))}
