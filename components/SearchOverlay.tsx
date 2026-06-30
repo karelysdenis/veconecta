@@ -52,9 +52,11 @@ const CATEGORY_ICONS = {
 export function SearchOverlay({
   locale,
   variant = 'icon',
+  triggerClassName,
 }: {
   locale: string
   variant?: 'icon' | 'tab'
+  triggerClassName?: string
 }) {
   const tCat = useTranslations('categories')
   const tNav = useTranslations('nav')
@@ -127,7 +129,7 @@ export function SearchOverlay({
         className={
           variant === 'tab'
             ? 'flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs text-gray-500'
-            : 'p-0.5'
+            : `p-0.5 ${triggerClassName ?? ''}`
         }
         aria-label={tNav('search')}
       >
@@ -136,130 +138,143 @@ export function SearchOverlay({
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col">
-          {/* Search bar */}
-          <div className="shrink-0 border-b border-[rgba(20,20,20,0.08)]">
-            <div className="max-w-2xl mx-auto px-4 h-[68px] flex items-center gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#808080] shrink-0" strokeWidth={1.5} />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={query}
-                  onChange={e => handleChange(e.target.value)}
-                  placeholder={placeholder}
-                  autoComplete="off"
-                  className="w-full bg-gray-100 rounded-xl pl-9 pr-4 py-2.5 text-[15px] font-sans text-[#141414] placeholder:text-[#808080] focus:outline-none focus:ring-2 focus:ring-caribe/30"
-                />
+        <div
+          className={
+            variant === 'tab'
+              ? 'fixed inset-0 z-50 bg-black/40 flex flex-col justify-end'
+              : 'fixed inset-0 z-50 bg-white flex flex-col'
+          }
+          onClick={
+            variant === 'tab'
+              ? (e) => { if (e.target === e.currentTarget) close() }
+              : undefined
+          }
+        >
+          <div className={variant === 'tab' ? 'bg-white rounded-t-2xl max-h-[85vh] flex flex-col overflow-hidden' : 'contents'}>
+            {/* Search bar */}
+            <div className="shrink-0 border-b border-[rgba(20,20,20,0.08)]">
+              <div className="max-w-2xl mx-auto px-4 h-[68px] flex items-center gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#808080] shrink-0" strokeWidth={1.5} />
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={query}
+                    onChange={e => handleChange(e.target.value)}
+                    placeholder={placeholder}
+                    autoComplete="off"
+                    className="w-full bg-gray-100 rounded-xl pl-9 pr-4 py-2.5 text-[15px] font-sans text-[#141414] placeholder:text-[#808080] focus:outline-none focus:ring-2 focus:ring-caribe/30"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={close}
+                  className="shrink-0 p-1 text-[#808080] hover:text-[#141414] transition-colors"
+                  aria-label="Cerrar"
+                >
+                  <X size={20} strokeWidth={1.5} />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={close}
-                className="shrink-0 p-1 text-[#808080] hover:text-[#141414] transition-colors"
-                aria-label="Cerrar"
-              >
-                <X size={20} strokeWidth={1.5} />
-              </button>
             </div>
-          </div>
 
-          {/* Results */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-2xl mx-auto">
+            {/* Results */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="max-w-2xl mx-auto">
 
-              {/* Estado: esperando */}
-              {query.length < 2 && (
-                <p className="px-5 py-10 text-center font-sans font-light text-[15px] text-[#808080]">
-                  {lang === 'en' ? 'Type to search…' : lang === 'pt' ? 'Digite para pesquisar…' : 'Escribe para buscar…'}
-                </p>
-              )}
+                {/* Estado: esperando */}
+                {query.length < 2 && (
+                  <p className="px-5 py-10 text-center font-sans font-light text-[15px] text-[#808080]">
+                    {lang === 'en' ? 'Type to search…' : lang === 'pt' ? 'Digite para pesquisar…' : 'Escribe para buscar…'}
+                  </p>
+                )}
 
-              {/* Estado: cargando */}
-              {loading && (
-                <p className="px-5 py-4 font-sans font-light text-[13px] text-[#808080]">
-                  {lang === 'en' ? 'Searching…' : lang === 'pt' ? 'Pesquisando…' : 'Buscando…'}
-                </p>
-              )}
+                {/* Estado: cargando */}
+                {loading && (
+                  <p className="px-5 py-4 font-sans font-light text-[13px] text-[#808080]">
+                    {lang === 'en' ? 'Searching…' : lang === 'pt' ? 'Pesquisando…' : 'Buscando…'}
+                  </p>
+                )}
 
-              {/* Estado: sin resultados */}
-              {!loading && query.length >= 2 && total === 0 && !showFallback && (
-                <p className="px-5 py-10 text-center font-sans font-light text-[15px] text-[#808080]">
-                  {lang === 'en' ? `No results for "${query}"`
-                    : lang === 'pt' ? `Sem resultados para "${query}"`
-                    : `Sin resultados para "${query}"`}
-                </p>
-              )}
+                {/* Estado: sin resultados */}
+                {!loading && query.length >= 2 && total === 0 && !showFallback && (
+                  <p className="px-5 py-10 text-center font-sans font-light text-[15px] text-[#808080]">
+                    {lang === 'en' ? `No results for "${query}"`
+                      : lang === 'pt' ? `Sem resultados para "${query}"`
+                      : `Sin resultados para "${query}"`}
+                  </p>
+                )}
 
-              {/* Países encontrados */}
-              {!loading && countries.length > 0 && countries.map(c => {
-                const name = lang === 'en' ? c.nameEn : lang === 'pt' ? (c.namePt ?? c.nameEs) : c.nameEs
-                const flagSrc = c.cca2 ? `https://flagcdn.com/w40/${c.cca2}.png` : isoFlagUrl(c.slug, 'w40')
-                return (
-                  <div key={c.slug}>
-                    <div className="h-px bg-[rgba(20,20,20,0.12)]" />
-                    <Link
-                      href={`/${locale}/${getLocalizedSlug(c, locale)}`}
-                      onClick={close}
-                      className="flex items-center gap-3 h-14 px-5 hover:bg-guacamaya/5 transition-colors"
-                    >
-                      {flagSrc && <img src={flagSrc} width={24} height={16} alt="" className="object-cover rounded-[2px] shrink-0" />}
-                      <span className="font-sans font-semibold text-base text-[#141414]">{name}</span>
-                      <span className="ml-auto text-[#b8b8b8] text-base shrink-0 select-none">›</span>
-                    </Link>
-                  </div>
-                )
-              })}
-
-              {/* Resultados agrupados */}
-              {!loading && total > 0 && CATEGORY_ORDER.map(cat => {
-                const catResults = byCategory[cat]
-                if (!catResults.length) return null
-                const Icon = CATEGORY_ICONS[cat]
-                return (
-                  <div key={cat}>
-                    <div className="h-px bg-[rgba(20,20,20,0.12)]" />
-                    <div className="flex items-center gap-3.5 h-14 px-5">
-                      <div className="w-9 h-9 rounded-full bg-coco flex items-center justify-center shrink-0">
-                        <Icon className="w-[18px] h-[18px] text-[#184e68]" strokeWidth={1.5} />
-                      </div>
-                      <span className="font-sans font-semibold text-base text-[#141414]">{tCat(cat)}</span>
-                      <span className="font-sans text-[12px] font-semibold text-caribe bg-caribe/10 rounded-full px-2 py-0.5 leading-none">
-                        {catResults.length}
-                      </span>
+                {/* Países encontrados */}
+                {!loading && countries.length > 0 && countries.map(c => {
+                  const name = lang === 'en' ? c.nameEn : lang === 'pt' ? (c.namePt ?? c.nameEs) : c.nameEs
+                  const flagSrc = c.cca2 ? `https://flagcdn.com/w40/${c.cca2}.png` : isoFlagUrl(c.slug, 'w40')
+                  return (
+                    <div key={c.slug}>
+                      <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+                      <Link
+                        href={`/${locale}/${getLocalizedSlug(c, locale)}`}
+                        onClick={close}
+                        className="flex items-center gap-3 h-14 px-5 hover:bg-guacamaya/5 transition-colors"
+                      >
+                        {flagSrc && <img src={flagSrc} width={24} height={16} alt="" className="object-cover rounded-[2px] shrink-0" />}
+                        <span className="font-sans font-semibold text-base text-[#141414]">{name}</span>
+                        <span className="ml-auto text-[#b8b8b8] text-base shrink-0 select-none">›</span>
+                      </Link>
                     </div>
-                    {catResults.map(r => (
+                  )
+                })}
+
+                {/* Resultados agrupados */}
+                {!loading && total > 0 && CATEGORY_ORDER.map(cat => {
+                  const catResults = byCategory[cat]
+                  if (!catResults.length) return null
+                  const Icon = CATEGORY_ICONS[cat]
+                  return (
+                    <div key={cat}>
+                      <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+                      <div className="flex items-center gap-3.5 h-14 px-5">
+                        <div className="w-9 h-9 rounded-full bg-coco flex items-center justify-center shrink-0">
+                          <Icon className="w-[18px] h-[18px] text-[#184e68]" strokeWidth={1.5} />
+                        </div>
+                        <span className="font-sans font-semibold text-base text-[#141414]">{tCat(cat)}</span>
+                        <span className="font-sans text-[12px] font-semibold text-caribe bg-caribe/10 rounded-full px-2 py-0.5 leading-none">
+                          {catResults.length}
+                        </span>
+                      </div>
+                      {catResults.map(r => (
+                        <ResultRow key={r.id} result={r} locale={locale} lang={lang} onClose={close} />
+                      ))}
+                    </div>
+                  )
+                })}
+
+                {total > 0 && <div className="h-px bg-[rgba(20,20,20,0.12)]" />}
+
+                {/* Fallback: recursos globales cuando no hay resultados */}
+                {showFallback && (
+                  <>
+                    <div className="px-5 py-4">
+                      <p className="font-sans font-light text-[13px] text-[#808080]">
+                        {lang === 'en'
+                          ? `No results for "${query}". These resources are available from any country:`
+                          : lang === 'pt'
+                          ? `Sem resultados para "${query}". Estes recursos estão disponíveis de qualquer país:`
+                          : `Sin resultados para "${query}". Estos recursos están disponibles desde cualquier país:`}
+                      </p>
+                    </div>
+                    <div className="px-5 pt-4 pb-6 flex justify-center">
+                      <div className="flex items-center gap-3">
+                        <Globe className="w-[22px] h-[22px] text-[#184e68]" strokeWidth={1.5} />
+                        <span className="font-display font-bold text-[22px] text-[#141414]">Internacional</span>
+                      </div>
+                    </div>
+                    {fallback.map(r => (
                       <ResultRow key={r.id} result={r} locale={locale} lang={lang} onClose={close} />
                     ))}
-                  </div>
-                )
-              })}
-
-              {total > 0 && <div className="h-px bg-[rgba(20,20,20,0.12)]" />}
-
-              {/* Fallback: recursos globales cuando no hay resultados */}
-              {showFallback && (
-                <>
-                  <div className="px-5 py-4">
-                    <p className="font-sans font-light text-[13px] text-[#808080]">
-                      {lang === 'en'
-                        ? `No results for "${query}". These resources are available from any country:`
-                        : lang === 'pt'
-                        ? `Sem resultados para "${query}". Estes recursos estão disponíveis de qualquer país:`
-                        : `Sin resultados para "${query}". Estos recursos están disponibles desde cualquier país:`}
-                    </p>
-                  </div>
-                  <div className="px-5 pt-4 pb-6 flex justify-center">
-                    <div className="flex items-center gap-3">
-                      <Globe className="w-[22px] h-[22px] text-[#184e68]" strokeWidth={1.5} />
-                      <span className="font-display font-bold text-[22px] text-[#141414]">Internacional</span>
-                    </div>
-                  </div>
-                  {fallback.map(r => (
-                    <ResultRow key={r.id} result={r} locale={locale} lang={lang} onClose={close} />
-                  ))}
-                  <div className="h-px bg-[rgba(20,20,20,0.12)]" />
-                </>
-              )}
+                    <div className="h-px bg-[rgba(20,20,20,0.12)]" />
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
