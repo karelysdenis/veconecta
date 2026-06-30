@@ -38,7 +38,9 @@ export default async function ReviewPage({
     where: {
       countrySlug: country,
       status: 'PUBLISHED',
-      ...(showAll ? {} : { verifiedAt: null }),
+      expiresAt: showAll
+        ? { not: null }
+        : { lte: new Date(Date.now() + 2 * 86400000) },
     },
     orderBy: [
       { expiresAt: 'asc' },
@@ -47,8 +49,8 @@ export default async function ReviewPage({
   })
 
   const total = resources.length
-  const unverifiedCount = showAll
-    ? resources.filter((r) => !r.verifiedAt).length
+  const urgentCount = showAll
+    ? resources.filter((r) => r.expiresAt! <= new Date(Date.now() + 2 * 86400000)).length
     : total
 
   const idx = Math.max(0, Math.min(parseInt(iParam ?? '0', 10) || 0, Math.max(total - 1, 0)))
@@ -68,7 +70,11 @@ export default async function ReviewPage({
 
     const updated = await prisma.resource.update({
       where: { id },
-      data: { verifiedAt: new Date(), verifiedBy: user.email },
+      data: {
+        verifiedAt: new Date(),
+        verifiedBy: user.email,
+        expiresAt: new Date(Date.now() + 5 * 86400000),
+      },
     })
     await logAction({
       userEmail: user.email,
@@ -97,15 +103,15 @@ export default async function ReviewPage({
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center space-y-3">
           <p className="text-gray-500 text-sm">
             {showAll
-              ? 'No hay recursos publicados en este país.'
-              : '¡Todos los recursos publicados están confirmados!'}
+              ? 'No hay recursos temporales en este país.'
+              : '¡Sin urgentes! Todos los temporales tienen vigencia suficiente.'}
           </p>
           {!showAll && (
             <Link
               href={`/admin/${country}/review?filter=all`}
               className="inline-block text-sm text-blue-600 hover:underline"
             >
-              Ver todos los publicados →
+              Ver todos los temporales →
             </Link>
           )}
           <div>
@@ -118,10 +124,6 @@ export default async function ReviewPage({
     )
   }
 
-  const days = resource.expiresAt
-    ? Math.ceil((resource.expiresAt.getTime() - Date.now()) / 86400000)
-    : null
-
   return (
     <div className="max-w-2xl">
       <Breadcrumb country={country} nameEs={countryRecord.nameEs} />
@@ -130,14 +132,14 @@ export default async function ReviewPage({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-500 tabular-nums">{idx + 1} / {total}</span>
-          {unverifiedCount > 0 && (
+          {urgentCount > 0 && showAll && (
             <span className="text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded">
-              {unverifiedCount} sin confirmar
+              {urgentCount} urgentes
             </span>
           )}
-          {unverifiedCount === 0 && showAll && (
+          {urgentCount === 0 && showAll && (
             <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
-              Todos confirmados
+              Todos al día
             </span>
           )}
         </div>
@@ -245,24 +247,24 @@ export default async function ReviewPage({
         )}
 
         {/* Expiry */}
-        {resource.expiresAt && (
-          <div
-            className={`text-xs px-3 py-2 rounded-lg ${
-              days !== null && days <= 0
+        {resource.expiresAt && (() => {
+          const days = Math.ceil((resource.expiresAt!.getTime() - Date.now()) / 86400000)
+          return (
+            <div className={`text-sm font-medium px-3 py-2 rounded-lg text-center ${
+              days < 0
                 ? 'bg-red-50 text-red-700 border border-red-200'
-                : days !== null && days <= 7
+                : days <= 2
                 ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                : 'bg-gray-50 text-gray-500 border border-gray-100'
-            }`}
-          >
-            Vence: {new Intl.DateTimeFormat('es-ES').format(resource.expiresAt)}
-            {days !== null && days <= 7 && (
-              <span className="ml-2 font-medium">
-                {days <= 0 ? '(Vencido)' : `(en ${days} días)`}
-              </span>
-            )}
-          </div>
-        )}
+                : 'bg-green-50 text-green-700 border border-green-200'
+            }`}>
+              {days < 0
+                ? `Vencido hace ${Math.abs(days)} día${Math.abs(days) !== 1 ? 's' : ''}`
+                : days === 0
+                ? 'Vence hoy'
+                : `Vence en ${days} día${days !== 1 ? 's' : ''}`}
+            </div>
+          )
+        })()}
 
         {/* Notes */}
         {resource.notesEs && (
@@ -371,7 +373,7 @@ function FilterToggle({
         href={`/admin/${country}/review?i=0`}
         className={`px-3 py-1.5 ${!showAll ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
       >
-        Sin confirmar
+        Urgentes
       </Link>
       <Link
         href={`/admin/${country}/review?i=0&filter=all`}
