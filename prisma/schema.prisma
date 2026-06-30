@@ -72,9 +72,8 @@ model Resource {
   name        String
   nameEn      String?
   namePt      String?
-  city        String?
   cityId      String?
-  cityRel     City?            @relation(fields: [cityId], references: [id])
+  city        City?            @relation(fields: [cityId], references: [id])
   url         String?
   phone       String?
   bizum       String?
@@ -93,7 +92,6 @@ model Resource {
 
   @@index([status])
   @@index([countrySlug])
-  @@index([city])
   @@index([cityId])
 }
 

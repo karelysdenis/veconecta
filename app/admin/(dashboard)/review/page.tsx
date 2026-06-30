@@ -42,7 +42,7 @@ export default async function GlobalReviewPage({
       { expiresAt: 'asc' },
       { createdAt: 'asc' },
     ],
-    include: { cityRel: true },
+    include: { city: true },
   })
 
   const total = resources.length
@@ -152,9 +152,9 @@ export default async function GlobalReviewPage({
             <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
               {CATEGORY_LABELS[resource.category] ?? resource.category}
             </span>
-            {resource.cityRel && (
+            {resource.city && (
               <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-100">
-                {resource.cityRel.nameEs}
+                {resource.city.nameEs}
               </span>
             )}
             {resource.free && (

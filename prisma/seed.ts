@@ -1,5 +1,6 @@
 // prisma/seed.ts
 import { PrismaClient, ResourceCategory, ResourceStatus } from '@prisma/client'
+import { cityToSlug } from '../lib/slugify'
 
 const prisma = new PrismaClient()
 
@@ -13,6 +14,7 @@ function exp(dateStr: string): Date {
 async function main() {
   // Reset resources so re-running seed doesn't accumulate duplicates
   await prisma.resource.deleteMany({})
+  await prisma.city.deleteMany({})
   await prisma.country.deleteMany({})
 
   // Countries — 'global' is a virtual country (active:false, never shown in selector)
@@ -31,6 +33,41 @@ async function main() {
     ],
     skipDuplicates: true,
   })
+
+  // Cities per country
+  const cityData = [
+    { countrySlug: 'spain',     nameEs: 'Madrid',          nameEn: 'Madrid',          namePt: 'Madrid' },
+    { countrySlug: 'usa',       nameEs: 'Doral, FL',       nameEn: 'Doral, FL',       namePt: 'Doral, FL' },
+    { countrySlug: 'usa',       nameEs: 'Miramar, FL',     nameEn: 'Miramar, FL',     namePt: 'Miramar, FL' },
+    { countrySlug: 'usa',       nameEs: 'Miami (online)',  nameEn: 'Miami (online)',  namePt: 'Miami (online)' },
+    { countrySlug: 'colombia',  nameEs: 'Bogotá',          nameEn: 'Bogotá',          namePt: 'Bogotá' },
+    { countrySlug: 'colombia',  nameEs: 'Barranquilla',    nameEn: 'Barranquilla',    namePt: 'Barranquilla' },
+    { countrySlug: 'colombia',  nameEs: 'Medellín',        nameEn: 'Medellín',        namePt: 'Medellín' },
+    { countrySlug: 'colombia',  nameEs: 'Santa Marta',     nameEn: 'Santa Marta',     namePt: 'Santa Marta' },
+    { countrySlug: 'colombia',  nameEs: 'Bucaramanga',     nameEn: 'Bucaramanga',     namePt: 'Bucaramanga' },
+    { countrySlug: 'colombia',  nameEs: 'Cartagena',       nameEn: 'Cartagena',       namePt: 'Cartagena' },
+    { countrySlug: 'argentina', nameEs: 'Buenos Aires',    nameEn: 'Buenos Aires',    namePt: 'Buenos Aires' },
+    { countrySlug: 'mexico',    nameEs: 'CDMX',            nameEn: 'Mexico City',     namePt: 'Cidade do México' },
+    { countrySlug: 'ecuador',   nameEs: 'Quito',           nameEn: 'Quito',           namePt: 'Quito' },
+    { countrySlug: 'ecuador',   nameEs: 'Guayaquil',       nameEn: 'Guayaquil',       namePt: 'Guayaquil' },
+    { countrySlug: 'peru',      nameEs: 'Lima',            nameEn: 'Lima',            namePt: 'Lima' },
+    { countrySlug: 'chile',     nameEs: 'Santiago',        nameEn: 'Santiago',        namePt: 'Santiago' },
+    { countrySlug: 'chile',     nameEs: 'Temuco',          nameEn: 'Temuco',          namePt: 'Temuco' },
+    { countrySlug: 'chile',     nameEs: 'Calama',          nameEn: 'Calama',          namePt: 'Calama' },
+  ]
+
+  const createdCities = await Promise.all(
+    cityData.map(({ countrySlug, nameEs, nameEn, namePt }) =>
+      prisma.city.create({
+        data: { countrySlug, slug: cityToSlug(nameEs), nameEs, nameEn, namePt },
+      })
+    )
+  )
+
+  // Build lookup: "countrySlug::nameEs" → cityId
+  const cityMap = Object.fromEntries(
+    createdCities.map((c) => [`${c.countrySlug}::${c.nameEs}`, c.id])
+  )
 
   // GLOBAL resources (shown on every country page)
   await prisma.resource.createMany({
@@ -276,7 +313,6 @@ async function main() {
       {
         countrySlug: 'spain',
         category: ResourceCategory.DONATE_MONEY,
-        city: 'Nacional',
         name: 'Save the Children España — Venezuela',
         url: 'https://www.savethechildren.es/donacion-ong/terremoto-en-venezuela-2026',
         bizum: '13132',
@@ -292,7 +328,6 @@ async function main() {
       {
         countrySlug: 'spain',
         category: ResourceCategory.DONATE_MONEY,
-        city: 'Nacional',
         name: 'Médicos Sin Fronteras — Fondo de Emergencias Venezuela',
         url: 'https://www.msf.es',
         free: false,
@@ -306,7 +341,6 @@ async function main() {
       {
         countrySlug: 'spain',
         category: ResourceCategory.DONATE_MONEY,
-        city: 'Nacional',
         name: 'Fundación Chamos España — emergencia Venezuela',
         url: 'https://fundacionchamos.es',
         free: false,
@@ -320,7 +354,7 @@ async function main() {
       {
         countrySlug: 'spain',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Madrid',
+        cityId: cityMap['spain::Madrid'],
         name: 'Madrid — Refugiados Sin Fronteras / Diáspora en Movimiento',
         address: 'Calle Matilde Landa 26',
         schedule: 'Sáb 27 y dom 28 junio, 11:00–18:00h',
@@ -356,7 +390,7 @@ async function main() {
       {
         countrySlug: 'usa',
         category: ResourceCategory.DONATE_MONEY,
-        city: 'Doral, FL',
+        cityId: cityMap['usa::Doral, FL'],
         name: 'Global Empowerment Mission (GEM)',
         url: 'https://gemusa.org',
         free: false,
@@ -369,7 +403,7 @@ async function main() {
       {
         countrySlug: 'usa',
         category: ResourceCategory.DONATE_MONEY,
-        city: 'Doral, FL',
+        cityId: cityMap['usa::Doral, FL'],
         name: 'VACC Foundation — Cámara Venezolana-Americana',
         url: 'https://vaccfoundation.org',
         free: false,
@@ -407,7 +441,7 @@ async function main() {
       {
         countrySlug: 'usa',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Doral, FL',
+        cityId: cityMap['usa::Doral, FL'],
         name: 'Miami — GEM Doral (centro principal)',
         url: 'https://gemusa.org',
         address: '1850 NW 84th Avenue, Suite 100, Doral FL 33126',
@@ -423,7 +457,7 @@ async function main() {
       {
         countrySlug: 'usa',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Miramar, FL',
+        cityId: cityMap['usa::Miramar, FL'],
         name: 'Miami — All Star Training Center',
         address: '11820 Miramar Pkwy Suite 2',
         schedule: '8:30am–8pm',
@@ -438,7 +472,7 @@ async function main() {
       {
         countrySlug: 'usa',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Doral, FL',
+        cityId: cityMap['usa::Doral, FL'],
         name: 'Miami — Nu Stadium (Inter Miami CF + GEM)',
         address: 'Nu Stadium',
         schedule: '9am–3pm',
@@ -453,7 +487,7 @@ async function main() {
       {
         countrySlug: 'usa',
         category: ResourceCategory.MENTAL_HEALTH,
-        city: 'Miami (online)',
+        cityId: cityMap['usa::Miami (online)'],
         name: "Children's Bereavement Center / Lift from Loss",
         url: 'https://childbereavement.org',
         free: true,
@@ -498,7 +532,6 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_MONEY,
-        city: 'Nacional',
         name: 'Catholic Relief Services (CRS) — Venezuela',
         url: 'https://www.crs.org/donate/venezuela-earthquake',
         free: false,
@@ -512,7 +545,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Bogotá',
+        cityId: cityMap['colombia::Bogotá'],
         name: 'Bogotá — Fundación Juntos se Puede (Chapinero 1)',
         address: 'Kr 13 #63-21, local 111, Hotel Matisse, Chapinero',
         schedule: 'Lun–Dom 7am–6pm',
@@ -527,7 +560,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Bogotá',
+        cityId: cityMap['colombia::Bogotá'],
         name: 'Bogotá — Fundación Juntos se Puede (Chapinero 2)',
         address: 'Kr 9 #61-70, Chapinero',
         schedule: 'Lun–Dom 9am–7pm',
@@ -542,7 +575,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Bogotá',
+        cityId: cityMap['colombia::Bogotá'],
         name: 'Bogotá — Calle 104 Pasadena (Suba)',
         address: 'Calle 104 #54-31, barrio Pasadena, Suba',
         schedule: 'Lun–Dom 7am–6pm',
@@ -557,7 +590,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Barranquilla',
+        cityId: cityMap['colombia::Barranquilla'],
         name: 'Barranquilla — Alcaldía (Barranquillita)',
         address: 'Carrera 43 #6-120, Barranquillita',
         schedule: 'Lun–Dom 8am–4pm',
@@ -572,7 +605,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Medellín',
+        cityId: cityMap['colombia::Medellín'],
         name: 'Medellín — Laika Arkadia',
         address: 'Cra. 70 #1-141, local 9822',
         free: true,
@@ -586,7 +619,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Santa Marta',
+        cityId: cityMap['colombia::Santa Marta'],
         name: 'Santa Marta — Parque La Tenería',
         address: 'Carrera 2 con 1D36, cerca Playa Los Cocos',
         schedule: '7am–6pm',
@@ -601,7 +634,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Bucaramanga',
+        cityId: cityMap['colombia::Bucaramanga'],
         name: 'Centro de Acopio Bucaramanga',
         address: 'Calle 18 #21-52, San Francisco, diagonal Iglesia San Francisco',
         schedule: '7am–7pm',
@@ -616,7 +649,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Cartagena',
+        cityId: cityMap['colombia::Cartagena'],
         name: 'Centro Intégrate Cartagena',
         address: 'Carrera 49 #31B-125, barrio Líbano',
         schedule: '8am–4pm',
@@ -631,7 +664,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Medellín',
+        cityId: cityMap['colombia::Medellín'],
         name: 'Medellín — I.E. Héctor Abad Gómez (Placita de Flores)',
         address: 'Calle 50 #39-65, Placita de Flores',
         schedule: '8am–5pm',
@@ -646,7 +679,7 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.MENTAL_HEALTH,
-        city: 'Medellín',
+        cityId: cityMap['colombia::Medellín'],
         name: 'Centro Intégrate Medellín',
         address: 'Carrera 49 #58-40, barrio Prado',
         schedule: 'Lun–Vie 8am–4pm',
@@ -661,7 +694,6 @@ async function main() {
       {
         countrySlug: 'colombia',
         category: ResourceCategory.MENTAL_HEALTH,
-        city: 'Nacional',
         name: 'Línea 106 — Salud Mental Colombia',
         phone: '106',
         schedule: '24h',
@@ -682,7 +714,7 @@ async function main() {
       {
         countrySlug: 'argentina',
         category: ResourceCategory.FIND_FAMILY,
-        city: 'Buenos Aires',
+        cityId: cityMap['argentina::Buenos Aires'],
         name: 'Cancillería Argentina — argentinos en Venezuela',
         phone: 'WhatsApp: +5491150615903 | Voz: +5491150407243',
         free: true,
@@ -708,7 +740,7 @@ async function main() {
       {
         countrySlug: 'argentina',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Buenos Aires',
+        cityId: cityMap['argentina::Buenos Aires'],
         name: 'Buenos Aires — Casa Venezuela Arg',
         address: 'Combate de los Pozos 1055, San Cristóbal / Monserrat, CABA',
         free: true,
@@ -722,7 +754,7 @@ async function main() {
       {
         countrySlug: 'argentina',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Buenos Aires',
+        cityId: cityMap['argentina::Buenos Aires'],
         name: 'Hipólita — Palermo',
         address: 'Humboldt 2474, Palermo, CABA',
         free: true,
@@ -736,7 +768,7 @@ async function main() {
       {
         countrySlug: 'argentina',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Buenos Aires',
+        cityId: cityMap['argentina::Buenos Aires'],
         name: 'Artigiani — Colegiales',
         address: 'Ciudad de la Paz 572, Colegiales, CABA',
         free: true,
@@ -750,7 +782,7 @@ async function main() {
       {
         countrySlug: 'argentina',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Buenos Aires',
+        cityId: cityMap['argentina::Buenos Aires'],
         name: 'Prados Café — Colegiales',
         address: 'Moldes 1379, Colegiales, CABA',
         free: true,
@@ -764,7 +796,7 @@ async function main() {
       {
         countrySlug: 'argentina',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Buenos Aires',
+        cityId: cityMap['argentina::Buenos Aires'],
         name: 'Vanshelato — Coghlan y Villa Pueyrredón',
         address: 'Iberá 3799 (Coghlan) y Griveo 2532 (Villa Pueyrredón), CABA',
         free: true,
@@ -778,7 +810,7 @@ async function main() {
       {
         countrySlug: 'argentina',
         category: ResourceCategory.MENTAL_HEALTH,
-        city: 'Buenos Aires',
+        cityId: cityMap['argentina::Buenos Aires'],
         name: 'AASM — apoyo psicológico gratuito venezolanos',
         schedule: 'Lun–Vie',
         free: true,
@@ -799,7 +831,7 @@ async function main() {
       {
         countrySlug: 'mexico',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'CDMX',
+        cityId: cityMap['mexico::CDMX'],
         name: 'CDMX — Brigada Topos Tlatelolco (Iztapalapa)',
         address: 'Magistrados 75, Amp. El Sifón, Iztapalapa, 09180',
         free: true,
@@ -813,7 +845,7 @@ async function main() {
       {
         countrySlug: 'mexico',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'CDMX',
+        cityId: cityMap['mexico::CDMX'],
         name: 'CDMX — Pasticho Express (Parques Polanco)',
         address: 'Centro Comercial Parques Polanco',
         free: true,
@@ -834,7 +866,7 @@ async function main() {
       {
         countrySlug: 'ecuador',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Quito',
+        cityId: cityMap['ecuador::Quito'],
         name: 'Quito — IMPAQTO La Carolina',
         address: 'Edificio IQON, Av. Shyris y Av. Suecia',
         schedule: '9am–6pm',
@@ -849,7 +881,7 @@ async function main() {
       {
         countrySlug: 'ecuador',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Quito',
+        cityId: cityMap['ecuador::Quito'],
         name: 'Quito — Cachapas El Félix',
         address: 'Av. Naciones Unidas y 10 de Agosto',
         free: true,
@@ -863,7 +895,7 @@ async function main() {
       {
         countrySlug: 'ecuador',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Guayaquil',
+        cityId: cityMap['ecuador::Guayaquil'],
         name: 'Guayaquil — Comando con Venezuela (Urdesa)',
         address: 'Av. Víctor Emilio Estrada y Las Jiguas (ref. Chamos Burger)',
         schedule: '9am–6pm',
@@ -885,7 +917,7 @@ async function main() {
       {
         countrySlug: 'peru',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Lima',
+        cityId: cityMap['peru::Lima'],
         name: 'Lima — Embajada de Venezuela (exteriores)',
         address: 'Embajada de Venezuela, Cercado de Lima',
         free: true,
@@ -899,7 +931,7 @@ async function main() {
       {
         countrySlug: 'peru',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Lima',
+        cityId: cityMap['peru::Lima'],
         name: 'Lima — Parque Voces por el Clima',
         address: 'Parque Voces por el Clima, Santiago de Surco',
         free: true,
@@ -958,7 +990,7 @@ async function main() {
       {
         countrySlug: 'chile',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Santiago',
+        cityId: cityMap['chile::Santiago'],
         name: 'Santiago — Centro de Acopio Municipal Independencia',
         address: 'Municipalidad de Independencia, Santiago',
         free: true,
@@ -972,7 +1004,7 @@ async function main() {
       {
         countrySlug: 'chile',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Temuco',
+        cityId: cityMap['chile::Temuco'],
         name: 'Temuco — Las Mil Bendiciones',
         address: 'Arquímedes 01885, Temuco',
         free: true,
@@ -986,7 +1018,7 @@ async function main() {
       {
         countrySlug: 'chile',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Temuco',
+        cityId: cityMap['chile::Temuco'],
         name: 'Temuco — Venemarket',
         address: 'Los Pablos 1999, Temuco',
         free: true,
@@ -1000,7 +1032,7 @@ async function main() {
       {
         countrySlug: 'chile',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Temuco',
+        cityId: cityMap['chile::Temuco'],
         name: 'Temuco — Sabe Venezuela',
         address: 'Luis Durand 01635, Local 1, Temuco',
         free: true,
@@ -1014,7 +1046,7 @@ async function main() {
       {
         countrySlug: 'chile',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Calama',
+        cityId: cityMap['chile::Calama'],
         name: 'Calama — AJ Dorada Restaurant',
         address: 'Abaroa 2046, Calama',
         free: true,
@@ -1028,7 +1060,7 @@ async function main() {
       {
         countrySlug: 'chile',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Calama',
+        cityId: cityMap['chile::Calama'],
         name: 'Calama — Llanero Carnes al Barril',
         address: 'Emilio Sotomayor 1806, Calama',
         free: true,
@@ -1042,7 +1074,7 @@ async function main() {
       {
         countrySlug: 'chile',
         category: ResourceCategory.DONATE_PHYSICALLY,
-        city: 'Calama',
+        cityId: cityMap['chile::Calama'],
         name: 'Calama — Redlogistic Market',
         address: 'Pasaje Monseñor Juan Bautista Herrada 1632, local 3, Calama',
         free: true,
