@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { touchCountry } from '@/lib/audit'
+import { revalidatePath } from 'next/cache'
 
 const patchSchema = z.object({
   name: z.string().min(1).optional(),
@@ -62,6 +63,12 @@ export async function DELETE(
       data: { status: 'ARCHIVED' },
     })
     await touchCountry(archived.countrySlug)
+    revalidatePath(`/es/${archived.countrySlug}`)
+    revalidatePath(`/en/${archived.countrySlug}`)
+    revalidatePath(`/pt/${archived.countrySlug}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[resources DELETE] DB error:', err)

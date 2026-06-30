@@ -37,6 +37,9 @@ export async function POST(
     revalidatePath(`/es/${resource.countrySlug}`)
     revalidatePath(`/en/${resource.countrySlug}`)
     revalidatePath(`/pt/${resource.countrySlug}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
 
     return NextResponse.json({ ok: true })
   } catch (err) {

@@ -85,6 +85,9 @@ export default async function GlobalReviewPage({
     revalidatePath(`/es/${row.countrySlug}`)
     revalidatePath(`/en/${row.countrySlug}`)
     revalidatePath(`/pt/${row.countrySlug}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
     redirect(`/admin/review?i=${returnI}`)
   }
 

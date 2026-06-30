@@ -106,6 +106,9 @@ export default async function AdminCountryPage({
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
     revalidatePath('/admin')
   }
 
@@ -130,6 +133,9 @@ export default async function AdminCountryPage({
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
   }
 
   async function archiveResource(formData: FormData) {
@@ -144,6 +150,9 @@ export default async function AdminCountryPage({
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
     revalidatePath('/admin')
   }
 

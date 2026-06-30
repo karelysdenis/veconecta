@@ -86,6 +86,9 @@ export default async function EditResourcePage({
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
     redirect(`/admin/${country}`)
   }
 

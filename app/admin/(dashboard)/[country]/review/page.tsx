@@ -91,6 +91,9 @@ export default async function ReviewPage({
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
 
     const fqs = returnFilter === 'all' ? '&filter=all' : ''
     redirect(`/admin/${country}/review?i=${returnI}${fqs}`)

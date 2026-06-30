@@ -75,6 +75,9 @@ export default async function NewResourcePage({
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
+    revalidatePath('/es')
+    revalidatePath('/en')
+    revalidatePath('/pt')
     redirect(`/admin/${country}`)
   }
 
