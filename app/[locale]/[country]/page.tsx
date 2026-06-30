@@ -6,7 +6,6 @@ import { ActionCard } from '@/components/ActionCard'
 import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
-import { cityToSlug, isVirtualCity } from '@/lib/slugify'
 import { getLocalizedSlug } from '@/lib/country-slug'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
@@ -106,19 +105,18 @@ export default async function CountryPage({
 
   const slug = country.slug
 
-  const [globalResources, cityGroups] = await Promise.all([
+  const [globalResources, citiesWithCount] = await Promise.all([
     prisma.resource.findMany({
       where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
       orderBy: { createdAt: 'asc' },
     }),
-    prisma.resource.groupBy({
-      by: ['city'],
-      where: {
-        countrySlug: slug,
-        status: ResourceStatus.PUBLISHED,
-        city: { not: null },
+    prisma.city.findMany({
+      where: { countrySlug: slug },
+      include: {
+        _count: {
+          select: { resources: { where: { status: ResourceStatus.PUBLISHED } } },
+        },
       },
-      _count: { _all: true },
     }),
   ])
 
@@ -129,14 +127,9 @@ export default async function CountryPage({
         ? (country.namePt ?? country.nameEs)
         : country.nameEs
 
-  // Build city list — filter out virtual cities (Nacional, etc.)
-  const realCities: CityEntry[] = cityGroups
-    .filter((g) => g.city && !isVirtualCity(g.city))
-    .map((g) => ({
-      name: g.city!,
-      slug: cityToSlug(g.city!),
-      count: g._count._all,
-    }))
+  const realCities: CityEntry[] = citiesWithCount
+    .filter((c) => c._count.resources > 0)
+    .map((c) => ({ name: c.nameEs, slug: c.slug, count: c._count.resources }))
     .sort((a, b) => b.count - a.count)
 
   const hasCitySelector = realCities.length >= 2
