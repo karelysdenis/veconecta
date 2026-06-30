@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
+import { cityToSlug } from '@/lib/slugify'
 
 export default async function EditCountryPage({
   params,
@@ -16,7 +17,14 @@ export default async function EditCountryPage({
   if (!user) redirect('/admin/login')
   if (user.role !== 'ADMIN') redirect('/admin')
 
-  const country = await prisma.country.findUnique({ where: { slug } })
+  const [country, cities] = await Promise.all([
+    prisma.country.findUnique({ where: { slug } }),
+    prisma.city.findMany({
+      where: { countrySlug: slug },
+      include: { _count: { select: { resources: true } } },
+      orderBy: { nameEs: 'asc' },
+    }),
+  ])
   if (!country) notFound()
 
   async function save(fd: FormData) {
@@ -38,6 +46,35 @@ export default async function EditCountryPage({
     revalidatePath('/es')
     revalidatePath('/en')
     redirect('/admin')
+  }
+
+  async function createCity(fd: FormData) {
+    'use server'
+    const { user } = await getSession()
+    if (!user || user.role !== 'ADMIN') return
+    const nameEs = (fd.get('nameEs') as string).trim()
+    if (!nameEs) return
+    await prisma.city.create({
+      data: {
+        countrySlug: slug,
+        slug: cityToSlug(nameEs),
+        nameEs,
+        nameEn: (fd.get('nameEn') as string).trim() || null,
+        namePt: (fd.get('namePt') as string).trim() || null,
+      },
+    })
+    revalidatePath(`/admin/countries/${slug}`)
+  }
+
+  async function deleteCity(fd: FormData) {
+    'use server'
+    const { user } = await getSession()
+    if (!user || user.role !== 'ADMIN') return
+    const cityId = fd.get('cityId') as string
+    const count = await prisma.resource.count({ where: { cityId } })
+    if (count > 0) return // guard: don't delete cities with resources
+    await prisma.city.delete({ where: { id: cityId } })
+    revalidatePath(`/admin/countries/${slug}`)
   }
 
   return (
@@ -117,6 +154,76 @@ export default async function EditCountryPage({
           </button>
         </div>
       </form>
+
+      {/* Ciudades */}
+      <div className="mt-8">
+        <h2 className="text-base font-semibold text-gray-900 mb-3">Ciudades</h2>
+
+        {cities.length > 0 && (
+          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden mb-4">
+            {cities.map((city, i) => (
+              <div
+                key={city.id}
+                className={`flex items-center gap-3 px-4 py-3 ${i < cities.length - 1 ? 'border-b border-gray-100' : ''}`}
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900">{city.nameEs}</p>
+                  <p className="text-xs text-gray-400">
+                    {[city.nameEn, city.namePt].filter(Boolean).join(' · ')}
+                    {city._count.resources > 0 && (
+                      <span className="ml-2 text-gray-300">{city._count.resources} recursos</span>
+                    )}
+                  </p>
+                </div>
+                <p className="text-xs text-gray-300 font-mono shrink-0">{city.slug}</p>
+                <Link
+                  href={`/admin/countries/${slug}/cities/${city.id}`}
+                  className="text-xs border border-gray-200 text-gray-600 px-2.5 py-1 rounded hover:bg-gray-50 shrink-0"
+                >
+                  Editar
+                </Link>
+                <form action={deleteCity}>
+                  <input type="hidden" name="cityId" value={city.id} />
+                  <button
+                    type="submit"
+                    disabled={city._count.resources > 0}
+                    className="text-xs border border-red-100 text-red-400 px-2.5 py-1 rounded hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                  >
+                    Eliminar
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <form action={createCity} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+          <p className="text-sm font-medium text-gray-700">Nueva ciudad</p>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Nombre ES <span className="text-red-400">*</span></label>
+              <input name="nameEs" required placeholder="ej: Bogotá"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Nombre EN</label>
+              <input name="nameEn" placeholder="ej: Bogota"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Nombre PT</label>
+              <input name="namePt" placeholder="ej: Bogotá"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <button type="submit"
+              className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+              + Añadir ciudad
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
