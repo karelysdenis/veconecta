@@ -63,6 +63,7 @@ export default async function AdminCountryPage({
 
   const drafts = countryRecord.resources.filter((r) => r.status === 'DRAFT')
   const published = countryRecord.resources.filter((r) => r.status === 'PUBLISHED')
+  const unverifiedCount = published.filter((r) => !r.verifiedAt).length
 
   async function publishResource(formData: FormData) {
     'use server'
@@ -130,12 +131,27 @@ export default async function AdminCountryPage({
           <Flag cca2={countryRecord.cca2} slug={countryRecord.slug} flag={countryRecord.flag} size={36} />
           <h1 className="text-xl font-bold text-gray-900">{countryRecord.nameEs}</h1>
         </div>
-        <Link
-          href={`/admin/${country}/new`}
-          className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
-        >
-          + Añadir
-        </Link>
+        <div className="flex gap-2">
+          {published.length > 0 && (
+            <Link
+              href={`/admin/${country}/review`}
+              className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-1.5"
+            >
+              Revisar
+              {unverifiedCount > 0 && (
+                <span className="text-xs bg-orange-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+                  {unverifiedCount}
+                </span>
+              )}
+            </Link>
+          )}
+          <Link
+            href={`/admin/${country}/new`}
+            className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+          >
+            + Añadir
+          </Link>
+        </div>
       </div>
 
       {drafts.length > 0 && (
