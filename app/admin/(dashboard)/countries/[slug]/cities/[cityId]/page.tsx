@@ -21,10 +21,12 @@ export default async function EditCityPage({
     'use server'
     const { user } = await getSession()
     if (!user || user.role !== 'ADMIN') return
+    const nameEs = (fd.get('nameEs') as string).trim()
+    if (!nameEs) return
     await prisma.city.update({
       where: { id: cityId },
       data: {
-        nameEs: (fd.get('nameEs') as string).trim(),
+        nameEs,
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
       },

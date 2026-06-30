@@ -54,15 +54,20 @@ export default async function EditCountryPage({
     if (!user || user.role !== 'ADMIN') return
     const nameEs = (fd.get('nameEs') as string).trim()
     if (!nameEs) return
-    await prisma.city.create({
-      data: {
-        countrySlug: slug,
-        slug: cityToSlug(nameEs),
-        nameEs,
-        nameEn: (fd.get('nameEn') as string).trim() || null,
-        namePt: (fd.get('namePt') as string).trim() || null,
-      },
-    })
+    try {
+      await prisma.city.create({
+        data: {
+          countrySlug: slug,
+          slug: cityToSlug(nameEs),
+          nameEs,
+          nameEn: (fd.get('nameEn') as string).trim() || null,
+          namePt: (fd.get('namePt') as string).trim() || null,
+        },
+      })
+    } catch (e: unknown) {
+      if ((e as { code?: string })?.code === 'P2002') return
+      throw e
+    }
     revalidatePath(`/admin/countries/${slug}`)
   }
 
@@ -73,7 +78,7 @@ export default async function EditCountryPage({
     const cityId = fd.get('cityId') as string
     const count = await prisma.resource.count({ where: { cityId } })
     if (count > 0) return // guard: don't delete cities with resources
-    await prisma.city.delete({ where: { id: cityId } })
+    await prisma.city.delete({ where: { id: cityId, countrySlug: slug } })
     revalidatePath(`/admin/countries/${slug}`)
   }
 
