@@ -50,7 +50,7 @@ export default async function ReviewPage({
 
   const total = resources.length
   const urgentCount = showAll
-    ? resources.filter((r) => r.expiresAt! <= new Date(Date.now() + 2 * 86400000)).length
+    ? resources.filter((r) => r.expiresAt !== null && r.expiresAt <= new Date(Date.now() + 2 * 86400000)).length
     : total
 
   const idx = Math.max(0, Math.min(parseInt(iParam ?? '0', 10) || 0, Math.max(total - 1, 0)))
