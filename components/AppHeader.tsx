@@ -10,7 +10,9 @@ export function AppHeader({ locale }: { locale: string }) {
           <VeConectaLogo />
         </Link>
         <div className="flex items-center gap-3.5 text-[#141414]">
-          <SearchOverlay locale={locale} />
+          <div className="hidden md:block">
+            <SearchOverlay locale={locale} />
+          </div>
           <LangPopover direction="down" />
         </div>
       </div>

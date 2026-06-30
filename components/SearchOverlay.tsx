@@ -49,8 +49,15 @@ const CATEGORY_ICONS = {
   CONSULAR: Landmark, MENTAL_HEALTH: Brain,
 } as const
 
-export function SearchOverlay({ locale }: { locale: string }) {
+export function SearchOverlay({
+  locale,
+  variant = 'icon',
+}: {
+  locale: string
+  variant?: 'icon' | 'tab'
+}) {
   const tCat = useTranslations('categories')
+  const tNav = useTranslations('nav')
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Result[]>([])
@@ -117,10 +124,15 @@ export function SearchOverlay({ locale }: { locale: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="p-0.5"
-        aria-label="Buscar"
+        className={
+          variant === 'tab'
+            ? 'flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs text-gray-500'
+            : 'p-0.5'
+        }
+        aria-label={tNav('search')}
       >
-        <Search size={18} strokeWidth={1.5} />
+        <Search size={variant === 'tab' ? 20 : 18} strokeWidth={variant === 'tab' ? 2 : 1.5} />
+        {variant === 'tab' && <span>{tNav('search')}</span>}
       </button>
 
       {open && (

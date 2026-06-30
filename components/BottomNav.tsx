@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { LangPopover } from './LangPopover'
+import { SearchOverlay } from './SearchOverlay'
 import { ShareButton } from './ShareButton'
 
 export function BottomNav({ locale }: { locale: string }) {
@@ -43,13 +43,8 @@ export function BottomNav({ locale }: { locale: string }) {
         <span>{t('home')}</span>
       </Link>
 
-      {/* Idioma */}
-      <div
-        className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs ${inactiveClass}`}
-      >
-        <LangPopover direction="up" />
-        <span>{t('language')}</span>
-      </div>
+      {/* Buscar */}
+      <SearchOverlay locale={locale} variant="tab" />
 
       {/* Compartir */}
       <div
