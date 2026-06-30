@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { UrlField } from '@/components/admin/UrlField'
 import { LanguageTabs } from '@/components/admin/LanguageTabs'
 import { NameTabs } from '@/components/admin/NameTabs'
-import { logAction } from '@/lib/audit'
+import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
 
@@ -70,6 +70,7 @@ export default async function NewResourcePage({
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: resource.id, entityName: name, countrySlug: country })
+    await touchCountry(country)
     revalidatePath(`/admin/${country}`)
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)

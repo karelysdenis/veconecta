@@ -5,7 +5,7 @@ import { ResourceStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
-import { logAction } from '@/lib/audit'
+import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 
 function Flag({ cca2, slug, flag, size = 32 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
@@ -102,6 +102,7 @@ export default async function AdminCountryPage({
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_PUBLISH', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
+    await touchCountry(country)
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)
@@ -123,6 +124,7 @@ export default async function AdminCountryPage({
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_CONFIRM', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
+    await touchCountry(country)
     revalidatePath(`/admin/${country}`)
     revalidatePath('/admin')
     revalidatePath(`/es/${country}`)
@@ -138,6 +140,7 @@ export default async function AdminCountryPage({
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const resource = await prisma.resource.update({ where: { id }, data: { status: 'ARCHIVED' } })
     await logAction({ userEmail: user.email, action: 'RESOURCE_ARCHIVE', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
+    await touchCountry(country)
     revalidatePath(`/es/${country}`)
     revalidatePath(`/en/${country}`)
     revalidatePath(`/pt/${country}`)

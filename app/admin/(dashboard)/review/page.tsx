@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
-import { logAction } from '@/lib/audit'
+import { logAction, touchCountry } from '@/lib/audit'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
 
@@ -77,6 +77,7 @@ export default async function GlobalReviewPage({
       entityName: updated.name,
       countrySlug: row.countrySlug,
     })
+    await touchCountry(row.countrySlug)
     revalidatePath('/admin/review')
     revalidatePath('/admin')
     revalidatePath(`/admin/${row.countrySlug}`)

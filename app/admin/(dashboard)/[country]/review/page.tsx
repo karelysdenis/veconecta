@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
-import { logAction } from '@/lib/audit'
+import { logAction, touchCountry } from '@/lib/audit'
 
 const CATEGORY_LABELS: Record<string, string> = {
   FIND_FAMILY: 'Encontrar familia',
@@ -85,6 +85,7 @@ export default async function ReviewPage({
       entityName: updated.name,
       countrySlug: country,
     })
+    await touchCountry(country)
     revalidatePath(`/admin/${country}/review`)
     revalidatePath(`/admin/${country}`)
     revalidatePath(`/es/${country}`)

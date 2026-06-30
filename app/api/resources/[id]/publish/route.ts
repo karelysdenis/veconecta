@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
+import { touchCountry } from '@/lib/audit'
 
 export async function POST(
   req: NextRequest,
@@ -29,6 +30,8 @@ export async function POST(
         expiresAt,
       },
     })
+
+    await touchCountry(resource.countrySlug)
 
     // Revalidate public pages for this country in all locales
     revalidatePath(`/es/${resource.countrySlug}`)

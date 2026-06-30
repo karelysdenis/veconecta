@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
+import { touchCountry } from '@/lib/audit'
 
 const patchSchema = z.object({
   name: z.string().min(1).optional(),
@@ -56,10 +57,11 @@ export async function DELETE(
   }
 
   try {
-    await prisma.resource.update({
+    const archived = await prisma.resource.update({
       where: { id },
       data: { status: 'ARCHIVED' },
     })
+    await touchCountry(archived.countrySlug)
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[resources DELETE] DB error:', err)

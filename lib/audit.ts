@@ -23,3 +23,11 @@ export async function logAction(params: {
 }) {
   await prisma.auditLog.create({ data: params })
 }
+
+/** Bumps Country.lastUpdatedAt so the homepage "last updated" date reflects resource changes. */
+export async function touchCountry(countrySlug: string) {
+  await prisma.country.update({
+    where: { slug: countrySlug },
+    data: { lastUpdatedAt: new Date() },
+  })
+}
