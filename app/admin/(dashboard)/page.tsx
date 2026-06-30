@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
@@ -12,8 +13,9 @@ function Flag({ cca2, slug, flag, size = 24 }: { cca2: string | null; slug: stri
 
 export default async function AdminDashboard() {
   const { user } = await getSession()
+  if (!user) redirect('/admin/login')
 
-  if (user!.role === 'EDITOR' && user!.countrySlugs.length === 0) {
+  if (user.role === 'EDITOR' && user.countrySlugs.length === 0) {
     return (
       <div className="text-center py-16">
         <p className="text-sm text-gray-500">
@@ -27,7 +29,7 @@ export default async function AdminDashboard() {
   }
 
   const countries = await prisma.country.findMany({
-    where: user!.role === 'EDITOR' ? { slug: { in: user!.countrySlugs } } : {},
+    where: user.role === 'EDITOR' ? { slug: { in: user.countrySlugs } } : {},
     include: {
       _count: {
         select: {
@@ -38,7 +40,7 @@ export default async function AdminDashboard() {
     orderBy: { slug: 'asc' },
   })
 
-  const pendingGroups = user!.role === 'ADMIN'
+  const pendingGroups = user.role === 'ADMIN'
     ? await prisma.resource.groupBy({
         by: ['countrySlug'],
         where: { status: 'PUBLISHED', verifiedAt: null },
@@ -50,7 +52,7 @@ export default async function AdminDashboard() {
   const reports = await prisma.communityReport.findMany({
     where: {
       resolved: false,
-      ...(user!.role === 'EDITOR' ? { countrySlug: { in: user!.countrySlugs } } : {}),
+      ...(user.role === 'EDITOR' ? { countrySlug: { in: user.countrySlugs } } : {}),
     },
     orderBy: { createdAt: 'desc' },
     take: 20,
@@ -61,7 +63,7 @@ export default async function AdminDashboard() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold text-gray-900">Países</h1>
-          {user!.role === 'ADMIN' && (
+          {user.role === 'ADMIN' && (
             <div className="flex items-center gap-2">
               <Link
                 href="/admin/activity"
@@ -120,7 +122,7 @@ export default async function AdminDashboard() {
                   </div>
                 </div>
               </Link>
-              {user!.role === 'ADMIN' && (
+              {user.role === 'ADMIN' && (
                 <Link
                   href={`/admin/countries/${country.slug}`}
                   title="Configurar país"
