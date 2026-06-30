@@ -6,11 +6,11 @@ import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { logAction } from '@/lib/audit'
+import { FlagImage } from '@/components/admin/FlagImage'
 
 function Flag({ cca2, slug, flag, size = 32 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
-  if (src) return <img src={src} width={size} height={Math.round(size * 0.67)} alt="" className="rounded-[2px] object-cover shrink-0" />
-  return <span className="leading-none" style={{ fontSize: size }}>{flag}</span>
+  return <FlagImage src={src} flag={flag} size={size} />
 }
 
 const CATEGORY_LABELS: Record<string, string> = {

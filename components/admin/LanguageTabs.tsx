@@ -2,9 +2,9 @@
 import { useState } from 'react'
 
 const LANGS = [
-  { code: 'es', label: '🇪🇸 ES', title: 'Español', placeholder: 'Descripción del recurso en español…' },
-  { code: 'en', label: '🇺🇸 EN', title: 'English', placeholder: 'Resource description in English…' },
-  { code: 'pt', label: '🇧🇷 PT', title: 'Português', placeholder: 'Descrição do recurso em português…' },
+  { code: 'es', label: 'ES', title: 'Español', placeholder: 'Descripción del recurso en español…' },
+  { code: 'en', label: 'EN', title: 'English', placeholder: 'Resource description in English…' },
+  { code: 'pt', label: 'PT', title: 'Português', placeholder: 'Descrição do recurso em português…' },
 ]
 
 export function LanguageTabs({

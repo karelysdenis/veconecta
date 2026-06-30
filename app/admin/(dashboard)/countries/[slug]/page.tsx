@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
+import { FlagImage } from '@/components/admin/FlagImage'
 
 export default async function EditCountryPage({
   params,
@@ -48,7 +49,12 @@ export default async function EditCountryPage({
       </nav>
 
       <div className="flex items-center gap-3 mb-6">
-        {(() => { const src = country.cca2 ? `https://flagcdn.com/w80/${country.cca2}.png` : flagUrl(country.slug, 'w80'); return src ? <img src={src} width={48} height={32} alt="" className="rounded-sm object-cover" /> : <span className="text-4xl leading-none">{country.flag}</span> })()}
+        <FlagImage
+          src={country.cca2 ? `https://flagcdn.com/w80/${country.cca2}.png` : flagUrl(country.slug, 'w80')}
+          flag={country.flag}
+          size={48}
+          imgClassName="rounded-sm object-cover"
+        />
         <h1 className="text-xl font-bold text-gray-900">{country.nameEs}</h1>
       </div>
 

@@ -2,9 +2,9 @@
 import { useState } from 'react'
 
 const LANGS = [
-  { code: 'es', label: '🇪🇸 ES', title: 'Español', name: 'name', placeholder: 'Nombre del recurso…', required: true },
-  { code: 'en', label: '🇺🇸 EN', title: 'English', name: 'nameEn', placeholder: 'Resource name…', required: false },
-  { code: 'pt', label: '🇧🇷 PT', title: 'Português', name: 'namePt', placeholder: 'Nome do recurso…', required: false },
+  { code: 'es', label: 'ES', title: 'Español', name: 'name', placeholder: 'Nombre del recurso…', required: true },
+  { code: 'en', label: 'EN', title: 'English', name: 'nameEn', placeholder: 'Resource name…', required: false },
+  { code: 'pt', label: 'PT', title: 'Português', name: 'namePt', placeholder: 'Nome do recurso…', required: false },
 ]
 
 export function NameTabs({

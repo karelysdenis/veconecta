@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { logAction } from '@/lib/audit'
 import { flagUrl } from '@/lib/country-iso'
+import { FlagImage } from '@/components/admin/FlagImage'
 
 const CATEGORY_LABELS: Record<string, string> = {
   FIND_FAMILY: 'Encontrar familia',
@@ -19,8 +20,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function Flag({ cca2, slug, flag, size = 20 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
-  if (src) return <img src={src} width={size} height={Math.round(size * 0.67)} alt="" className="rounded-[2px] object-cover shrink-0" />
-  return <span className="leading-none" style={{ fontSize: size }}>{flag}</span>
+  return <FlagImage src={src} flag={flag} size={size} />
 }
 
 export default async function GlobalReviewPage({

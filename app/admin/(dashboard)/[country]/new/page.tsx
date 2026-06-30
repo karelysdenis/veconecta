@@ -8,6 +8,8 @@ import { UrlField } from '@/components/admin/UrlField'
 import { LanguageTabs } from '@/components/admin/LanguageTabs'
 import { NameTabs } from '@/components/admin/NameTabs'
 import { logAction } from '@/lib/audit'
+import { FlagImage } from '@/components/admin/FlagImage'
+import { flagUrl } from '@/lib/country-iso'
 
 const CATEGORIES = Object.values(ResourceCategory)
 
@@ -79,8 +81,15 @@ export default async function NewResourcePage({
       <nav className="flex items-center gap-2 mb-6 text-sm">
         <Link href="/admin" className="text-gray-400 hover:text-gray-700">Inicio</Link>
         <span className="text-gray-300">/</span>
-        <Link href={`/admin/${country}`} className="text-gray-400 hover:text-gray-700">
-          {countryRecord?.flag} {countryName}
+        <Link href={`/admin/${country}`} className="text-gray-400 hover:text-gray-700 flex items-center gap-1.5">
+          {countryRecord && (
+            <FlagImage
+              src={countryRecord.cca2 ? `https://flagcdn.com/w40/${countryRecord.cca2}.png` : flagUrl(countryRecord.slug)}
+              flag={countryRecord.flag}
+              size={16}
+            />
+          )}
+          {countryName}
         </Link>
         <span className="text-gray-300">/</span>
         <span className="text-gray-900 font-medium">Nuevo</span>
