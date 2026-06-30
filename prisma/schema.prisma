@@ -47,6 +47,21 @@ model Country {
   active        Boolean    @default(true)
   lastUpdatedAt DateTime   @updatedAt
   resources     Resource[]
+  cities        City[]
+}
+
+model City {
+  id          String     @id @default(cuid())
+  countrySlug String
+  country     Country    @relation(fields: [countrySlug], references: [slug])
+  slug        String
+  nameEs      String
+  nameEn      String?
+  namePt      String?
+  resources   Resource[]
+
+  @@unique([countrySlug, slug])
+  @@index([countrySlug])
 }
 
 model Resource {
@@ -58,6 +73,8 @@ model Resource {
   nameEn      String?
   namePt      String?
   city        String?
+  cityId      String?
+  cityRel     City?            @relation(fields: [cityId], references: [id])
   url         String?
   phone       String?
   bizum       String?
@@ -77,6 +94,7 @@ model Resource {
   @@index([status])
   @@index([countrySlug])
   @@index([city])
+  @@index([cityId])
 }
 
 model AuditLog {
