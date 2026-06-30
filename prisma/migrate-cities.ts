@@ -1,19 +1,11 @@
 // prisma/migrate-cities.ts
 import { PrismaClient } from '@prisma/client'
+import { cityToSlug } from '../lib/slugify'
 
 const prisma = new PrismaClient()
 
 const VIRTUAL = new Set(['nacional', 'national'])
 function isVirtual(city: string) { return VIRTUAL.has(city.toLowerCase()) }
-
-function cityToSlug(city: string): string {
-  return city
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
 
 async function main() {
   const resources = await prisma.resource.findMany({
