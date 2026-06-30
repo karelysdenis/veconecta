@@ -27,10 +27,23 @@ const CATEGORY_LABELS: Record<string, string> = {
 function DaysLeft({ date }: { date: Date | null }) {
   if (!date) return null
   const days = Math.ceil((date.getTime() - Date.now()) / 86400000)
-  if (days > 7) return null
+  if (days < 0) {
+    return (
+      <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-100 text-red-700">
+        Vencido
+      </span>
+    )
+  }
+  if (days <= 2) {
+    return (
+      <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">
+        {days}d
+      </span>
+    )
+  }
   return (
-    <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${days <= 0 ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
-      {days <= 0 ? 'Vencido' : `Vence en ${days}d`}
+    <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-green-100 text-green-700">
+      {days}d
     </span>
   )
 }
@@ -63,7 +76,9 @@ export default async function AdminCountryPage({
 
   const drafts = countryRecord.resources.filter((r) => r.status === 'DRAFT')
   const published = countryRecord.resources.filter((r) => r.status === 'PUBLISHED')
-  const unverifiedCount = published.filter((r) => !r.verifiedAt).length
+  const urgentCount = published.filter(
+    (r) => r.expiresAt !== null && r.expiresAt <= new Date(Date.now() + 2 * 86400000)
+  ).length
 
   async function publishResource(formData: FormData) {
     'use server'
@@ -141,9 +156,9 @@ export default async function AdminCountryPage({
               className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-1.5"
             >
               Revisar
-              {unverifiedCount > 0 && (
+              {urgentCount > 0 && (
                 <span className="text-xs bg-orange-500 text-white px-1.5 py-0.5 rounded-full leading-none">
-                  {unverifiedCount}
+                  {urgentCount}
                 </span>
               )}
             </Link>
