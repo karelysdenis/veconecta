@@ -72,13 +72,16 @@ export default async function AdminCountryPage({
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const now = new Date()
+    const existing = await prisma.resource.findUnique({ where: { id }, select: { expiresAt: true } })
     const resource = await prisma.resource.update({
       where: { id },
       data: {
         status: 'PUBLISHED',
         verifiedAt: user.role === 'ADMIN' ? now : null,
         verifiedBy: user.role === 'ADMIN' ? user.email : null,
-        expiresAt: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000),
+        expiresAt: existing?.expiresAt != null
+          ? new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000)
+          : null,
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_PUBLISH', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
