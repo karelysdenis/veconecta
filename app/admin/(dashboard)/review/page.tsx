@@ -50,13 +50,6 @@ export default async function GlobalReviewPage({
   const prevI = idx > 0 ? idx - 1 : null
   const nextI = idx < total - 1 ? idx + 1 : null
 
-  const countrySlugs = [...new Set(resources.map((r) => r.countrySlug))]
-  const countryRows = await prisma.country.findMany({
-    where: { slug: { in: countrySlugs } },
-    select: { slug: true, nameEs: true, cca2: true, flag: true },
-  })
-  const countryMap = Object.fromEntries(countryRows.map((c) => [c.slug, c]))
-
   async function confirm(formData: FormData) {
     'use server'
     const id = formData.get('id') as string
@@ -64,7 +57,9 @@ export default async function GlobalReviewPage({
     const countrySlug = formData.get('countrySlug') as string
     const { user } = await getSession()
     if (!user) return
-    if (user.role === 'EDITOR' && !user.countrySlugs.includes(countrySlug)) return
+    const row = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
+    if (!row) return
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(row.countrySlug)) return
 
     const updated = await prisma.resource.update({
       where: { id },
@@ -109,6 +104,13 @@ export default async function GlobalReviewPage({
       </div>
     )
   }
+
+  const countrySlugs = [...new Set(resources.map((r) => r.countrySlug))]
+  const countryRows = await prisma.country.findMany({
+    where: { slug: { in: countrySlugs } },
+    select: { slug: true, nameEs: true, cca2: true, flag: true },
+  })
+  const countryMap = Object.fromEntries(countryRows.map((c) => [c.slug, c]))
 
   const currentCountry = countryMap[resource.countrySlug]
 
