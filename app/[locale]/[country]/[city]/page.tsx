@@ -28,15 +28,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, country: urlSlug, city: citySlug } = await params
   const whereLocalized = locale === 'en' ? { slugEn: urlSlug } : locale === 'pt' ? { slugPt: urlSlug } : { slugEs: urlSlug }
-  const country = await prisma.country.findFirst({ where: whereLocalized })
+  const country = await prisma.country.findFirst({ where: { ...whereLocalized, active: true } })
   if (!country) return {}
 
   const cityRecord = await prisma.city.findFirst({ where: { countrySlug: country.slug, slug: citySlug } })
-  const cityName = cityRecord
-    ? (locale === 'en' ? (cityRecord.nameEn ?? cityRecord.nameEs) : locale === 'pt' ? (cityRecord.namePt ?? cityRecord.nameEs) : cityRecord.nameEs)
-    : citySlug
+  if (!cityRecord) return {}
+  const cityName = locale === 'en' ? (cityRecord.nameEn ?? cityRecord.nameEs) : locale === 'pt' ? (cityRecord.namePt ?? cityRecord.nameEs) : cityRecord.nameEs
 
-  const countryName = locale === 'en' ? country.nameEn : country.nameEs
+  const countryName = locale === 'en' ? country.nameEn : locale === 'pt' ? (country.namePt ?? country.nameEs) : country.nameEs
 
   return {
     title: `${cityName}, ${countryName} | VeConecta`,

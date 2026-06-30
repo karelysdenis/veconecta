@@ -6,13 +6,17 @@ import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { cityToSlug } from '@/lib/slugify'
+import { ResourceStatus } from '@prisma/client'
 
 export default async function EditCountryPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>
+  searchParams: Promise<{ error?: string }>
 }) {
   const { slug } = await params
+  const { error } = await searchParams
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
   if (user.role !== 'ADMIN') redirect('/admin')
@@ -21,7 +25,7 @@ export default async function EditCountryPage({
     prisma.country.findUnique({ where: { slug } }),
     prisma.city.findMany({
       where: { countrySlug: slug },
-      include: { _count: { select: { resources: true } } },
+      include: { _count: { select: { resources: { where: { status: ResourceStatus.PUBLISHED } } } } },
       orderBy: { nameEs: 'asc' },
     }),
   ])
@@ -65,7 +69,9 @@ export default async function EditCountryPage({
         },
       })
     } catch (e: unknown) {
-      if ((e as { code?: string })?.code === 'P2002') return
+      if ((e as { code?: string })?.code === 'P2002') {
+        redirect(`/admin/countries/${slug}?error=city-duplicate`)
+      }
       throw e
     }
     revalidatePath(`/admin/countries/${slug}`)
@@ -76,8 +82,9 @@ export default async function EditCountryPage({
     const { user } = await getSession()
     if (!user || user.role !== 'ADMIN') return
     const cityId = fd.get('cityId') as string
-    const count = await prisma.resource.count({ where: { cityId } })
-    if (count > 0) return // guard: don't delete cities with resources
+    if (!cityId) return
+    const count = await prisma.resource.count({ where: { cityId, status: ResourceStatus.PUBLISHED } })
+    if (count > 0) return
     await prisma.city.delete({ where: { id: cityId, countrySlug: slug } })
     revalidatePath(`/admin/countries/${slug}`)
   }
@@ -204,6 +211,9 @@ export default async function EditCountryPage({
 
         <form action={createCity} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
           <p className="text-sm font-medium text-gray-700">Nueva ciudad</p>
+          {error === 'city-duplicate' && (
+            <p className="text-sm text-red-600">Ya existe una ciudad con ese slug. Prueba un nombre diferente.</p>
+          )}
           <div className="grid grid-cols-3 gap-3">
             <div>
               <label className="block text-xs text-gray-500 mb-1">Nombre ES <span className="text-red-400">*</span></label>

@@ -24,7 +24,7 @@ export default async function EditCityPage({
     const nameEs = (fd.get('nameEs') as string).trim()
     if (!nameEs) return
     await prisma.city.update({
-      where: { id: cityId },
+      where: { id: cityId, countrySlug: slug },
       data: {
         nameEs,
         nameEn: (fd.get('nameEn') as string).trim() || null,
@@ -50,7 +50,7 @@ export default async function EditCityPage({
       <form action={save} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Slug <span className="text-xs text-gray-400 font-normal">(no editable — afecta URLs públicas)</span>
+            Slug <span className="text-xs text-gray-400 font-normal">(no editable: afecta URLs públicas)</span>
           </label>
           <input type="text" value={city.slug} disabled
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-400 cursor-not-allowed font-mono" />

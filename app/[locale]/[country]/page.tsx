@@ -34,7 +34,7 @@ export async function generateMetadata({
       : { slugEs: urlSlug }
 
   const [country, t] = await Promise.all([
-    prisma.country.findFirst({ where: whereLocalized }),
+    prisma.country.findFirst({ where: { ...whereLocalized, active: true } }),
     getTranslations({ locale, namespace: 'country' }),
   ])
   if (!country) return {}
@@ -129,7 +129,11 @@ export default async function CountryPage({
 
   const realCities: CityEntry[] = citiesWithCount
     .filter((c) => c._count.resources > 0)
-    .map((c) => ({ name: c.nameEs, slug: c.slug, count: c._count.resources }))
+    .map((c) => ({
+      name: locale === 'en' ? (c.nameEn ?? c.nameEs) : locale === 'pt' ? (c.namePt ?? c.nameEs) : c.nameEs,
+      slug: c.slug,
+      count: c._count.resources,
+    }))
     .sort((a, b) => b.count - a.count)
 
   const hasCitySelector = realCities.length >= 2

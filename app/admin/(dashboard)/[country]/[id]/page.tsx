@@ -138,7 +138,7 @@ export default async function EditResourcePage({
           <F label="Bizum" name="bizum" defaultValue={resource.bizum ?? ''} />
         </div>
 
-        {cities.length > 0 && (
+        {cities.length > 0 ? (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad / Región</label>
             <select name="cityId"
@@ -150,6 +150,8 @@ export default async function EditResourcePage({
               ))}
             </select>
           </div>
+        ) : (
+          <input type="hidden" name="cityId" value={resource.cityId ?? ''} />
         )}
         <F label="Dirección" name="address" defaultValue={resource.address ?? ''} />
         <F label="Horario" name="schedule" defaultValue={resource.schedule ?? ''} />
