@@ -54,7 +54,6 @@ export default async function GlobalReviewPage({
     'use server'
     const id = formData.get('id') as string
     const returnI = formData.get('returnI') as string
-    const countrySlug = formData.get('countrySlug') as string
     const { user } = await getSession()
     if (!user) return
     const row = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
@@ -119,7 +118,7 @@ export default async function GlobalReviewPage({
       <Breadcrumb />
 
       {/* Controls */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center mb-3">
         <span className="text-sm text-gray-500 tabular-nums">{idx + 1} / {total}</span>
       </div>
 
@@ -250,8 +249,6 @@ export default async function GlobalReviewPage({
             }`}>
               {ms < 0
                 ? `Vencido hace ${Math.abs(days)} día${Math.abs(days) !== 1 ? 's' : ''}`
-                : days === 0
-                ? 'Vence hoy'
                 : `Vence en ${days} día${days !== 1 ? 's' : ''}`}
             </div>
           )
@@ -271,7 +268,6 @@ export default async function GlobalReviewPage({
             <form action={confirm}>
               <input type="hidden" name="id" value={resource.id} />
               <input type="hidden" name="returnI" value={String(idx)} />
-              <input type="hidden" name="countrySlug" value={resource.countrySlug} />
               <button
                 type="submit"
                 className="text-sm bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 font-medium"
@@ -283,7 +279,6 @@ export default async function GlobalReviewPage({
             <form action={confirm}>
               <input type="hidden" name="id" value={resource.id} />
               <input type="hidden" name="returnI" value={String(idx)} />
-              <input type="hidden" name="countrySlug" value={resource.countrySlug} />
               <button
                 type="submit"
                 className="text-sm border border-green-300 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 font-medium"
