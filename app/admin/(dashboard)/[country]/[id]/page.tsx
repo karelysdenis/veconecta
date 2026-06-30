@@ -41,9 +41,10 @@ export default async function EditResourcePage({
   if (!user) redirect('/admin/login')
   if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
 
-  const [resource, countryRecord] = await Promise.all([
+  const [resource, countryRecord, cities] = await Promise.all([
     prisma.resource.findUnique({ where: { id } }),
     prisma.country.findUnique({ where: { slug: country } }),
+    prisma.city.findMany({ where: { countrySlug: country }, orderBy: { nameEs: 'asc' } }),
   ])
   if (!resource || resource.countrySlug !== country) notFound()
 
@@ -67,7 +68,7 @@ export default async function EditResourcePage({
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
-        city: (fd.get('city') as string).trim() || null,
+        cityId: (fd.get('cityId') as string) || null,
         address: (fd.get('address') as string).trim() || null,
         schedule: (fd.get('schedule') as string).trim() || null,
         free: fd.get('free') === 'on',
@@ -137,7 +138,19 @@ export default async function EditResourcePage({
           <F label="Bizum" name="bizum" defaultValue={resource.bizum ?? ''} />
         </div>
 
-        <F label="Ciudad / Región" name="city" defaultValue={resource.city ?? ''} />
+        {cities.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad / Región</label>
+            <select name="cityId"
+              defaultValue={resource.cityId ?? ''}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300">
+              <option value="">— Nacional (sin ciudad específica)</option>
+              {cities.map(c => (
+                <option key={c.id} value={c.id}>{c.nameEs}</option>
+              ))}
+            </select>
+          </div>
+        )}
         <F label="Dirección" name="address" defaultValue={resource.address ?? ''} />
         <F label="Horario" name="schedule" defaultValue={resource.schedule ?? ''} />
         <F label="Vence (fecha)" name="expiresAt" type="date" defaultValue={expFormatted} />

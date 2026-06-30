@@ -69,6 +69,7 @@ export default async function AdminCountryPage({
       resources: {
         where: { status: { not: ResourceStatus.ARCHIVED } },
         orderBy: [{ status: 'asc' }, { category: 'asc' }, { createdAt: 'asc' }],
+        include: { cityRel: true },
       },
     },
   })
@@ -195,7 +196,7 @@ export default async function AdminCountryPage({
                       <span className="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
                         {CATEGORY_LABELS[r.category] ?? r.category}
                       </span>
-                      {r.city && <span className="text-xs text-gray-400">{r.city}</span>}
+                      {r.cityRel && <span className="text-xs text-gray-400">{r.cityRel.nameEs}</span>}
                       <DaysLeft date={r.expiresAt} />
                     </div>
                     <p className="font-medium text-sm text-gray-900">{r.name}</p>

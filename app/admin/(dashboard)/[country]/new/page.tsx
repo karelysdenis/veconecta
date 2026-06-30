@@ -34,7 +34,10 @@ export default async function NewResourcePage({
   if (!user) redirect('/admin/login')
   if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
 
-  const countryRecord = await prisma.country.findUnique({ where: { slug: country } })
+  const [countryRecord, cities] = await Promise.all([
+    prisma.country.findUnique({ where: { slug: country } }),
+    prisma.city.findMany({ where: { countrySlug: country }, orderBy: { nameEs: 'asc' } }),
+  ])
 
   async function create(fd: FormData) {
     'use server'
@@ -54,7 +57,7 @@ export default async function NewResourcePage({
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
-        city: (fd.get('city') as string).trim() || null,
+        cityId: (fd.get('cityId') as string) || null,
         address: (fd.get('address') as string).trim() || null,
         schedule: (fd.get('schedule') as string).trim() || null,
         free: fd.get('free') === 'on',
@@ -103,7 +106,18 @@ export default async function NewResourcePage({
 
         <div className="grid grid-cols-2 gap-4">
           <Sel label="Categoría" name="category" opts={CATEGORIES} labels={CATEGORY_LABELS} />
-          <F label="Ciudad / Región" name="city" />
+          {cities.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad / Región</label>
+              <select name="cityId"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300">
+                <option value="">— Nacional (sin ciudad específica)</option>
+                {cities.map(c => (
+                  <option key={c.id} value={c.id}>{c.nameEs}</option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         <UrlField />
