@@ -75,15 +75,15 @@ export default async function GlobalReviewPage({
       entityType: 'resource',
       entityId: id,
       entityName: updated.name,
-      countrySlug,
+      countrySlug: row.countrySlug,
     })
     revalidatePath('/admin/review')
     revalidatePath('/admin')
-    revalidatePath(`/admin/${countrySlug}`)
-    revalidatePath(`/admin/${countrySlug}/review`)
-    revalidatePath(`/es/${countrySlug}`)
-    revalidatePath(`/en/${countrySlug}`)
-    revalidatePath(`/pt/${countrySlug}`)
+    revalidatePath(`/admin/${row.countrySlug}`)
+    revalidatePath(`/admin/${row.countrySlug}/review`)
+    revalidatePath(`/es/${row.countrySlug}`)
+    revalidatePath(`/en/${row.countrySlug}`)
+    revalidatePath(`/pt/${row.countrySlug}`)
     redirect(`/admin/review?i=${returnI}`)
   }
 
