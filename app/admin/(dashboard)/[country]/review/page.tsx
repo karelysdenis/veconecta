@@ -248,16 +248,17 @@ export default async function ReviewPage({
 
         {/* Expiry */}
         {resource.expiresAt && (() => {
-          const days = Math.ceil((resource.expiresAt!.getTime() - Date.now()) / 86400000)
+          const ms = resource.expiresAt!.getTime() - Date.now()
+          const days = Math.ceil(ms / 86400000)
           return (
             <div className={`text-sm font-medium px-3 py-2 rounded-lg text-center ${
-              days < 0
+              ms < 0
                 ? 'bg-red-50 text-red-700 border border-red-200'
                 : days <= 2
                 ? 'bg-amber-50 text-amber-700 border border-amber-200'
                 : 'bg-green-50 text-green-700 border border-green-200'
             }`}>
-              {days < 0
+              {ms < 0
                 ? `Vencido hace ${Math.abs(days)} día${Math.abs(days) !== 1 ? 's' : ''}`
                 : days === 0
                 ? 'Vence hoy'

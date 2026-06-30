@@ -26,14 +26,15 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function DaysLeft({ date }: { date: Date | null }) {
   if (!date) return null
-  const days = Math.ceil((date.getTime() - Date.now()) / 86400000)
-  if (days < 0) {
+  const ms = date.getTime() - Date.now()
+  if (ms < 0) {
     return (
       <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-100 text-red-700">
         Vencido
       </span>
     )
   }
+  const days = Math.ceil(ms / 86400000)
   if (days <= 2) {
     return (
       <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">
@@ -111,9 +112,14 @@ export default async function AdminCountryPage({
     const id = formData.get('id') as string
     const { user } = await getSession()
     if (!user || user.role !== 'ADMIN') return
+    const existing = await prisma.resource.findUnique({ where: { id }, select: { expiresAt: true } })
     const resource = await prisma.resource.update({
       where: { id },
-      data: { verifiedAt: new Date(), verifiedBy: user.email },
+      data: {
+        verifiedAt: new Date(),
+        verifiedBy: user.email,
+        ...(existing?.expiresAt != null ? { expiresAt: new Date(Date.now() + 5 * 86400000) } : {}),
+      },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_CONFIRM', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
     revalidatePath(`/admin/${country}`)
