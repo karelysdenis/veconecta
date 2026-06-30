@@ -6,7 +6,6 @@ import { ActionCard } from '@/components/ActionCard'
 import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
-import { cityToSlug } from '@/lib/slugify'
 import { getLocalizedSlug } from '@/lib/country-slug'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
@@ -31,26 +30,13 @@ export async function generateMetadata({
   const whereLocalized = locale === 'en' ? { slugEn: urlSlug } : locale === 'pt' ? { slugPt: urlSlug } : { slugEs: urlSlug }
   const country = await prisma.country.findFirst({ where: whereLocalized })
   if (!country) return {}
-  const countrySlug = country.slug
+
+  const cityRecord = await prisma.city.findFirst({ where: { countrySlug: country.slug, slug: citySlug } })
+  const cityName = cityRecord
+    ? (locale === 'en' ? (cityRecord.nameEn ?? cityRecord.nameEs) : locale === 'pt' ? (cityRecord.namePt ?? cityRecord.nameEs) : cityRecord.nameEs)
+    : citySlug
 
   const countryName = locale === 'en' ? country.nameEn : country.nameEs
-
-  // Find the canonical city name from slug
-  const cityResource = await prisma.resource.findFirst({
-    where: {
-      countrySlug,
-      status: ResourceStatus.PUBLISHED,
-      city: { not: null },
-    },
-    select: { city: true },
-  })
-  const allCityResources = await prisma.resource.findMany({
-    where: { countrySlug, status: ResourceStatus.PUBLISHED, city: { not: null } },
-    select: { city: true },
-  })
-  const cityName =
-    allCityResources.find((r) => r.city && cityToSlug(r.city) === citySlug)?.city ??
-    citySlug
 
   return {
     title: `${cityName}, ${countryName} | VeConecta`,
@@ -94,7 +80,8 @@ export default async function CityPage({
 
   const countrySlug = country.slug
 
-  const [allCountryResources, globalResources] = await Promise.all([
+  const [cityRecord, allCountryResources, globalResources] = await Promise.all([
+    prisma.city.findFirst({ where: { countrySlug, slug: citySlug } }),
     prisma.resource.findMany({
       where: { countrySlug, status: ResourceStatus.PUBLISHED },
       orderBy: { createdAt: 'asc' },
@@ -105,11 +92,14 @@ export default async function CityPage({
     }),
   ])
 
-  // Find canonical city name from the slug
-  const cityName =
-    allCountryResources.find((r) => r.city && cityToSlug(r.city) === citySlug)?.city
+  if (!cityRecord) notFound()
 
-  if (!cityName) notFound()
+  const cityName =
+    locale === 'en'
+      ? (cityRecord.nameEn ?? cityRecord.nameEs)
+      : locale === 'pt'
+        ? (cityRecord.namePt ?? cityRecord.nameEs)
+        : cityRecord.nameEs
 
   const countryName =
     locale === 'en'
@@ -118,9 +108,9 @@ export default async function CityPage({
         ? (country.namePt ?? country.nameEs)
         : country.nameEs
 
-  // City resources = exact city match + no-city (national) resources + global
+  // City resources = FK match + no-city (national) resources
   const cityResources = allCountryResources.filter(
-    (r) => r.city === cityName || !r.city || r.city.toLowerCase() === 'nacional',
+    (r) => r.cityId === cityRecord.id || r.cityId === null,
   )
 
   const serializedCity = cityResources.map(serializeResource)
