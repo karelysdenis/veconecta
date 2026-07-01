@@ -26,7 +26,7 @@ export default function LoginForm() {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 w-full max-w-sm">
-      <h1 className="text-xl font-bold text-gray-900 mb-1">VeConecta</h1>
+      <h1 className="text-xl font-bold text-gray-900 mb-1">VEconecta</h1>
       <p className="text-sm text-gray-500 mb-6">Panel de administración</p>
 
       {errorParam === 'expired' && (

@@ -38,14 +38,14 @@ export async function generateMetadata({
   const heading = t('fromCountry', { name })
 
   return {
-    title: `${heading}: ${locale === 'en' ? 'How to help with the Venezuela earthquake' : 'Cómo ayudar con el terremoto de Venezuela'} | VeConecta`,
+    title: `${heading}: ${locale === 'en' ? 'How to help with the Venezuela earthquake' : 'Cómo ayudar con el terremoto de Venezuela'} | VEconecta`,
     description:
       locale === 'en'
         ? `Verified donation channels, free calls, and how to find missing family from ${name}. Updated resources for Venezuelans.`
         : `Recursos verificados para venezolanos en ${name}: donaciones, llamadas gratis, búsqueda de familiares.`,
     openGraph: {
       type: 'website',
-      siteName: 'VeConecta',
+      siteName: 'VEconecta',
       images: [{ url: '/api/og', width: 1200, height: 630 }],
     },
     alternates: {

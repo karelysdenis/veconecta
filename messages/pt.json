@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "VeConecta",
+    "name": "VEconecta",
     "tagline": "A diáspora venezuelana conectada"
   },
   "homepage": {
@@ -53,7 +53,7 @@
     "success": "Obrigado. Vamos revisar seu relatório nas próximas horas.",
     "error": "Erro ao enviar. Tente novamente."
   },
-  "disclaimer": "VeConecta é uma iniciativa cidadã independente. Verificamos a informação antes de publicá-la, mas os recursos mudam rápido. Confirme sempre antes de agir.",
+  "disclaimer": "VEconecta é uma iniciativa cidadã independente. Verificamos a informação antes de publicá-la, mas os recursos mudam rápido. Confirme sempre antes de agir.",
   "country": {
     "lastUpdated": "Atualizado: {date}",
     "noResources": "Recursos em preparação — volte em breve.",
@@ -103,7 +103,7 @@
     "address": "Endereço",
     "schedule": "Horário",
     "free": "Gratuito · Sem custo",
-    "verifiedBy": "Verificado por VeConecta",
+    "verifiedBy": "Verificado por VEconecta",
     "goToResource": "Ir ao recurso",
     "reportOutdated": "Informação incorreta ou desatualizada? Reporte",
     "callNow": "Ligar agora"

@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "VeConecta",
+    "name": "VEconecta",
     "tagline": "Die venezolanische Diaspora, vernetzt"
   },
   "homepage": {
@@ -53,7 +53,7 @@
     "success": "Danke. Wir prüfen deine Meldung innerhalb der nächsten Stunden.",
     "error": "Fehler beim Senden. Bitte erneut versuchen."
   },
-  "disclaimer": "VeConecta ist eine unabhängige Bürgerinitiative. Wir verifizieren Informationen vor der Veröffentlichung, aber Ressourcen ändern sich schnell. Bestätige immer, bevor du handelst.",
+  "disclaimer": "VEconecta ist eine unabhängige Bürgerinitiative. Wir verifizieren Informationen vor der Veröffentlichung, aber Ressourcen ändern sich schnell. Bestätige immer, bevor du handelst.",
   "country": {
     "lastUpdated": "Aktualisiert: {date}",
     "noResources": "Ressourcen in Vorbereitung — schau bald wieder vorbei.",
@@ -103,7 +103,7 @@
     "address": "Adresse",
     "schedule": "Öffnungszeiten",
     "free": "Kostenlos · Keine Kosten",
-    "verifiedBy": "Verifiziert von VeConecta",
+    "verifiedBy": "Verifiziert von VEconecta",
     "goToResource": "Zur Ressource",
     "reportOutdated": "Falsche oder veraltete Information? Melden",
     "callNow": "Jetzt anrufen"

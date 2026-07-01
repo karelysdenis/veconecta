@@ -17,7 +17,7 @@ export async function generateMetadata({
   if (!resource) return {}
   const resourceName = localizeBare(resource, 'name', locale)
   return {
-    title: `${resourceName} | VeConecta`,
+    title: `${resourceName} | VEconecta`,
     description: localizeSuffixed(resource, 'notes', locale) ?? undefined,
   }
 }

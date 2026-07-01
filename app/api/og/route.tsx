@@ -34,7 +34,7 @@ export async function GET() {
               letterSpacing: '-2px',
             }}
           >
-            VeConecta
+            VEconecta
           </div>
         </div>
         <div

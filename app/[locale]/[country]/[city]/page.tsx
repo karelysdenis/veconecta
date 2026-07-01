@@ -37,14 +37,14 @@ export async function generateMetadata({
   const countryName = localizeSuffixed(country, 'name', locale) ?? country.nameEs
 
   return {
-    title: `${cityName}, ${countryName} | VeConecta`,
+    title: `${cityName}, ${countryName} | VEconecta`,
     description:
       locale === 'en'
         ? `Verified resources for Venezuelans in ${cityName}, ${countryName}.`
         : `Recursos verificados para venezolanos en ${cityName}, ${countryName}.`,
     openGraph: {
       type: 'website',
-      siteName: 'VeConecta',
+      siteName: 'VEconecta',
       images: [{ url: '/api/og', width: 1200, height: 630 }],
     },
   }

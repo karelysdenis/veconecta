@@ -60,9 +60,9 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale, namespace: 'search' })
   if (!query) {
-    return { title: `${t('title')} | VeConecta` }
+    return { title: `${t('title')} | VEconecta` }
   }
-  return { title: `"${query}" — ${t('title')} | VeConecta` }
+  return { title: `"${query}" — ${t('title')} | VEconecta` }
 }
 
 export default async function SearchPage({

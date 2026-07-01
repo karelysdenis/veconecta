@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "VeConecta",
+    "name": "VEconecta",
     "tagline": "La diaspora vénézuélienne connectée"
   },
   "homepage": {
@@ -53,7 +53,7 @@
     "success": "Merci. Nous examinerons votre signalement dans les prochaines heures.",
     "error": "Erreur lors de l'envoi. Réessayez."
   },
-  "disclaimer": "VeConecta est une initiative citoyenne indépendante. Nous vérifions les informations avant publication, mais les ressources changent rapidement. Confirmez toujours avant d'agir.",
+  "disclaimer": "VEconecta est une initiative citoyenne indépendante. Nous vérifions les informations avant publication, mais les ressources changent rapidement. Confirmez toujours avant d'agir.",
   "country": {
     "lastUpdated": "Mis à jour : {date}",
     "noResources": "Ressources en préparation — revenez bientôt.",
@@ -103,7 +103,7 @@
     "address": "Adresse",
     "schedule": "Horaires",
     "free": "Gratuit · Sans frais",
-    "verifiedBy": "Vérifié par VeConecta",
+    "verifiedBy": "Vérifié par VEconecta",
     "goToResource": "Accéder à la ressource",
     "reportOutdated": "Information incorrecte ou obsolète ? Signalez-le",
     "callNow": "Appeler maintenant"
