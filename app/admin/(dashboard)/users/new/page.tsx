@@ -12,7 +12,7 @@ export default async function NewUserPage() {
   if (user.role !== 'ADMIN') redirect('/admin')
 
   const allCountries = await prisma.country.findMany({
-    where: { active: true },
+    where: { OR: [{ active: true }, { slug: 'global' }] },
     select: { slug: true, nameEs: true },
     orderBy: { nameEs: 'asc' },
   })

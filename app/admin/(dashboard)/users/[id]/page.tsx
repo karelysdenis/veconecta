@@ -19,7 +19,7 @@ export default async function EditUserPage({
   const [target, countries] = await Promise.all([
     prisma.user.findUnique({ where: { id } }),
     prisma.country.findMany({
-      where: { active: true },
+      where: { OR: [{ active: true }, { slug: 'global' }] },
       select: { slug: true, nameEs: true },
       orderBy: { nameEs: 'asc' },
     }).then(all => [
