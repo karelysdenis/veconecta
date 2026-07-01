@@ -133,8 +133,6 @@ export default async function EditResourcePage({
             es: resource.name,
             en: resource.nameEn ?? '',
             pt: resource.namePt ?? '',
-            fr: resource.nameFr ?? '',
-            de: resource.nameDe ?? '',
           }} />
         </div>
 
@@ -189,8 +187,6 @@ export default async function EditResourcePage({
             es: resource.notesEs ?? '',
             en: resource.notesEn ?? '',
             pt: resource.notesPt ?? '',
-            fr: resource.notesFr ?? '',
-            de: resource.notesDe ?? '',
           }} />
         </div>
 

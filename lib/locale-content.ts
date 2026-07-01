@@ -4,7 +4,7 @@
 // LOCALE_SUFFIX/LOCALE_LABELS below, add a messages/<locale>.json file — no
 // call site that renders content needs to change.
 
-export const LOCALES = ['es', 'en', 'pt', 'fr', 'de'] as const
+export const LOCALES = ['es', 'en', 'pt'] as const
 export type Locale = (typeof LOCALES)[number]
 export const DEFAULT_LOCALE: Locale = 'es'
 
@@ -12,8 +12,6 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   es: 'Español',
   en: 'English',
   pt: 'Português',
-  fr: 'Français',
-  de: 'Deutsch',
 }
 
 // BCP-47 tags for Intl.DateTimeFormat / Intl.NumberFormat.
@@ -21,17 +19,13 @@ export const INTL_LOCALE: Record<Locale, string> = {
   es: 'es-ES',
   en: 'en-US',
   pt: 'pt-PT',
-  fr: 'fr-FR',
-  de: 'de-DE',
 }
 
-// Column suffix per locale: name + suffix = nameEn, nameFr, nameDe...
+// Column suffix per locale: name + suffix = nameEn, namePt...
 export const LOCALE_SUFFIX: Record<Locale, string> = {
   es: 'Es',
   en: 'En',
   pt: 'Pt',
-  fr: 'Fr',
-  de: 'De',
 }
 
 function field(record: object, base: string, locale: string): string | null {

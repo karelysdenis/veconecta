@@ -68,13 +68,19 @@ export default async function CityPage({
   // Lookup by localized slug
   let country = await prisma.country.findFirst({ where: { ...localizedSlugWhere(urlSlug, locale), active: true } })
 
-  // Fallback: try canonical slug + redirect to localized URL
+  // Fallback: try canonical slug. Redirect only if a distinct localized slug
+  // exists for it — otherwise the localized slug equals urlSlug and
+  // redirecting would loop back to this same URL.
   if (!country) {
     const byCanonical = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
-    if (byCanonical) {
-      redirect(`/${locale}/${getLocalizedSlug(byCanonical, locale)}/${citySlug}`)
+    if (!byCanonical) notFound()
+
+    const localizedSlug = getLocalizedSlug(byCanonical, locale)
+    if (localizedSlug !== urlSlug) {
+      redirect(`/${locale}/${localizedSlug}/${citySlug}`)
     }
-    notFound()
+
+    country = byCanonical
   }
 
   const countrySlug = country.slug

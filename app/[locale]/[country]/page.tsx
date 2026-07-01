@@ -83,13 +83,28 @@ export default async function CountryPage({
     },
   })
 
-  // Fallback: try canonical slug and redirect to localized URL
+  // Fallback: try canonical slug. Redirect only if a distinct localized slug
+  // exists for it — otherwise the localized slug equals urlSlug and
+  // redirecting would loop back to this same URL.
   if (!country) {
     const byCanonical = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
-    if (byCanonical) {
-      redirect(`/${locale}/${getLocalizedSlug(byCanonical, locale)}`)
+    if (!byCanonical) notFound()
+
+    const localizedSlug = getLocalizedSlug(byCanonical, locale)
+    if (localizedSlug !== urlSlug) {
+      redirect(`/${locale}/${localizedSlug}`)
     }
-    notFound()
+
+    country = await prisma.country.findUnique({
+      where: { slug: byCanonical.slug },
+      include: {
+        resources: {
+          where: { status: ResourceStatus.PUBLISHED },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    })
+    if (!country) notFound()
   }
 
   const slug = country.slug
