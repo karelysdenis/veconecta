@@ -67,7 +67,7 @@ export default async function EditResourcePage({
     const expiresRaw = fd.get('expiresAt') as string
     const name = (fd.get('name') as string).trim()
     const isAdmin = user.role === 'ADMIN'
-    const newStatus = isAdmin ? fd.get('status') as ResourceStatus : undefined
+    const newStatus = fd.get('status') as ResourceStatus
     await prisma.resource.update({
       where: { id },
       data: {
@@ -75,7 +75,7 @@ export default async function EditResourcePage({
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
-        ...(newStatus !== undefined ? { status: newStatus } : {}),
+        status: newStatus,
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
@@ -134,16 +134,7 @@ export default async function EditResourcePage({
 
         <div className="grid grid-cols-2 gap-4">
           <Sel label="Categoría" name="category" value={resource.category} opts={CATEGORIES} labels={CATEGORY_LABELS} />
-          {user.role === 'ADMIN' ? (
-            <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} labels={STATUS_LABELS} />
-          ) : (
-            <div>
-              <p className="block text-sm font-medium text-gray-700 mb-1">Estado</p>
-              <p className="border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500">
-                {STATUS_LABELS[resource.status] ?? resource.status}
-              </p>
-            </div>
-          )}
+          <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} labels={STATUS_LABELS} />
         </div>
 
         <UrlField defaultValue={resource.url ?? ''} />
