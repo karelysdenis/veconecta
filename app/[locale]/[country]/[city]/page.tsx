@@ -1,13 +1,12 @@
 import Link from 'next/link'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
-import { getLocalizedSlug } from '@/lib/country-slug'
-import { localizeSuffixed, localizedSlugWhere, anyLocaleSlugWhere, type Locale } from '@/lib/locale-content'
+import { localizeSuffixed, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -28,7 +27,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; country: string; city: string }>
 }): Promise<Metadata> {
   const { locale, country: urlSlug, city: citySlug } = await params
-  const country = await prisma.country.findFirst({ where: { ...localizedSlugWhere(urlSlug, locale), active: true } })
+  const country = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
   if (!country) return {}
 
   const cityRecord = await prisma.city.findFirst({ where: { countrySlug: country.slug, slug: citySlug } })
@@ -65,24 +64,8 @@ export default async function CityPage({
     getTranslations('search'),
   ])
 
-  // Lookup by localized slug
-  let country = await prisma.country.findFirst({ where: { ...localizedSlugWhere(urlSlug, locale), active: true } })
-
-  // Fallback: the URL may carry a slug from a different locale (e.g. the
-  // language switcher swaps only the locale segment). Match it against the
-  // canonical id or any locale's slug column, then redirect to this locale's
-  // own slug — unless it's already the same, which would loop.
-  if (!country) {
-    const byCanonical = await prisma.country.findFirst({ where: { ...anyLocaleSlugWhere(urlSlug), active: true } })
-    if (!byCanonical) notFound()
-
-    const localizedSlug = getLocalizedSlug(byCanonical, locale)
-    if (localizedSlug !== urlSlug) {
-      redirect(`/${locale}/${localizedSlug}/${citySlug}`)
-    }
-
-    country = byCanonical
-  }
+  const country = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
+  if (!country) notFound()
 
   const countrySlug = country.slug
 

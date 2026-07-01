@@ -4,7 +4,6 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { CountrySearch } from '@/components/admin/CountrySearch'
-import { cityToSlug } from '@/lib/slugify'
 
 export default async function NewCountryPage() {
   const { user } = await getSession()
@@ -21,9 +20,6 @@ export default async function NewCountryPage() {
     await prisma.country.create({
       data: {
         slug: (fd.get('slug') as string).trim().toLowerCase(),
-        slugEs: cityToSlug(nameEs),
-        slugEn: cityToSlug(nameEn),
-        slugPt: namePt ? cityToSlug(namePt) : cityToSlug(nameEs),
         nameEs,
         nameEn,
         namePt,

@@ -127,22 +127,6 @@ export default async function EditCountryPage({
           <F label="Código ISO" name="cca2" defaultValue={country.cca2 ?? ''} placeholder="ej: co" note="Para mostrar la bandera" />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: 'URL español', value: country.slugEs },
-            { label: 'URL inglés', value: country.slugEn },
-            { label: 'URL portugués', value: country.slugPt },
-          ].map(({ label, value }) => (
-            <div key={label}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {label} <span className="text-xs text-gray-400 font-normal">(no editable)</span>
-              </label>
-              <input type="text" value={value ?? ''} disabled
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-400 cursor-not-allowed" />
-            </div>
-          ))}
-        </div>
-
         <div className="grid grid-cols-2 gap-4">
           <F label="Nombre en español" name="nameEs" defaultValue={country.nameEs} required />
           <F label="Nombre en inglés" name="nameEn" defaultValue={country.nameEn ?? ''} required />

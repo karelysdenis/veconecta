@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import type { ResourceCategory } from '@prisma/client'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
-import { getLocalizedSlug } from '@/lib/country-slug'
 import { getResourceName } from '@/lib/types'
 import { localizeSuffixed } from '@/lib/locale-content'
 
@@ -196,7 +195,7 @@ export function SearchOverlay({
                     <div key={c.slug}>
                       <div className="h-px bg-[rgba(20,20,20,0.12)]" />
                       <Link
-                        href={`/${locale}/${getLocalizedSlug(c, locale)}`}
+                        href={`/${locale}/${c.slug}`}
                         onClick={close}
                         className="flex items-center gap-3 h-14 px-5 hover:bg-guacamaya/5 transition-colors"
                       >

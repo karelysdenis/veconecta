@@ -5,7 +5,6 @@ import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import { SearchResultLink } from '@/components/SearchResultLink'
 import { SearchInput } from '@/components/SearchInput'
 import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, type LucideIcon } from 'lucide-react'
-import { getLocalizedSlug } from '@/lib/country-slug'
 import { localizeSuffixed } from '@/lib/locale-content'
 import type { Metadata } from 'next'
 
@@ -98,7 +97,7 @@ export default async function SearchPage({
           ],
         },
         select: {
-          slug: true, slugEs: true, slugEn: true, slugPt: true, slugFr: true, slugDe: true,
+          slug: true,
           nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true,
         },
       })
@@ -194,7 +193,7 @@ export default async function SearchPage({
           <div key={c.slug}>
             <div className="h-px bg-[rgba(20,20,20,0.12)]" />
             <Link
-              href={`/${locale}/${getLocalizedSlug(c, locale)}`}
+              href={`/${locale}/${c.slug}`}
               className="flex items-center gap-3 h-14 px-5 hover:bg-guacamaya/5 transition-colors"
             >
               {flagSrc && <img src={flagSrc} width={24} height={16} alt="" className="object-cover rounded-[2px] shrink-0" />}

@@ -1,13 +1,12 @@
 import Link from 'next/link'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
-import { getLocalizedSlug } from '@/lib/country-slug'
-import { localizeSuffixed, localizedSlugWhere, anyLocaleSlugWhere, LOCALES, INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { localizeSuffixed, LOCALES, INTL_LOCALE, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -30,7 +29,7 @@ export async function generateMetadata({
   const { locale, country: urlSlug } = await params
 
   const [country, t] = await Promise.all([
-    prisma.country.findFirst({ where: { ...localizedSlugWhere(urlSlug, locale), active: true } }),
+    prisma.country.findUnique({ where: { slug: urlSlug, active: true } }),
     getTranslations({ locale, namespace: 'country' }),
   ])
   if (!country) return {}
@@ -52,7 +51,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://www.veconecta.org/${locale}/${urlSlug}`,
       languages: Object.fromEntries(
-        LOCALES.map((l) => [l, `https://www.veconecta.org/${l}/${getLocalizedSlug(country, l)}`]),
+        LOCALES.map((l) => [l, `https://www.veconecta.org/${l}/${country.slug}`]),
       ),
     },
   }
@@ -72,9 +71,8 @@ export default async function CountryPage({
     getTranslations('search'),
   ])
 
-  // Lookup by localized slug
-  let country = await prisma.country.findFirst({
-    where: { ...localizedSlugWhere(urlSlug, locale), active: true },
+  const country = await prisma.country.findUnique({
+    where: { slug: urlSlug, active: true },
     include: {
       resources: {
         where: { status: ResourceStatus.PUBLISHED },
@@ -82,31 +80,7 @@ export default async function CountryPage({
       },
     },
   })
-
-  // Fallback: the URL may carry a slug from a different locale (e.g. the
-  // language switcher swaps only the locale segment). Match it against the
-  // canonical id or any locale's slug column, then redirect to this locale's
-  // own slug — unless it's already the same, which would loop.
-  if (!country) {
-    const byCanonical = await prisma.country.findFirst({ where: { ...anyLocaleSlugWhere(urlSlug), active: true } })
-    if (!byCanonical) notFound()
-
-    const localizedSlug = getLocalizedSlug(byCanonical, locale)
-    if (localizedSlug !== urlSlug) {
-      redirect(`/${locale}/${localizedSlug}`)
-    }
-
-    country = await prisma.country.findUnique({
-      where: { slug: byCanonical.slug },
-      include: {
-        resources: {
-          where: { status: ResourceStatus.PUBLISHED },
-          orderBy: { createdAt: 'asc' },
-        },
-      },
-    })
-    if (!country) notFound()
-  }
+  if (!country) notFound()
 
   const slug = country.slug
 

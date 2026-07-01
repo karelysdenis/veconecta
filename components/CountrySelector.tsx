@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import type { Country } from '@prisma/client'
 import { flagUrl } from '@/lib/country-iso'
-import { getLocalizedSlug } from '@/lib/country-slug'
 import { localizeSuffixed } from '@/lib/locale-content'
 
 type CountryWithCount = Country & {
@@ -25,7 +24,7 @@ export function CountrySelector({
         return (
           <Link
             key={country.slug}
-            href={`/${locale}/${getLocalizedSlug(country, locale)}`}
+            href={`/${locale}/${country.slug}`}
             className="flex items-center justify-between h-14 px-5 bg-white border-b border-black/[0.08] hover:bg-guacamaya/5 transition-colors"
           >
             <div className="flex items-center gap-3">

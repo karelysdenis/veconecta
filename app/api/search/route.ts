@@ -38,7 +38,7 @@ export async function GET(request: Request) {
       ],
     },
     select: {
-      slug: true, slugEs: true, slugEn: true, slugPt: true, slugFr: true, slugDe: true,
+      slug: true,
       nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true,
     },
   })

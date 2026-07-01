@@ -1,8 +1,9 @@
 // Single source of truth for which locales VeConecta supports and how
-// per-locale content columns (nameEn, namePt, notesFr, slugDe...) map to a
-// given locale. Adding a locale means: add the DB columns, add one entry to
+// per-locale content columns (nameEn, namePt, notesFr...) map to a given
+// locale. Adding a locale means: add the DB columns, add one entry to
 // LOCALE_SUFFIX/LOCALE_LABELS below, add a messages/<locale>.json file — no
-// call site that renders content needs to change.
+// call site that renders content needs to change. Slugs are NOT per-locale —
+// every locale shares the same canonical `slug` id.
 
 export const LOCALES = ['es', 'en', 'pt'] as const
 export type Locale = (typeof LOCALES)[number]
@@ -47,34 +48,10 @@ export function localizeBare(record: object, base: string, locale: string): stri
 
 /**
  * Records where the Spanish value also lives in its own `${base}Es` column
- * (Country/City names, Resource notes, slugs).
+ * (Country/City names, Resource notes).
  */
 export function localizeSuffixed(record: object, base: string, locale: string): string | null {
   const es = field(record, base, 'es')
   if (locale === 'es') return es
   return field(record, base, locale) ?? es
-}
-
-/** Builds a Prisma `where` filter for a locale-suffixed unique slug column (slugEs, slugEn, slugFr...). */
-export function localizedSlugWhere(urlSlug: string, locale: string): Record<string, string> {
-  const suffix = LOCALE_SUFFIX[locale as Locale] ?? LOCALE_SUFFIX.es
-  return { [`slug${suffix}`]: urlSlug }
-}
-
-/**
- * Builds a Prisma `where` filter matching urlSlug against the canonical slug
- * id OR any locale's slug column. Used as a fallback when the URL was built
- * for a different locale than the one currently requested (e.g. the language
- * switcher swaps only the locale segment, keeping whatever slug was in the
- * URL) — the canonical id alone isn't enough to recognize it.
- */
-export function anyLocaleSlugWhere(urlSlug: string): {
-  OR: Array<Record<string, string>>
-} {
-  return {
-    OR: [
-      { slug: urlSlug },
-      ...LOCALES.map((l) => ({ [`slug${LOCALE_SUFFIX[l]}`]: urlSlug })),
-    ],
-  }
 }
