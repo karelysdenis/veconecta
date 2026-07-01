@@ -1,10 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgTrgm]
 }
 
 model User {
@@ -47,6 +49,14 @@ model Country {
   lastUpdatedAt DateTime   @updatedAt
   resources     Resource[]
   cities        City[]
+
+  // Trigram indexes back the ILIKE '%term%' substring search in /api/search
+  // and /buscar — a plain btree index can't accelerate that query shape.
+  @@index([nameEs(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([nameEn(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([namePt(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([nameFr(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([nameDe(ops: raw("gin_trgm_ops"))], type: Gin)
 }
 
 model City {
@@ -98,6 +108,19 @@ model Resource {
   @@index([status])
   @@index([countrySlug])
   @@index([cityId])
+
+  // Trigram indexes back the ILIKE '%term%' substring search in /api/search
+  // and /buscar — a plain btree index can't accelerate that query shape.
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([nameEn(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([namePt(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([nameFr(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([nameDe(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([notesEs(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([notesEn(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([notesPt(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([notesFr(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([notesDe(ops: raw("gin_trgm_ops"))], type: Gin)
 }
 
 model AuditLog {
