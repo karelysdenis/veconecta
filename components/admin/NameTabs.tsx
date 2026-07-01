@@ -1,23 +1,35 @@
 'use client'
 import { useState } from 'react'
+import { LOCALES, LOCALE_SUFFIX, LOCALE_LABELS, type Locale } from '@/lib/locale-content'
 
-const LANGS = [
-  { code: 'es', label: 'ES', title: 'Español', name: 'name', placeholder: 'Nombre del recurso…', required: true },
-  { code: 'en', label: 'EN', title: 'English', name: 'nameEn', placeholder: 'Resource name…', required: false },
-  { code: 'pt', label: 'PT', title: 'Português', name: 'namePt', placeholder: 'Nome do recurso…', required: false },
-]
+const PLACEHOLDERS: Record<Locale, string> = {
+  es: 'Nombre del recurso…',
+  en: 'Resource name…',
+  pt: 'Nome do recurso…',
+  fr: 'Nom de la ressource…',
+  de: 'Name der Ressource…',
+}
+
+const LANGS = LOCALES.map((code) => ({
+  code,
+  label: code.toUpperCase(),
+  title: LOCALE_LABELS[code],
+  name: code === 'es' ? 'name' : `name${LOCALE_SUFFIX[code]}`,
+  placeholder: PLACEHOLDERS[code],
+  required: code === 'es',
+}))
+
+type Values = Partial<Record<Locale, string>>
 
 export function NameTabs({
   defaultValues = {},
 }: {
-  defaultValues?: { es?: string; en?: string; pt?: string }
+  defaultValues?: Values
 }) {
-  const [active, setActive] = useState('es')
-  const [filled, setFilled] = useState({
-    es: !!(defaultValues.es ?? ''),
-    en: !!(defaultValues.en ?? ''),
-    pt: !!(defaultValues.pt ?? ''),
-  })
+  const [active, setActive] = useState<Locale>('es')
+  const [filled, setFilled] = useState<Record<Locale, boolean>>(() =>
+    Object.fromEntries(LOCALES.map((l) => [l, !!(defaultValues[l] ?? '')])) as Record<Locale, boolean>,
+  )
 
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -37,7 +49,7 @@ export function NameTabs({
             {label}
             {required
               ? <span className="text-red-400 text-xs">*</span>
-              : filled[code as keyof typeof filled] && (
+              : filled[code] && (
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
                 )
             }
@@ -52,7 +64,7 @@ export function NameTabs({
               type="text"
               name={name}
               required={required}
-              defaultValue={defaultValues[code as keyof typeof defaultValues] ?? ''}
+              defaultValue={defaultValues[code] ?? ''}
               placeholder={placeholder}
               onChange={(e) => setFilled(prev => ({ ...prev, [code]: e.target.value.trim().length > 0 }))}
               className="w-full text-sm border-0 focus:outline-none placeholder:text-gray-300"

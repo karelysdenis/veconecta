@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { serializeResource } from '@/lib/types'
+import type { Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
@@ -72,7 +73,7 @@ export default async function GlobalPage({
           key={cat}
           category={cat}
           resources={byCategory[cat] ?? []}
-          locale={locale as 'es' | 'en' | 'pt'}
+          locale={locale as Locale}
         />
       ))}
       <div className="h-px bg-[rgba(20,20,20,0.12)]" />

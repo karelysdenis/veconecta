@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
 import { getRequestConfig } from 'next-intl/server'
+import { LOCALES, DEFAULT_LOCALE, type Locale } from '@/lib/locale-content'
 
-export const locales = ['es', 'en'] as const
-export type Locale = typeof locales[number]
-export const defaultLocale: Locale = 'es'
+export const locales = LOCALES
+export type { Locale }
+export const defaultLocale: Locale = DEFAULT_LOCALE
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const locale = (await requestLocale) ?? defaultLocale

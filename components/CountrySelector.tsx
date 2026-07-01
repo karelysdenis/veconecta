@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Country } from '@prisma/client'
 import { flagUrl } from '@/lib/country-iso'
 import { getLocalizedSlug } from '@/lib/country-slug'
+import { localizeSuffixed } from '@/lib/locale-content'
 
 type CountryWithCount = Country & {
   _count: { resources: number }
@@ -17,12 +18,7 @@ export function CountrySelector({
   return (
     <div>
       {countries.map((country) => {
-        const name =
-          locale === 'en'
-            ? country.nameEn
-            : locale === 'pt'
-              ? (country.namePt ?? country.nameEs)
-              : country.nameEs
+        const name = localizeSuffixed(country, 'name', locale) ?? country.nameEs
         const flag40 = flagUrl(country.slug, 'w40')
         const flag80 = flagUrl(country.slug, 'w80')
 

@@ -3,19 +3,9 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ReportForm } from '@/components/ReportForm'
+import { localizeBare, localizeSuffixed, INTL_LOCALE, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
-
-const CATEGORY_LABELS: Record<ResourceCategory, { es: string; en: string }> = {
-  FIND_FAMILY: { es: 'Localizar familia', en: 'Find family' },
-  DONATE_MONEY: { es: 'Donar dinero', en: 'Donate money' },
-  SEND_MONEY: { es: 'Enviar dinero', en: 'Send money' },
-  CALL_FREE: { es: 'Llamar gratis', en: 'Call for free' },
-  DONATE_PHYSICALLY: { es: 'Donar físicamente', en: 'Donate supplies' },
-  DIGITAL_BRIDGE: { es: 'Ser puente digital', en: 'Digital bridge' },
-  CONSULAR: { es: 'Trámites consulares', en: 'Consular services' },
-  MENTAL_HEALTH: { es: 'Apoyo psicológico', en: 'Mental health' },
-}
 
 export async function generateMetadata({
   params,
@@ -25,13 +15,10 @@ export async function generateMetadata({
   const { locale, id } = await params
   const resource = await prisma.resource.findUnique({ where: { id } })
   if (!resource) return {}
-  const resourceName = locale === 'en' ? (resource.nameEn ?? resource.name) : locale === 'pt' ? (resource.namePt ?? resource.name) : resource.name
+  const resourceName = localizeBare(resource, 'name', locale)
   return {
     title: `${resourceName} | VeConecta`,
-    description:
-      locale === 'en'
-        ? (resource.notesEn ?? resource.notesEs ?? undefined)
-        : (resource.notesEs ?? undefined),
+    description: localizeSuffixed(resource, 'notes', locale) ?? undefined,
   }
 }
 
@@ -43,9 +30,10 @@ export default async function ResourceDetailPage({
   const { locale, id } = await params
   setRequestLocale(locale)
 
-  const [tNav, tDetail] = await Promise.all([
+  const [tNav, tDetail, tCat] = await Promise.all([
     getTranslations('nav'),
     getTranslations('resourceDetail'),
+    getTranslations('categories'),
   ])
 
   const resource = await prisma.resource.findUnique({
@@ -55,28 +43,13 @@ export default async function ResourceDetailPage({
 
   if (!resource) notFound()
 
-  const countryName =
-    locale === 'en'
-      ? resource.country.nameEn
-      : locale === 'pt'
-        ? (resource.country.namePt ?? resource.country.nameEs)
-        : resource.country.nameEs
-
-  const displayName = locale === 'en' ? (resource.nameEn ?? resource.name) : locale === 'pt' ? (resource.namePt ?? resource.name) : resource.name
-  const notes =
-    locale === 'en'
-      ? (resource.notesEn ?? resource.notesEs)
-      : locale === 'pt'
-        ? (resource.notesPt ?? resource.notesEs)
-        : resource.notesEs
-
-  const categoryLabel =
-    locale === 'en'
-      ? CATEGORY_LABELS[resource.category].en
-      : CATEGORY_LABELS[resource.category].es
+  const countryName = localizeSuffixed(resource.country, 'name', locale) ?? resource.country.nameEs
+  const displayName = localizeBare(resource, 'name', locale)
+  const notes = localizeSuffixed(resource, 'notes', locale)
+  const categoryLabel = tCat(resource.category)
 
   const verifiedDate = resource.verifiedAt
-    ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
+    ? new Intl.DateTimeFormat(INTL_LOCALE[locale as Locale] ?? INTL_LOCALE.es, {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
@@ -199,7 +172,7 @@ export default async function ResourceDetailPage({
             href={`tel:${resource.phone.replace(/[^+\d]/g, '')}`}
             className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-caribe text-white font-sans font-semibold text-[15px] hover:bg-caribe/90 transition-colors"
           >
-            {locale === 'en' ? 'Call now' : 'Llamar ahora'} →
+            {tDetail('callNow')} →
           </a>
         )}
 

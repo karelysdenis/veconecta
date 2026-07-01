@@ -1,0 +1,111 @@
+{
+  "site": {
+    "name": "VeConecta",
+    "tagline": "Die venezolanische Diaspora, vernetzt"
+  },
+  "homepage": {
+    "heroPre": "Hilf",
+    "heroCountry": "Venezuela",
+    "heroPost": "von wo auch immer du bist",
+    "verifiedResources": "{count} verifizierte Ressourcen",
+    "selectCountry": "Wähle dein Wohnsitzland.",
+    "updatedAt": "aktualisiert am {date}",
+    "globalSection": "Von jedem Land aus",
+    "sectionLabel": "Ressourcen nach Land",
+    "emergencyBanner": "Erdbeben Yaracuy · Verifizierte Notfallressourcen"
+  },
+  "categories": {
+    "FIND_FAMILY": "Familie finden",
+    "DONATE_MONEY": "Geld spenden",
+    "SEND_MONEY": "Geld an die Familie senden",
+    "CALL_FREE": "Kostenlos nach Venezuela telefonieren",
+    "DONATE_PHYSICALLY": "Sachspenden",
+    "DIGITAL_BRIDGE": "Digitale Brücke sein",
+    "CONSULAR": "Konsularische Angelegenheiten",
+    "MENTAL_HEALTH": "Psychologische Unterstützung"
+  },
+  "verification": {
+    "verified": "Verifiziert",
+    "unverified": "Nicht kürzlich verifiziert",
+    "expired": "Verifizierung abgelaufen — vor Nutzung bestätigen",
+    "lastChecked": "Letzte Verifizierung: {date}",
+    "reportError": "Information veraltet? Melden"
+  },
+  "resource": {
+    "visit": "Besuchen",
+    "call": "Anrufen",
+    "bizum": "Bizum: {code}",
+    "free": "Kostenlos"
+  },
+  "digitalBridge": {
+    "title": "Wie man eine digitale Brücke wird",
+    "subtitle": "Wenn du eine stabile Verbindung hast, kannst du Familienmitgliedern ohne Internet in Venezuela helfen",
+    "step1": "Wenn dich ein Familienmitglied aus Venezuela anruft, frage vor Abbruch des Anrufs nach: vollständiger Name, Ausweisnummer, letzter bekannter Aufenthaltsort, körperliche Beschreibung, getragene Kleidung.",
+    "step2": "Suche vor dem Erstellen einer Meldung zuerst auf venezuelatebusca.com und desaparecidosterremotovenezuela.com nach Name und Ausweisnummer. Vermeide Duplikate — sie überlasten das System.",
+    "step3": "Falls die Person nicht erscheint, erstelle eine Meldung auf venezuelatebusca.com. Lade ein Foto hoch, falls vorhanden. Die Registrierung erfolgt sofort.",
+    "step4": "Teile den Link der Meldung in allen familiären WhatsApp-Gruppen.",
+    "step5": "Sobald die Person gefunden wurde, markiere sie als gefunden. Das schafft Kapazität für die, die noch vermisst werden."
+  },
+  "report": {
+    "title": "Veraltete Information melden",
+    "placeholder": "Beschreibe, welche Information veraltet oder falsch ist",
+    "submit": "Meldung senden",
+    "success": "Danke. Wir prüfen deine Meldung innerhalb der nächsten Stunden.",
+    "error": "Fehler beim Senden. Bitte erneut versuchen."
+  },
+  "disclaimer": "VeConecta ist eine unabhängige Bürgerinitiative. Wir verifizieren Informationen vor der Veröffentlichung, aber Ressourcen ändern sich schnell. Bestätige immer, bevor du handelst.",
+  "country": {
+    "lastUpdated": "Aktualisiert: {date}",
+    "noResources": "Ressourcen in Vorbereitung — schau bald wieder vorbei.",
+    "fromCountry": "Von {name}",
+    "whatYouCanDo": "Das kannst du jetzt sofort tun:",
+    "availableAnywhere": "Verfügbar von jedem Land aus"
+  },
+  "search": {
+    "title": "Suchen",
+    "placeholder": "Suche nach Name, Land oder Kategorie…",
+    "typeHint": "Gib mindestens 2 Zeichen ein, um zu suchen",
+    "noResults": "Keine Ergebnisse für „{query}“",
+    "resultsCount": "{count} {count, plural, one {Ergebnis} other {Ergebnisse}} für „{query}“",
+    "fallbackIntro": "Keine Ergebnisse für „{query}“. Diese Ressourcen sind von jedem Land aus verfügbar:",
+    "international": "International"
+  },
+  "searchOverlay": {
+    "placeholder": "Ressourcen suchen…",
+    "typeHint": "Zum Suchen tippen…",
+    "loading": "Suche läuft…",
+    "noResults": "Keine Ergebnisse für „{query}“",
+    "fallbackIntro": "Keine Ergebnisse für „{query}“. Diese Ressourcen sind von jedem Land aus verfügbar:",
+    "close": "Schließen"
+  },
+  "footer": {
+    "cta": "Eine Ressource hinzufügen?"
+  },
+  "nav": {
+    "home": "Start",
+    "language": "Sprache",
+    "share": "Teilen",
+    "search": "Suchen",
+    "changeLanguage": "Sprache ändern"
+  },
+  "city": {
+    "selectCity": "Wähle deine Stadt oder Region",
+    "activeSection": "STÄDTE MIT AKTIVEN RESSOURCEN",
+    "filterPlaceholder": "Städte filtern...",
+    "resources": "{count} {count, plural, one {Ressource} other {Ressourcen}}",
+    "backToCountry": "Alle Ressourcen"
+  },
+  "resourceDetail": {
+    "keyInfo": "WICHTIGE INFORMATIONEN",
+    "website": "Webseite",
+    "phone": "Telefon",
+    "bizum": "Bizum",
+    "address": "Adresse",
+    "schedule": "Öffnungszeiten",
+    "free": "Kostenlos · Keine Kosten",
+    "verifiedBy": "Verifiziert von VeConecta",
+    "goToResource": "Zur Ressource",
+    "reportOutdated": "Falsche oder veraltete Information? Melden",
+    "callNow": "Jetzt anrufen"
+  }
+}

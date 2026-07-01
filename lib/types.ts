@@ -2,6 +2,7 @@
 // Next.js cannot serialize Date objects across the boundary; use this type
 // whenever resources are passed to 'use client' components.
 import type { Resource } from '@prisma/client'
+import { localizeBare } from './locale-content'
 
 export type SerializedResource = Omit<
   Resource,
@@ -13,13 +14,8 @@ export type SerializedResource = Omit<
   updatedAt: string
 }
 
-export function getResourceName(
-  resource: { name: string; nameEn?: string | null; namePt?: string | null },
-  locale: string
-): string {
-  if (locale === 'en') return resource.nameEn ?? resource.name
-  if (locale === 'pt') return resource.namePt ?? resource.name
-  return resource.name
+export function getResourceName(resource: { name: string }, locale: string): string {
+  return localizeBare(resource, 'name', locale)
 }
 
 export function serializeResource(r: Resource): SerializedResource {

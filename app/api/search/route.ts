@@ -6,13 +6,17 @@ const RESOURCE_SELECT = {
   name: true,
   nameEn: true,
   namePt: true,
+  nameFr: true,
+  nameDe: true,
   category: true,
   countrySlug: true,
   notesEs: true,
   notesEn: true,
   notesPt: true,
+  notesFr: true,
+  notesDe: true,
   country: {
-    select: { nameEs: true, nameEn: true, namePt: true, flag: true, cca2: true },
+    select: { nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, flag: true, cca2: true },
   },
 } as const
 
@@ -29,9 +33,14 @@ export async function GET(request: Request) {
         { nameEs: { contains: q, mode: 'insensitive' } },
         { nameEn: { contains: q, mode: 'insensitive' } },
         { namePt: { contains: q, mode: 'insensitive' } },
+        { nameFr: { contains: q, mode: 'insensitive' } },
+        { nameDe: { contains: q, mode: 'insensitive' } },
       ],
     },
-    select: { slug: true, slugEs: true, slugEn: true, slugPt: true, nameEs: true, nameEn: true, namePt: true, cca2: true },
+    select: {
+      slug: true, slugEs: true, slugEn: true, slugPt: true, slugFr: true, slugDe: true,
+      nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true,
+    },
   })
   const countrySlugs = matchingCountries.map(c => c.slug)
 
@@ -42,9 +51,13 @@ export async function GET(request: Request) {
         { name: { contains: q, mode: 'insensitive' } },
         { nameEn: { contains: q, mode: 'insensitive' } },
         { namePt: { contains: q, mode: 'insensitive' } },
+        { nameFr: { contains: q, mode: 'insensitive' } },
+        { nameDe: { contains: q, mode: 'insensitive' } },
         { notesEs: { contains: q, mode: 'insensitive' } },
         { notesEn: { contains: q, mode: 'insensitive' } },
         { notesPt: { contains: q, mode: 'insensitive' } },
+        { notesFr: { contains: q, mode: 'insensitive' } },
+        { notesDe: { contains: q, mode: 'insensitive' } },
         ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
       ],
     },

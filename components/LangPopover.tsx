@@ -4,11 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter } from 'next/navigation'
 import { locales } from '@/i18n'
-
-const LOCALE_LABELS: Record<string, string> = {
-  es: 'Español',
-  en: 'English',
-}
+import { LOCALE_LABELS } from '@/lib/locale-content'
 
 export function LangPopover({
   direction = 'up',

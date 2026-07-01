@@ -10,6 +10,7 @@ import { NameTabs } from '@/components/admin/NameTabs'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
+import { LOCALES } from '@/lib/locale-content'
 
 const CATEGORIES = Object.values(ResourceCategory)
 const STATUSES = Object.values(ResourceStatus)
@@ -31,15 +32,25 @@ const STATUS_LABELS: Record<string, string> = {
   ARCHIVED: 'Archivado',
 }
 
+function sanitizeReturnTo(raw: unknown, fallback: string) {
+  if (typeof raw !== 'string' || !raw.startsWith('/admin/') || raw.startsWith('//')) return fallback
+  return raw
+}
+
 export default async function EditResourcePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ country: string; id: string }>
+  searchParams: Promise<{ returnTo?: string }>
 }) {
   const { country, id } = await params
+  const { returnTo: rawReturnTo } = await searchParams
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
   if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
+
+  const returnTo = sanitizeReturnTo(rawReturnTo, `/admin/${country}`)
 
   const [resource, countryRecord, cities] = await Promise.all([
     prisma.resource.findUnique({ where: { id } }),
@@ -63,6 +74,8 @@ export default async function EditResourcePage({
         name,
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
+        nameFr: (fd.get('nameFr') as string).trim() || null,
+        nameDe: (fd.get('nameDe') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
         ...(newStatus !== undefined ? { status: newStatus } : {}),
         url: (fd.get('url') as string).trim() || null,
@@ -75,21 +88,19 @@ export default async function EditResourcePage({
         notesEs: (fd.get('notesEs') as string).trim() || null,
         notesEn: (fd.get('notesEn') as string).trim() || null,
         notesPt: (fd.get('notesPt') as string).trim() || null,
+        notesFr: (fd.get('notesFr') as string).trim() || null,
+        notesDe: (fd.get('notesDe') as string).trim() || null,
         expiresAt: expiresRaw ? new Date(expiresRaw) : null,
-        verifiedAt: isAdmin ? new Date() : null,
-        verifiedBy: isAdmin ? user.email : null,
+        verifiedAt: isAdmin ? new Date() : undefined,
+        verifiedBy: isAdmin ? user.email : undefined,
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_UPDATE', entityType: 'resource', entityId: id, entityName: name, countrySlug: country, detail: newStatus })
     await touchCountry(country)
     revalidatePath(`/admin/${country}`)
-    revalidatePath(`/es/${country}`)
-    revalidatePath(`/en/${country}`)
-    revalidatePath(`/pt/${country}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
-    redirect(`/admin/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
+    redirect(returnTo)
   }
 
   const expFormatted = resource.expiresAt
@@ -118,7 +129,13 @@ export default async function EditResourcePage({
       <form action={save} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
         <div>
           <p className="text-sm font-medium text-gray-700 mb-2">Nombre por idioma</p>
-          <NameTabs defaultValues={{ es: resource.name, en: resource.nameEn ?? '', pt: resource.namePt ?? '' }} />
+          <NameTabs defaultValues={{
+            es: resource.name,
+            en: resource.nameEn ?? '',
+            pt: resource.namePt ?? '',
+            fr: resource.nameFr ?? '',
+            de: resource.nameDe ?? '',
+          }} />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -172,11 +189,13 @@ export default async function EditResourcePage({
             es: resource.notesEs ?? '',
             en: resource.notesEn ?? '',
             pt: resource.notesPt ?? '',
+            fr: resource.notesFr ?? '',
+            de: resource.notesDe ?? '',
           }} />
         </div>
 
         <div className="flex justify-end gap-3 pt-2">
-          <Link href={`/admin/${country}`} className="text-sm text-gray-600 hover:underline px-4 py-2">
+          <Link href={returnTo} className="text-sm text-gray-600 hover:underline px-4 py-2">
             Cancelar
           </Link>
           <button

@@ -1,21 +1,17 @@
 import Link from 'next/link'
 import type { SerializedResource } from '@/lib/types'
 import { getResourceName } from '@/lib/types'
+import { localizeSuffixed, type Locale } from '@/lib/locale-content'
 
 export function ResourceLink({
   resource,
   locale,
 }: {
   resource: SerializedResource
-  locale: 'es' | 'en' | 'pt'
+  locale: Locale
 }) {
   const name = getResourceName(resource, locale)
-  const notes =
-    locale === 'en'
-      ? (resource.notesEn ?? resource.notesEs)
-      : locale === 'pt'
-        ? (resource.notesPt ?? resource.notesEs)
-        : resource.notesEs
+  const notes = localizeSuffixed(resource, 'notes', locale)
 
   return (
     <Link

@@ -1,20 +1,15 @@
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getResourceName } from '@/lib/types'
+import { localizeSuffixed } from '@/lib/locale-content'
 
 type ResourceWithCountry = {
   id: string
   name: string
-  nameEn: string | null
-  namePt: string | null
-  notesEs: string | null
-  notesEn: string | null
-  notesPt: string | null
   countrySlug: string
   country: {
     nameEs: string
-    nameEn: string
-    namePt: string | null
     cca2: string | null
   }
 }
@@ -26,20 +21,10 @@ export function SearchResultLink({
   resource: ResourceWithCountry
   locale: string
 }) {
+  const t = useTranslations('search')
   const name = getResourceName(resource, locale)
-  const notes =
-    locale === 'en'
-      ? (resource.notesEn ?? resource.notesEs)
-      : locale === 'pt'
-        ? (resource.notesPt ?? resource.notesEs)
-        : resource.notesEs
-
-  const countryName =
-    locale === 'en'
-      ? resource.country.nameEn
-      : locale === 'pt'
-        ? (resource.country.namePt ?? resource.country.nameEs)
-        : resource.country.nameEs
+  const notes = localizeSuffixed(resource, 'notes', locale)
+  const countryName = localizeSuffixed(resource.country, 'name', locale) ?? resource.country.nameEs
 
   const isGlobal = resource.countrySlug === 'global'
 
@@ -64,7 +49,7 @@ export function SearchResultLink({
         <div className="flex items-center gap-1.5 mt-1">
           {isGlobal ? (
             <span className="font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5">
-              Internacional
+              {t('international')}
             </span>
           ) : (
             <>

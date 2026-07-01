@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { CountrySelector } from '@/components/CountrySelector'
+import { INTL_LOCALE, type Locale } from '@/lib/locale-content'
 import { ResourceStatus } from '@prisma/client'
 import { Globe } from 'lucide-react'
 
@@ -42,7 +43,7 @@ export default async function HomePage({
     .at(-1)
 
   const formattedDate = latestDate
-    ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
+    ? new Intl.DateTimeFormat(INTL_LOCALE[locale as Locale] ?? INTL_LOCALE.es, {
         day: 'numeric',
         month: 'short',
         year: 'numeric',

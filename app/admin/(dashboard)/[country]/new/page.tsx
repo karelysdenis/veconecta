@@ -10,6 +10,7 @@ import { NameTabs } from '@/components/admin/NameTabs'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
+import { LOCALES } from '@/lib/locale-content'
 
 const CATEGORIES = Object.values(ResourceCategory)
 
@@ -52,6 +53,8 @@ export default async function NewResourcePage({
         name,
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
+        nameFr: (fd.get('nameFr') as string).trim() || null,
+        nameDe: (fd.get('nameDe') as string).trim() || null,
         category: fd.get('category') as ResourceCategory,
         status: ResourceStatus.PUBLISHED,
         url: (fd.get('url') as string).trim() || null,
@@ -64,6 +67,8 @@ export default async function NewResourcePage({
         notesEs: (fd.get('notesEs') as string).trim() || null,
         notesEn: (fd.get('notesEn') as string).trim() || null,
         notesPt: (fd.get('notesPt') as string).trim() || null,
+        notesFr: (fd.get('notesFr') as string).trim() || null,
+        notesDe: (fd.get('notesDe') as string).trim() || null,
         expiresAt: expiresRaw ? new Date(expiresRaw) : null,
         verifiedAt: user.role === 'ADMIN' ? new Date() : null,
         verifiedBy: user.role === 'ADMIN' ? user.email : null,
@@ -72,12 +77,8 @@ export default async function NewResourcePage({
     await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: resource.id, entityName: name, countrySlug: country })
     await touchCountry(country)
     revalidatePath(`/admin/${country}`)
-    revalidatePath(`/es/${country}`)
-    revalidatePath(`/en/${country}`)
-    revalidatePath(`/pt/${country}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
     redirect(`/admin/${country}`)
   }
 

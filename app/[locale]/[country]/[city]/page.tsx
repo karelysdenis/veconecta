@@ -7,6 +7,7 @@ import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
 import { getLocalizedSlug } from '@/lib/country-slug'
+import { localizeSuffixed, localizedSlugWhere, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -27,15 +28,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string; country: string; city: string }>
 }): Promise<Metadata> {
   const { locale, country: urlSlug, city: citySlug } = await params
-  const whereLocalized = locale === 'en' ? { slugEn: urlSlug } : locale === 'pt' ? { slugPt: urlSlug } : { slugEs: urlSlug }
-  const country = await prisma.country.findFirst({ where: { ...whereLocalized, active: true } })
+  const country = await prisma.country.findFirst({ where: { ...localizedSlugWhere(urlSlug, locale), active: true } })
   if (!country) return {}
 
   const cityRecord = await prisma.city.findFirst({ where: { countrySlug: country.slug, slug: citySlug } })
   if (!cityRecord) return {}
-  const cityName = locale === 'en' ? (cityRecord.nameEn ?? cityRecord.nameEs) : locale === 'pt' ? (cityRecord.namePt ?? cityRecord.nameEs) : cityRecord.nameEs
+  const cityName = localizeSuffixed(cityRecord, 'name', locale) ?? cityRecord.nameEs
 
-  const countryName = locale === 'en' ? country.nameEn : locale === 'pt' ? (country.namePt ?? country.nameEs) : country.nameEs
+  const countryName = localizeSuffixed(country, 'name', locale) ?? country.nameEs
 
   return {
     title: `${cityName}, ${countryName} | VeConecta`,
@@ -59,14 +59,14 @@ export default async function CityPage({
   const { locale, country: urlSlug, city: citySlug } = await params
   setRequestLocale(locale)
 
-  const [t, tNav] = await Promise.all([
+  const [t, tNav, tSearch] = await Promise.all([
     getTranslations('country'),
     getTranslations('nav'),
+    getTranslations('search'),
   ])
 
   // Lookup by localized slug
-  const whereLocalized = locale === 'en' ? { slugEn: urlSlug, active: true } : locale === 'pt' ? { slugPt: urlSlug, active: true } : { slugEs: urlSlug, active: true }
-  let country = await prisma.country.findFirst({ where: whereLocalized })
+  let country = await prisma.country.findFirst({ where: { ...localizedSlugWhere(urlSlug, locale), active: true } })
 
   // Fallback: try canonical slug + redirect to localized URL
   if (!country) {
@@ -93,19 +93,8 @@ export default async function CityPage({
 
   if (!cityRecord) notFound()
 
-  const cityName =
-    locale === 'en'
-      ? (cityRecord.nameEn ?? cityRecord.nameEs)
-      : locale === 'pt'
-        ? (cityRecord.namePt ?? cityRecord.nameEs)
-        : cityRecord.nameEs
-
-  const countryName =
-    locale === 'en'
-      ? country.nameEn
-      : locale === 'pt'
-        ? (country.namePt ?? country.nameEs)
-        : country.nameEs
+  const cityName = localizeSuffixed(cityRecord, 'name', locale) ?? cityRecord.nameEs
+  const countryName = localizeSuffixed(country, 'name', locale) ?? country.nameEs
 
   // City resources = FK match + no-city (national) resources
   const cityResources = allCountryResources.filter(
@@ -184,7 +173,7 @@ export default async function CityPage({
           key={category}
           category={category}
           resources={cityByCategory[category] ?? []}
-          locale={locale as 'es' | 'en' | 'pt'}
+          locale={locale as Locale}
         />
       ))}
 
@@ -196,15 +185,11 @@ export default async function CityPage({
             <div className="flex items-center gap-2 mb-0.5">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#184e68" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               <span className="font-sans font-bold text-sm text-[#184e68] uppercase tracking-widest">
-                {locale === 'en' ? 'International' : 'Internacional'}
+                {tSearch('international')}
               </span>
             </div>
             <p className="font-sans text-sm text-[#184e68]/60">
-              {locale === 'en'
-                ? 'Available from any country'
-                : locale === 'pt'
-                  ? 'Disponível de qualquer país'
-                  : 'Disponible desde cualquier país'}
+              {t('availableAnywhere')}
             </p>
           </div>
           {CATEGORY_ORDER.map((category) => (
@@ -212,7 +197,7 @@ export default async function CityPage({
               key={`global-${category}`}
               category={category}
               resources={globalByCategory[category] ?? []}
-              locale={locale as 'es' | 'en' | 'pt'}
+              locale={locale as Locale}
             />
           ))}
         </>

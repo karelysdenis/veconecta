@@ -6,6 +6,7 @@ import { SearchResultLink } from '@/components/SearchResultLink'
 import { SearchInput } from '@/components/SearchInput'
 import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, type LucideIcon } from 'lucide-react'
 import { getLocalizedSlug } from '@/lib/country-slug'
+import { localizeSuffixed } from '@/lib/locale-content'
 import type { Metadata } from 'next'
 
 const GLOBAL_SELECT = {
@@ -13,12 +14,16 @@ const GLOBAL_SELECT = {
   name: true,
   nameEn: true,
   namePt: true,
+  nameFr: true,
+  nameDe: true,
   category: true,
   countrySlug: true,
   notesEs: true,
   notesEn: true,
   notesPt: true,
-  country: { select: { nameEs: true, nameEn: true, namePt: true, cca2: true } },
+  notesFr: true,
+  notesDe: true,
+  country: { select: { nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true } },
 } as const
 
 const CATEGORY_ORDER: ResourceCategory[] = [
@@ -54,16 +59,11 @@ export async function generateMetadata({
   const { q = '' } = await searchParams
   const query = q.trim().slice(0, 100)
 
+  const t = await getTranslations({ locale, namespace: 'search' })
   if (!query) {
-    return {
-      title: locale === 'en' ? 'Search | VeConecta' : 'Buscar | VeConecta',
-    }
+    return { title: `${t('title')} | VeConecta` }
   }
-  return {
-    title: locale === 'en'
-      ? `"${query}" — Search | VeConecta`
-      : `"${query}" — Buscar | VeConecta`,
-  }
+  return { title: `"${query}" — ${t('title')} | VeConecta` }
 }
 
 export default async function SearchPage({
@@ -79,9 +79,10 @@ export default async function SearchPage({
 
   const query = q.trim().slice(0, 100)
 
-  const [tNav, tCat] = await Promise.all([
+  const [tNav, tCat, tSearch] = await Promise.all([
     getTranslations('nav'),
     getTranslations('categories'),
+    getTranslations('search'),
   ])
 
   const matchingCountries = query.length >= 2
@@ -92,9 +93,14 @@ export default async function SearchPage({
             { nameEs: { contains: query, mode: 'insensitive' } },
             { nameEn: { contains: query, mode: 'insensitive' } },
             { namePt: { contains: query, mode: 'insensitive' } },
+            { nameFr: { contains: query, mode: 'insensitive' } },
+            { nameDe: { contains: query, mode: 'insensitive' } },
           ],
         },
-        select: { slug: true, slugEs: true, slugEn: true, slugPt: true, nameEs: true, nameEn: true, namePt: true, cca2: true },
+        select: {
+          slug: true, slugEs: true, slugEn: true, slugPt: true, slugFr: true, slugDe: true,
+          nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true,
+        },
       })
     : []
   const countrySlugs = matchingCountries.map(c => c.slug)
@@ -107,9 +113,13 @@ export default async function SearchPage({
             { name: { contains: query, mode: 'insensitive' } },
             { nameEn: { contains: query, mode: 'insensitive' } },
             { namePt: { contains: query, mode: 'insensitive' } },
+            { nameFr: { contains: query, mode: 'insensitive' } },
+            { nameDe: { contains: query, mode: 'insensitive' } },
             { notesEs: { contains: query, mode: 'insensitive' } },
             { notesEn: { contains: query, mode: 'insensitive' } },
             { notesPt: { contains: query, mode: 'insensitive' } },
+            { notesFr: { contains: query, mode: 'insensitive' } },
+            { notesDe: { contains: query, mode: 'insensitive' } },
             ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
           ],
         },
@@ -137,22 +147,10 @@ export default async function SearchPage({
   )
 
   const total = results.length
-  const lang = locale === 'en' ? 'en' : 'es'
 
-  const placeholder =
-    lang === 'en'
-      ? 'Search by name, country or category…'
-      : 'Busca por nombre, país o categoría…'
-
-  const noResultsText =
-    lang === 'en' ? `No results for "${query}"` : `Sin resultados para "${query}"`
-
-  const resultsText =
-    lang === 'en'
-      ? `${total} result${total !== 1 ? 's' : ''} for "${query}"`
-      : `${total} resultado${total !== 1 ? 's' : ''} para "${query}"`
-
-  const searchLabel = lang === 'en' ? 'Search' : 'Buscar'
+  const placeholder = tSearch('placeholder')
+  const resultsText = tSearch('resultsCount', { count: total, query })
+  const searchLabel = tSearch('title')
 
   return (
     <main className="min-h-screen bg-white">
@@ -183,16 +181,14 @@ export default async function SearchPage({
       {query.length < 2 && (
         <div className="px-5 py-10 text-center">
           <p className="font-sans font-light text-[15px] text-[#808080]">
-            {lang === 'en'
-              ? 'Type at least 2 characters to search'
-              : 'Escribe al menos 2 caracteres para buscar'}
+            {tSearch('typeHint')}
           </p>
         </div>
       )}
 
       {/* Países encontrados */}
       {matchingCountries.length > 0 && matchingCountries.map(c => {
-        const name = lang === 'en' ? c.nameEn : c.nameEs
+        const name = localizeSuffixed(c, 'name', locale) ?? c.nameEs
         const flagSrc = c.cca2 ? `https://flagcdn.com/w40/${c.cca2}.png` : null
         return (
           <div key={c.slug}>
@@ -243,15 +239,13 @@ export default async function SearchPage({
         <>
           <div className="px-5 py-3">
             <p className="font-sans font-light text-[13px] text-[#808080]">
-              {lang === 'en'
-                ? `No results for "${query}". These resources are available from any country:`
-                : `Sin resultados para "${query}". Estos recursos están disponibles desde cualquier país:`}
+              {tSearch('fallbackIntro', { query })}
             </p>
           </div>
           <div className="px-5 pt-4 pb-6 flex justify-center">
             <div className="flex items-center gap-3">
               <Globe className="w-[22px] h-[22px] text-[#184e68]" strokeWidth={1.5} />
-              <span className="font-display font-bold text-[22px] text-[#141414]">Internacional</span>
+              <span className="font-display font-bold text-[22px] text-[#141414]">{tSearch('international')}</span>
             </div>
           </div>
           {fallback.map((r) => (

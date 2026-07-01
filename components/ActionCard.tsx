@@ -5,6 +5,7 @@ import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, t
 import { ResourceLink } from './ResourceLink'
 import type { ResourceCategory } from '@prisma/client'
 import type { SerializedResource } from '@/lib/types'
+import type { Locale } from '@/lib/locale-content'
 
 const categoryIcons: Record<ResourceCategory, LucideIcon> = {
   FIND_FAMILY: Users,
@@ -24,7 +25,7 @@ export function ActionCard({
 }: {
   category: ResourceCategory
   resources: SerializedResource[]
-  locale: 'es' | 'en' | 'pt'
+  locale: Locale
 }) {
   const [open, setOpen] = useState(true)
   const t = useTranslations('categories')

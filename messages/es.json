@@ -58,7 +58,25 @@
     "lastUpdated": "Actualizado: {date}",
     "noResources": "Recursos en preparación — vuelve pronto.",
     "fromCountry": "Desde {name}",
-    "whatYouCanDo": "Esto es lo que puedes hacer ahora mismo:"
+    "whatYouCanDo": "Esto es lo que puedes hacer ahora mismo:",
+    "availableAnywhere": "Disponible desde cualquier país"
+  },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Busca por nombre, país o categoría…",
+    "typeHint": "Escribe al menos 2 caracteres para buscar",
+    "noResults": "Sin resultados para \"{query}\"",
+    "resultsCount": "{count} {count, plural, one {resultado} other {resultados}} para \"{query}\"",
+    "fallbackIntro": "Sin resultados para \"{query}\". Estos recursos están disponibles desde cualquier país:",
+    "international": "Internacional"
+  },
+  "searchOverlay": {
+    "placeholder": "Buscar recursos…",
+    "typeHint": "Escribe para buscar…",
+    "loading": "Buscando…",
+    "noResults": "Sin resultados para \"{query}\"",
+    "fallbackIntro": "Sin resultados para \"{query}\". Estos recursos están disponibles desde cualquier país:",
+    "close": "Cerrar"
   },
   "footer": {
     "cta": "¿Tienes un recurso para agregar?"
@@ -87,6 +105,7 @@
     "free": "Gratuito · Sin costo",
     "verifiedBy": "Verificado por VeConecta",
     "goToResource": "Ir al recurso",
-    "reportOutdated": "¿Información incorrecta o desactualizada? Repórtalo"
+    "reportOutdated": "¿Información incorrecta o desactualizada? Repórtalo",
+    "callNow": "Llamar ahora"
   }
 }

@@ -29,6 +29,8 @@ export default async function EditCityPage({
         nameEs,
         nameEn: (fd.get('nameEn') as string).trim() || null,
         namePt: (fd.get('namePt') as string).trim() || null,
+        nameFr: (fd.get('nameFr') as string).trim() || null,
+        nameDe: (fd.get('nameDe') as string).trim() || null,
       },
     })
     revalidatePath(`/admin/countries/${slug}`)
@@ -60,6 +62,10 @@ export default async function EditCityPage({
           <F label="Nombre ES" name="nameEs" defaultValue={city.nameEs} required />
           <F label="Nombre EN" name="nameEn" defaultValue={city.nameEn ?? ''} />
           <F label="Nombre PT" name="namePt" defaultValue={city.namePt ?? ''} />
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <F label="Nombre FR" name="nameFr" defaultValue={city.nameFr ?? ''} />
+          <F label="Nombre DE" name="nameDe" defaultValue={city.nameDe ?? ''} />
         </div>
 
         <div className="flex justify-end gap-3 pt-2">

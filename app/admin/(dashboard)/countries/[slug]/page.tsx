@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { cityToSlug } from '@/lib/slugify'
+import { LOCALES } from '@/lib/locale-content'
 import { ResourceStatus } from '@prisma/client'
 
 export default async function EditCountryPage({
@@ -41,14 +42,15 @@ export default async function EditCountryPage({
         nameEs: (fd.get('nameEs') as string).trim(),
         nameEn: (fd.get('nameEn') as string).trim(),
         namePt: (fd.get('namePt') as string).trim() || null,
+        nameFr: (fd.get('nameFr') as string).trim() || null,
+        nameDe: (fd.get('nameDe') as string).trim() || null,
         flag: (fd.get('flag') as string).trim(),
         cca2: (fd.get('cca2') as string).trim().toLowerCase() || null,
         active: fd.get('active') === 'on',
       },
     })
     revalidatePath('/admin')
-    revalidatePath('/es')
-    revalidatePath('/en')
+    for (const l of LOCALES) revalidatePath(`/${l}`)
     redirect('/admin')
   }
 
@@ -66,6 +68,8 @@ export default async function EditCountryPage({
           nameEs,
           nameEn: (fd.get('nameEn') as string).trim() || null,
           namePt: (fd.get('namePt') as string).trim() || null,
+          nameFr: (fd.get('nameFr') as string).trim() || null,
+          nameDe: (fd.get('nameDe') as string).trim() || null,
         },
       })
     } catch (e: unknown) {
@@ -146,6 +150,11 @@ export default async function EditCountryPage({
 
         <div className="grid grid-cols-2 gap-4">
           <F label="Nombre en portugués" name="namePt" defaultValue={country.namePt ?? ''} />
+          <F label="Nombre en francés" name="nameFr" defaultValue={country.nameFr ?? ''} />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <F label="Nombre en alemán" name="nameDe" defaultValue={country.nameDe ?? ''} />
           <F label="Bandera (emoji)" name="flag" defaultValue={country.flag} />
         </div>
 
@@ -181,7 +190,7 @@ export default async function EditCountryPage({
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900">{city.nameEs}</p>
                   <p className="text-xs text-gray-400">
-                    {[city.nameEn, city.namePt].filter(Boolean).join(' · ')}
+                    {[city.nameEn, city.namePt, city.nameFr, city.nameDe].filter(Boolean).join(' · ')}
                     {city._count.resources > 0 && (
                       <span className="ml-2 text-gray-300">{city._count.resources} recursos</span>
                     )}
@@ -228,6 +237,16 @@ export default async function EditCountryPage({
             <div>
               <label className="block text-xs text-gray-500 mb-1">Nombre PT</label>
               <input name="namePt" placeholder="ej: Bogotá"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Nombre FR</label>
+              <input name="nameFr" placeholder="ej: Bogota"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Nombre DE</label>
+              <input name="nameDe" placeholder="ej: Bogotá"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" />
             </div>
           </div>

@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
+import { LOCALES } from '@/lib/locale-content'
 
 function Flag({ cca2, slug, flag, size = 32 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
@@ -89,7 +90,8 @@ export default async function AdminCountryPage({
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const now = new Date()
-    const existing = await prisma.resource.findUnique({ where: { id }, select: { expiresAt: true } })
+    const existing = await prisma.resource.findUnique({ where: { id }, select: { expiresAt: true, countrySlug: true } })
+    if (!existing || existing.countrySlug !== country) return
     const resource = await prisma.resource.update({
       where: { id },
       data: {
@@ -103,12 +105,8 @@ export default async function AdminCountryPage({
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_PUBLISH', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
     await touchCountry(country)
-    revalidatePath(`/es/${country}`)
-    revalidatePath(`/en/${country}`)
-    revalidatePath(`/pt/${country}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
     revalidatePath('/admin')
   }
 
@@ -130,12 +128,8 @@ export default async function AdminCountryPage({
     await touchCountry(country)
     revalidatePath(`/admin/${country}`)
     revalidatePath('/admin')
-    revalidatePath(`/es/${country}`)
-    revalidatePath(`/en/${country}`)
-    revalidatePath(`/pt/${country}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
   }
 
   async function archiveResource(formData: FormData) {
@@ -144,15 +138,13 @@ export default async function AdminCountryPage({
     const { user } = await getSession()
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
+    const existing = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
+    if (!existing || existing.countrySlug !== country) return
     const resource = await prisma.resource.update({ where: { id }, data: { status: 'ARCHIVED' } })
     await logAction({ userEmail: user.email, action: 'RESOURCE_ARCHIVE', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
     await touchCountry(country)
-    revalidatePath(`/es/${country}`)
-    revalidatePath(`/en/${country}`)
-    revalidatePath(`/pt/${country}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
     revalidatePath('/admin')
   }
 

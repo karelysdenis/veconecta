@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { touchCountry } from '@/lib/audit'
 import { revalidatePath } from 'next/cache'
+import { LOCALES } from '@/lib/locale-content'
 
 const patchSchema = z.object({
   name: z.string().min(1).optional(),
@@ -14,6 +15,8 @@ const patchSchema = z.object({
   notesEs: z.string().optional(),
   notesEn: z.string().optional(),
   notesPt: z.string().optional(),
+  notesFr: z.string().optional(),
+  notesDe: z.string().optional(),
 })
 
 export async function PATCH(
@@ -63,12 +66,8 @@ export async function DELETE(
       data: { status: 'ARCHIVED' },
     })
     await touchCountry(archived.countrySlug)
-    revalidatePath(`/es/${archived.countrySlug}`)
-    revalidatePath(`/en/${archived.countrySlug}`)
-    revalidatePath(`/pt/${archived.countrySlug}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
+    for (const l of LOCALES) revalidatePath(`/${l}/${archived.countrySlug}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[resources DELETE] DB error:', err)

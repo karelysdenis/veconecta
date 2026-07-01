@@ -4,6 +4,8 @@ import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { logAction, touchCountry } from '@/lib/audit'
+import { LOCALES } from '@/lib/locale-content'
+import { fetchResourcesByIds } from '@/lib/resource-review'
 
 const CATEGORY_LABELS: Record<string, string> = {
   FIND_FAMILY: 'Encontrar familia',
@@ -21,53 +23,63 @@ export default async function ReviewPage({
   searchParams,
 }: {
   params: Promise<{ country: string }>
-  searchParams: Promise<{ i?: string; filter?: string }>
+  searchParams: Promise<{ i?: string; filter?: string; ids?: string }>
 }) {
   const { country } = await params
-  const { i: iParam, filter } = await searchParams
+  const { i: iParam, filter, ids: idsParam } = await searchParams
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
   if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
 
   const showAll = filter === 'all'
+  const filterQs = showAll ? '&filter=all' : ''
 
   const countryRecord = await prisma.country.findUnique({ where: { slug: country } })
   if (!countryRecord) notFound()
 
-  const resources = await prisma.resource.findMany({
-    where: {
-      countrySlug: country,
-      status: 'PUBLISHED',
-      expiresAt: showAll
-        ? { not: null }
-        : { lte: new Date(Date.now() + 2 * 86400000) },
-    },
-    orderBy: [
-      { expiresAt: 'asc' },
-      { createdAt: 'asc' },
-    ],
-    include: { city: true },
-  })
+  const resources = idsParam
+    ? await fetchResourcesByIds(idsParam.split(','), { countrySlug: country })
+    : await prisma.resource.findMany({
+        where: {
+          countrySlug: country,
+          status: 'PUBLISHED',
+          expiresAt: showAll
+            ? { not: null }
+            : { lte: new Date(Date.now() + 2 * 86400000) },
+        },
+        orderBy: [
+          { expiresAt: 'asc' },
+          { createdAt: 'asc' },
+        ],
+        include: { city: true },
+      })
+
+  // Snapshot the queue as a fixed list of IDs so confirming a resource doesn't
+  // change the underlying filter result and reshuffle indices mid-review.
+  if (!idsParam && resources.length > 0) {
+    redirect(`/admin/${country}/review?ids=${resources.map((r) => r.id).join(',')}&i=0${filterQs}`)
+  }
 
   const total = resources.length
-  const urgentCount = showAll
-    ? resources.filter((r) => r.expiresAt !== null && r.expiresAt <= new Date(Date.now() + 2 * 86400000)).length
-    : total
+  const pendingCount = resources.filter((r) => !r.verifiedAt).length
 
   const idx = Math.max(0, Math.min(parseInt(iParam ?? '0', 10) || 0, Math.max(total - 1, 0)))
   const resource = resources[idx]
   const prevI = idx > 0 ? idx - 1 : null
   const nextI = idx < total - 1 ? idx + 1 : null
-  const filterQs = showAll ? '&filter=all' : ''
+  const idsQs = idsParam ? `&ids=${idsParam}` : ''
 
   async function confirm(formData: FormData) {
     'use server'
     const id = formData.get('id') as string
     const returnI = formData.get('returnI') as string
     const returnFilter = formData.get('returnFilter') as string
+    const returnIds = formData.get('returnIds') as string
     const { user } = await getSession()
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
+    const row = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
+    if (!row || row.countrySlug !== country) return
 
     const updated = await prisma.resource.update({
       where: { id },
@@ -88,18 +100,14 @@ export default async function ReviewPage({
     await touchCountry(country)
     revalidatePath(`/admin/${country}/review`)
     revalidatePath(`/admin/${country}`)
-    revalidatePath(`/es/${country}`)
-    revalidatePath(`/en/${country}`)
-    revalidatePath(`/pt/${country}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
 
     const fqs = returnFilter === 'all' ? '&filter=all' : ''
-    redirect(`/admin/${country}/review?i=${returnI}${fqs}`)
+    redirect(`/admin/${country}/review?i=${returnI}&ids=${returnIds}${fqs}`)
   }
 
-  const afterConfirmI = showAll ? (nextI ?? idx) : idx
+  const afterConfirmI = nextI ?? idx
 
   if (total === 0) {
     return (
@@ -137,14 +145,13 @@ export default async function ReviewPage({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-500 tabular-nums">{idx + 1} / {total}</span>
-          {urgentCount > 0 && showAll && (
+          {pendingCount > 0 ? (
             <span className="text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded">
-              {urgentCount} urgentes
+              {pendingCount} sin confirmar
             </span>
-          )}
-          {urgentCount === 0 && showAll && (
+          ) : (
             <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
-              Todos al día
+              Todos confirmados
             </span>
           )}
         </div>
@@ -287,6 +294,7 @@ export default async function ReviewPage({
               <input type="hidden" name="id" value={resource.id} />
               <input type="hidden" name="returnI" value={String(afterConfirmI)} />
               <input type="hidden" name="returnFilter" value={showAll ? 'all' : ''} />
+              <input type="hidden" name="returnIds" value={idsParam ?? ''} />
               <button
                 type="submit"
                 className="text-sm bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 font-medium"
@@ -299,6 +307,7 @@ export default async function ReviewPage({
               <input type="hidden" name="id" value={resource.id} />
               <input type="hidden" name="returnI" value={String(afterConfirmI)} />
               <input type="hidden" name="returnFilter" value={showAll ? 'all' : ''} />
+              <input type="hidden" name="returnIds" value={idsParam ?? ''} />
               <button
                 type="submit"
                 className="text-sm border border-green-300 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 font-medium"
@@ -308,7 +317,7 @@ export default async function ReviewPage({
             </form>
           )}
           <Link
-            href={`/admin/${country}/${resource.id}`}
+            href={`/admin/${country}/${resource.id}?returnTo=${encodeURIComponent(`/admin/${country}/review?i=${idx}${filterQs}${idsQs}`)}`}
             className="text-sm border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50"
           >
             Editar
@@ -320,7 +329,7 @@ export default async function ReviewPage({
       <div className="flex justify-between items-center mt-4">
         {prevI !== null ? (
           <Link
-            href={`/admin/${country}/review?i=${prevI}${filterQs}`}
+            href={`/admin/${country}/review?i=${prevI}${filterQs}${idsQs}`}
             className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
           >
             ← Anterior
@@ -330,7 +339,7 @@ export default async function ReviewPage({
         )}
         {nextI !== null ? (
           <Link
-            href={`/admin/${country}/review?i=${nextI}${filterQs}`}
+            href={`/admin/${country}/review?i=${nextI}${filterQs}${idsQs}`}
             className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
           >
             Siguiente →

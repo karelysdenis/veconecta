@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { logAction, touchCountry } from '@/lib/audit'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
+import { LOCALES } from '@/lib/locale-content'
+import { fetchResourcesByIds } from '@/lib/resource-review'
 
 const CATEGORY_LABELS: Record<string, string> = {
   FIND_FAMILY: 'Encontrar familia',
@@ -26,35 +28,50 @@ function Flag({ cca2, slug, flag, size = 20 }: { cca2: string | null; slug: stri
 export default async function GlobalReviewPage({
   searchParams,
 }: {
-  searchParams: Promise<{ i?: string }>
+  searchParams: Promise<{ i?: string; ids?: string }>
 }) {
-  const { i: iParam } = await searchParams
+  const { i: iParam, ids: idsParam } = await searchParams
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
 
-  const resources = await prisma.resource.findMany({
-    where: {
-      status: 'PUBLISHED',
-      expiresAt: { lte: new Date(Date.now() + 2 * 86400000) },
-      ...(user.role === 'EDITOR' ? { countrySlug: { in: user.countrySlugs } } : {}),
-    },
-    orderBy: [
-      { expiresAt: 'asc' },
-      { createdAt: 'asc' },
-    ],
-    include: { city: true },
-  })
+  const editorCountrySlugs = user.role === 'EDITOR' ? user.countrySlugs : null
+
+  const resources = idsParam
+    ? await fetchResourcesByIds(idsParam.split(','), editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {})
+    : await prisma.resource.findMany({
+        where: {
+          status: 'PUBLISHED',
+          expiresAt: { lte: new Date(Date.now() + 2 * 86400000) },
+          ...(editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {}),
+        },
+        orderBy: [
+          { expiresAt: 'asc' },
+          { createdAt: 'asc' },
+        ],
+        include: { city: true },
+      })
+
+  // Snapshot the queue as a fixed list of IDs so confirming a resource (which
+  // changes its expiresAt and would otherwise drop it out of the urgent filter)
+  // doesn't reshuffle indices mid-review. Confirmed items stay visible/navigable.
+  if (!idsParam && resources.length > 0) {
+    redirect(`/admin/review?ids=${resources.map((r) => r.id).join(',')}&i=0`)
+  }
 
   const total = resources.length
+  const pendingCount = resources.filter((r) => !r.verifiedAt).length
   const idx = Math.max(0, Math.min(parseInt(iParam ?? '0', 10) || 0, Math.max(total - 1, 0)))
   const resource = resources[idx]
   const prevI = idx > 0 ? idx - 1 : null
   const nextI = idx < total - 1 ? idx + 1 : null
+  const afterConfirmI = nextI ?? idx
+  const idsQs = idsParam ? `&ids=${idsParam}` : ''
 
   async function confirm(formData: FormData) {
     'use server'
     const id = formData.get('id') as string
     const returnI = formData.get('returnI') as string
+    const returnIds = formData.get('returnIds') as string
     const { user } = await getSession()
     if (!user) return
     const row = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
@@ -82,13 +99,9 @@ export default async function GlobalReviewPage({
     revalidatePath('/admin')
     revalidatePath(`/admin/${row.countrySlug}`)
     revalidatePath(`/admin/${row.countrySlug}/review`)
-    revalidatePath(`/es/${row.countrySlug}`)
-    revalidatePath(`/en/${row.countrySlug}`)
-    revalidatePath(`/pt/${row.countrySlug}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
-    redirect(`/admin/review?i=${returnI}`)
+    for (const l of LOCALES) revalidatePath(`/${l}/${row.countrySlug}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
+    redirect(`/admin/review?i=${returnI}&ids=${returnIds}`)
   }
 
   if (total === 0) {
@@ -123,8 +136,17 @@ export default async function GlobalReviewPage({
       <Breadcrumb />
 
       {/* Controls */}
-      <div className="flex items-center mb-3">
+      <div className="flex items-center gap-2 mb-3">
         <span className="text-sm text-gray-500 tabular-nums">{idx + 1} / {total}</span>
+        {pendingCount > 0 ? (
+          <span className="text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded">
+            {pendingCount} sin confirmar
+          </span>
+        ) : (
+          <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
+            Todos confirmados
+          </span>
+        )}
       </div>
 
       {/* Progress bar */}
@@ -272,7 +294,8 @@ export default async function GlobalReviewPage({
           {!resource.verifiedAt ? (
             <form action={confirm}>
               <input type="hidden" name="id" value={resource.id} />
-              <input type="hidden" name="returnI" value={String(idx)} />
+              <input type="hidden" name="returnI" value={String(afterConfirmI)} />
+              <input type="hidden" name="returnIds" value={idsParam ?? ''} />
               <button
                 type="submit"
                 className="text-sm bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 font-medium"
@@ -283,7 +306,8 @@ export default async function GlobalReviewPage({
           ) : (
             <form action={confirm}>
               <input type="hidden" name="id" value={resource.id} />
-              <input type="hidden" name="returnI" value={String(idx)} />
+              <input type="hidden" name="returnI" value={String(afterConfirmI)} />
+              <input type="hidden" name="returnIds" value={idsParam ?? ''} />
               <button
                 type="submit"
                 className="text-sm border border-green-300 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 font-medium"
@@ -293,7 +317,7 @@ export default async function GlobalReviewPage({
             </form>
           )}
           <Link
-            href={`/admin/${resource.countrySlug}/${resource.id}`}
+            href={`/admin/${resource.countrySlug}/${resource.id}?returnTo=${encodeURIComponent(`/admin/review?i=${idx}${idsQs}`)}`}
             className="text-sm border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50"
           >
             Editar
@@ -305,7 +329,7 @@ export default async function GlobalReviewPage({
       <div className="flex justify-between items-center mt-4">
         {prevI !== null ? (
           <Link
-            href={`/admin/review?i=${prevI}`}
+            href={`/admin/review?i=${prevI}${idsQs}`}
             className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
           >
             ← Anterior
@@ -315,7 +339,7 @@ export default async function GlobalReviewPage({
         )}
         {nextI !== null ? (
           <Link
-            href={`/admin/review?i=${nextI}`}
+            href={`/admin/review?i=${nextI}${idsQs}`}
             className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
           >
             Siguiente →

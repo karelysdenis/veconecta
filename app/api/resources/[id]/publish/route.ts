@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
 import { touchCountry } from '@/lib/audit'
+import { LOCALES } from '@/lib/locale-content'
 
 export async function POST(
   req: NextRequest,
@@ -34,12 +35,8 @@ export async function POST(
     await touchCountry(resource.countrySlug)
 
     // Revalidate public pages for this country in all locales
-    revalidatePath(`/es/${resource.countrySlug}`)
-    revalidatePath(`/en/${resource.countrySlug}`)
-    revalidatePath(`/pt/${resource.countrySlug}`)
-    revalidatePath('/es')
-    revalidatePath('/en')
-    revalidatePath('/pt')
+    for (const l of LOCALES) revalidatePath(`/${l}/${resource.countrySlug}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
 
     return NextResponse.json({ ok: true })
   } catch (err) {

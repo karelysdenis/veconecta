@@ -1,23 +1,34 @@
 'use client'
 import { useState } from 'react'
+import { LOCALES, LOCALE_SUFFIX, LOCALE_LABELS, type Locale } from '@/lib/locale-content'
 
-const LANGS = [
-  { code: 'es', label: 'ES', title: 'Español', placeholder: 'Descripción del recurso en español…' },
-  { code: 'en', label: 'EN', title: 'English', placeholder: 'Resource description in English…' },
-  { code: 'pt', label: 'PT', title: 'Português', placeholder: 'Descrição do recurso em português…' },
-]
+const PLACEHOLDERS: Record<Locale, string> = {
+  es: 'Descripción del recurso en español…',
+  en: 'Resource description in English…',
+  pt: 'Descrição do recurso em português…',
+  fr: 'Description de la ressource en français…',
+  de: 'Beschreibung der Ressource auf Deutsch…',
+}
+
+const LANGS = LOCALES.map((code) => ({
+  code,
+  label: code.toUpperCase(),
+  title: LOCALE_LABELS[code],
+  name: `notes${LOCALE_SUFFIX[code]}`,
+  placeholder: PLACEHOLDERS[code],
+}))
+
+type Values = Partial<Record<Locale, string>>
 
 export function LanguageTabs({
   defaultValues = {},
 }: {
-  defaultValues?: { es?: string; en?: string; pt?: string }
+  defaultValues?: Values
 }) {
-  const [active, setActive] = useState('es')
-  const [filled, setFilled] = useState({
-    es: !!(defaultValues.es ?? ''),
-    en: !!(defaultValues.en ?? ''),
-    pt: !!(defaultValues.pt ?? ''),
-  })
+  const [active, setActive] = useState<Locale>('es')
+  const [filled, setFilled] = useState<Record<Locale, boolean>>(() =>
+    Object.fromEntries(LOCALES.map((l) => [l, !!(defaultValues[l] ?? '')])) as Record<Locale, boolean>,
+  )
 
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -35,7 +46,7 @@ export function LanguageTabs({
             }`}
           >
             {label}
-            {filled[code as keyof typeof filled] && (
+            {filled[code] && (
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
             )}
           </button>
@@ -43,11 +54,11 @@ export function LanguageTabs({
       </div>
 
       <div className="p-4 bg-white">
-        {LANGS.map(({ code, placeholder }) => (
+        {LANGS.map(({ code, name, placeholder }) => (
           <div key={code} className={active === code ? '' : 'hidden'}>
             <textarea
-              name={`notes${code.charAt(0).toUpperCase()}${code.slice(1)}`}
-              defaultValue={defaultValues[code as keyof typeof defaultValues] ?? ''}
+              name={name}
+              defaultValue={defaultValues[code] ?? ''}
               rows={5}
               placeholder={placeholder}
               onChange={(e) => setFilled(prev => ({ ...prev, [code]: e.target.value.trim().length > 0 }))}

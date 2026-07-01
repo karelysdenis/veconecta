@@ -39,9 +39,13 @@ model Country {
   slugEs        String?    @unique
   slugEn        String?    @unique
   slugPt        String?    @unique
+  slugFr        String?    @unique
+  slugDe        String?    @unique
   nameEs        String
   nameEn        String
   namePt        String?
+  nameFr        String?
+  nameDe        String?
   flag          String
   cca2          String?
   active        Boolean    @default(true)
@@ -58,6 +62,8 @@ model City {
   nameEs      String
   nameEn      String?
   namePt      String?
+  nameFr      String?
+  nameDe      String?
   resources   Resource[]
 
   @@unique([countrySlug, slug])
@@ -72,6 +78,8 @@ model Resource {
   name        String
   nameEn      String?
   namePt      String?
+  nameFr      String?
+  nameDe      String?
   cityId      String?
   city        City?            @relation(fields: [cityId], references: [id])
   url         String?
@@ -83,6 +91,8 @@ model Resource {
   notesEs     String?
   notesEn     String?
   notesPt     String?
+  notesFr     String?
+  notesDe     String?
   status      ResourceStatus   @default(DRAFT)
   verifiedAt  DateTime?
   verifiedBy  String?
