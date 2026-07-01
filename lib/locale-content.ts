@@ -60,3 +60,21 @@ export function localizedSlugWhere(urlSlug: string, locale: string): Record<stri
   const suffix = LOCALE_SUFFIX[locale as Locale] ?? LOCALE_SUFFIX.es
   return { [`slug${suffix}`]: urlSlug }
 }
+
+/**
+ * Builds a Prisma `where` filter matching urlSlug against the canonical slug
+ * id OR any locale's slug column. Used as a fallback when the URL was built
+ * for a different locale than the one currently requested (e.g. the language
+ * switcher swaps only the locale segment, keeping whatever slug was in the
+ * URL) — the canonical id alone isn't enough to recognize it.
+ */
+export function anyLocaleSlugWhere(urlSlug: string): {
+  OR: Array<Record<string, string>>
+} {
+  return {
+    OR: [
+      { slug: urlSlug },
+      ...LOCALES.map((l) => ({ [`slug${LOCALE_SUFFIX[l]}`]: urlSlug })),
+    ],
+  }
+}

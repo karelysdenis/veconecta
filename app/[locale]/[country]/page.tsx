@@ -7,7 +7,7 @@ import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
 import { getLocalizedSlug } from '@/lib/country-slug'
-import { localizeSuffixed, localizedSlugWhere, LOCALES, INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { localizeSuffixed, localizedSlugWhere, anyLocaleSlugWhere, LOCALES, INTL_LOCALE, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -83,11 +83,12 @@ export default async function CountryPage({
     },
   })
 
-  // Fallback: try canonical slug. Redirect only if a distinct localized slug
-  // exists for it — otherwise the localized slug equals urlSlug and
-  // redirecting would loop back to this same URL.
+  // Fallback: the URL may carry a slug from a different locale (e.g. the
+  // language switcher swaps only the locale segment). Match it against the
+  // canonical id or any locale's slug column, then redirect to this locale's
+  // own slug — unless it's already the same, which would loop.
   if (!country) {
-    const byCanonical = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
+    const byCanonical = await prisma.country.findFirst({ where: { ...anyLocaleSlugWhere(urlSlug), active: true } })
     if (!byCanonical) notFound()
 
     const localizedSlug = getLocalizedSlug(byCanonical, locale)
