@@ -11,6 +11,8 @@ import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
 import { LOCALES } from '@/lib/locale-content'
+import { CitySelect } from '@/components/admin/CitySelect'
+import { resolveCityId } from '@/lib/city'
 
 const CATEGORIES = Object.values(ResourceCategory)
 const STATUSES = Object.values(ResourceStatus)
@@ -68,6 +70,7 @@ export default async function EditResourcePage({
     const name = (fd.get('name') as string).trim()
     const isAdmin = user.role === 'ADMIN'
     const newStatus = fd.get('status') as ResourceStatus
+    const cityId = await resolveCityId(country, fd)
     await prisma.resource.update({
       where: { id },
       data: {
@@ -79,7 +82,7 @@ export default async function EditResourcePage({
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
-        cityId: (fd.get('cityId') as string) || null,
+        cityId,
         address: (fd.get('address') as string).trim() || null,
         schedule: (fd.get('schedule') as string).trim() || null,
         free: fd.get('free') === 'on',
@@ -144,21 +147,7 @@ export default async function EditResourcePage({
           <F label="Bizum" name="bizum" defaultValue={resource.bizum ?? ''} />
         </div>
 
-        {cities.length > 0 ? (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad / Región</label>
-            <select name="cityId"
-              defaultValue={resource.cityId ?? ''}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300">
-              <option value="">— Nacional (sin ciudad específica)</option>
-              {cities.map(c => (
-                <option key={c.id} value={c.id}>{c.nameEs}</option>
-              ))}
-            </select>
-          </div>
-        ) : (
-          <input type="hidden" name="cityId" value={resource.cityId ?? ''} />
-        )}
+        <CitySelect cities={cities} defaultValue={resource.cityId ?? ''} />
         <F label="Dirección" name="address" defaultValue={resource.address ?? ''} />
         <F label="Horario" name="schedule" defaultValue={resource.schedule ?? ''} />
         <F label="Vence (fecha)" name="expiresAt" type="date" defaultValue={expFormatted} />
