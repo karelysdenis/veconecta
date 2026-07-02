@@ -11,6 +11,7 @@ export type AuditAction =
   | 'USER_DELETE'
   | 'COUNTRY_CREATE'
   | 'COUNTRY_UPDATE'
+  | 'COUNTRY_DELETE'
   | 'LOCALE_TOGGLE'
 
 export async function logAction(params: {

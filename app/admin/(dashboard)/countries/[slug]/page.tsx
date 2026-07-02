@@ -8,7 +8,7 @@ import { FlagImage } from '@/components/admin/FlagImage'
 import { cityToSlug } from '@/lib/slugify'
 import { LOCALES } from '@/lib/locale-content'
 import { logAction } from '@/lib/audit'
-import { ResourceStatus } from '@prisma/client'
+import { ConfirmButton } from '@/components/admin/ConfirmButton'
 
 export default async function EditCountryPage({
   params,
@@ -23,13 +23,17 @@ export default async function EditCountryPage({
   if (!user) redirect('/admin/login')
   if (user.role !== 'ADMIN') redirect('/admin')
 
-  const [country, cities] = await Promise.all([
+  const [country, cities, resourceCount] = await Promise.all([
     prisma.country.findUnique({ where: { slug } }),
     prisma.city.findMany({
       where: { countrySlug: slug },
-      include: { _count: { select: { resources: { where: { status: ResourceStatus.PUBLISHED } } } } },
+      // Any resource (draft or published) blocks deletion — the DB has no
+      // cascade on Resource.cityId, so a status filter here would let the
+      // UI show "deletable" for a city Postgres will actually refuse.
+      include: { _count: { select: { resources: true } } },
       orderBy: { nameEs: 'asc' },
     }),
+    prisma.resource.count({ where: { countrySlug: slug } }),
   ])
   if (!country) notFound()
 
@@ -99,10 +103,61 @@ export default async function EditCountryPage({
     if (!user || user.role !== 'ADMIN') return
     const cityId = fd.get('cityId') as string
     if (!cityId) return
-    const count = await prisma.resource.count({ where: { cityId, status: ResourceStatus.PUBLISHED } })
+    const count = await prisma.resource.count({ where: { cityId } })
     if (count > 0) return
-    await prisma.city.delete({ where: { id: cityId, countrySlug: slug } })
+    try {
+      await prisma.city.delete({ where: { id: cityId, countrySlug: slug } })
+    } catch (e: unknown) {
+      // A resource could've been created between the count check above and
+      // this delete — Postgres' FK constraint is the real backstop.
+      if ((e as { code?: string })?.code === 'P2003') return
+      throw e
+    }
     revalidatePath(`/admin/countries/${slug}`)
+  }
+
+  async function deleteCountry() {
+    'use server'
+    const { user } = await getSession()
+    if (!user || user.role !== 'ADMIN') return
+    if (!country || slug === 'global') return
+    const count = await prisma.resource.count({ where: { countrySlug: slug } })
+    if (count > 0) return
+    try {
+      await prisma.$transaction([
+        prisma.city.deleteMany({ where: { countrySlug: slug } }),
+        prisma.country.delete({ where: { slug } }),
+      ])
+    } catch (e: unknown) {
+      // Same race-condition backstop as deleteCity: a resource created
+      // after the count check above makes City/Country FK deletes fail.
+      if ((e as { code?: string })?.code === 'P2003') return
+      throw e
+    }
+    // Drop the slug from any EDITOR's assignment so it doesn't dangle.
+    const affectedUsers = await prisma.user.findMany({
+      where: { countrySlugs: { has: slug } },
+      select: { id: true, countrySlugs: true },
+    })
+    await Promise.all(
+      affectedUsers.map((u) =>
+        prisma.user.update({
+          where: { id: u.id },
+          data: { countrySlugs: u.countrySlugs.filter((s) => s !== slug) },
+        }),
+      ),
+    )
+    await logAction({
+      userEmail: user.email,
+      action: 'COUNTRY_DELETE',
+      entityType: 'country',
+      entityId: slug,
+      entityName: country.nameEs,
+    })
+    revalidatePath('/admin')
+    for (const l of LOCALES) revalidatePath(`/${l}`)
+    for (const l of LOCALES) revalidatePath(`/${l}/${slug}`)
+    redirect('/admin')
   }
 
   return (
@@ -206,22 +261,22 @@ export default async function EditCountryPage({
                 >
                   Editar
                 </Link>
-                <form action={deleteCity}>
-                  <input type="hidden" name="cityId" value={city.id} />
-                  <button
-                    type="submit"
+                <div className="shrink-0">
+                  <ConfirmButton
+                    action={deleteCity}
+                    hiddenFields={{ cityId: city.id }}
+                    label="Eliminar"
+                    message={`¿Eliminar ${city.nameEs}?`}
                     disabled={city._count.resources > 0}
-                    className="text-xs border border-red-100 text-red-400 px-2.5 py-1 rounded hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
-                  >
-                    Eliminar
-                  </button>
-                </form>
+                    disabledReason={`Tiene ${city._count.resources} recurso(s) — reasígnalos o elimínalos primero`}
+                  />
+                </div>
               </div>
             ))}
           </div>
         )}
 
-        <form action={createCity} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+        <form action={createCity} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 mb-8">
           <p className="text-sm font-medium text-gray-700">Nueva ciudad</p>
           {error === 'city-duplicate' && (
             <p className="text-sm text-red-600">Ya existe una ciudad con ese slug. Prueba un nombre diferente.</p>
@@ -260,6 +315,28 @@ export default async function EditCountryPage({
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Zona de peligro */}
+      <div className="mt-8 bg-white border border-red-100 rounded-xl p-4 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium text-gray-900">Eliminar país</p>
+          <p className="text-xs text-gray-500">
+            {resourceCount > 0
+              ? `Bloqueado: tiene ${resourceCount} recurso(s). Reasígnalos o elimínalos primero.`
+              : 'Borra el país y sus ciudades (ya sin recursos). No se puede deshacer.'}
+          </p>
+        </div>
+        <ConfirmButton
+          action={deleteCountry}
+          label="Eliminar país"
+          message={`¿Eliminar ${country.nameEs} definitivamente?`}
+          confirmLabel="Sí, eliminar"
+          disabled={resourceCount > 0 || slug === 'global'}
+          disabledReason={
+            slug === 'global' ? 'El país global no se puede eliminar' : `Tiene ${resourceCount} recurso(s)`
+          }
+        />
       </div>
     </div>
   )
