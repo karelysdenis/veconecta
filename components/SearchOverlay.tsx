@@ -79,7 +79,7 @@ export function SearchOverlay({
     debounceRef.current = setTimeout(async () => {
       setLoading(true)
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(v.trim())}`)
+        const res = await fetch(`/api/search?q=${encodeURIComponent(v.trim())}&locale=${encodeURIComponent(locale)}`)
         const data = await res.json()
         setResults(data.results)
         setFallback(data.fallback)

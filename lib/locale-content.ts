@@ -70,6 +70,17 @@ export function localizeSuffixed(record: object, base: string, locale: string): 
 }
 
 /**
+ * Whether a country should be listed/linked at all when browsing in
+ * `locale` — same "empty enabledLocales = no restriction" rule as
+ * effectiveLocalesForCountry, but for the common case where you already
+ * have the single country row in hand (selector lists, search results)
+ * and don't need the full active-set intersection.
+ */
+export function isCountryVisibleInLocale(enabledLocales: readonly string[], locale: string): boolean {
+  return enabledLocales.length === 0 || enabledLocales.includes(locale)
+}
+
+/**
  * Intersects a country's allowed locales (Country.enabledLocales) with the
  * site-wide active set. An empty `enabledLocales` means "no restriction" —
  * the country simply inherits every active locale.

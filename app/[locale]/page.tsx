@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { CountrySelector } from '@/components/CountrySelector'
-import { INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { INTL_LOCALE, isCountryVisibleInLocale, type Locale } from '@/lib/locale-content'
 import { ResourceStatus } from '@prisma/client'
 import { Globe } from 'lucide-react'
 
@@ -18,7 +18,7 @@ export default async function HomePage({
 
   const t = await getTranslations('homepage')
 
-  const [countries, globalCount] = await Promise.all([
+  const [allCountries, globalCount] = await Promise.all([
     prisma.country.findMany({
       where: { active: true, slug: { not: 'global' } },
       orderBy: { slug: 'asc' },
@@ -32,6 +32,8 @@ export default async function HomePage({
       where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
     }),
   ])
+  // Don't offer a country whose page would 404 in this locale.
+  const countries = allCountries.filter((c) => isCountryVisibleInLocale(c.enabledLocales, locale))
 
   const totalResources =
     countries.reduce((sum, c) => sum + c._count.resources, 0) + globalCount
