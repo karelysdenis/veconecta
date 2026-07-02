@@ -99,6 +99,12 @@ export default async function AdminDashboard() {
                   </svg>
                 </Link>
                 <Link
+                  href="/admin/languages"
+                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+                >
+                  Idiomas
+                </Link>
+                <Link
                   href="/admin/users"
                   className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
                 >

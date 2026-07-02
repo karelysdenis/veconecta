@@ -6,7 +6,9 @@ import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { cityToSlug } from '@/lib/slugify'
-import { LOCALES } from '@/lib/locale-content'
+import { LOCALES, LOCALE_LABELS, DEFAULT_LOCALE } from '@/lib/locale-content'
+import { getActiveLocales } from '@/lib/locale-active'
+import { logAction } from '@/lib/audit'
 import { ResourceStatus } from '@prisma/client'
 
 export default async function EditCountryPage({
@@ -22,13 +24,14 @@ export default async function EditCountryPage({
   if (!user) redirect('/admin/login')
   if (user.role !== 'ADMIN') redirect('/admin')
 
-  const [country, cities] = await Promise.all([
+  const [country, cities, activeLocales] = await Promise.all([
     prisma.country.findUnique({ where: { slug } }),
     prisma.city.findMany({
       where: { countrySlug: slug },
       include: { _count: { select: { resources: { where: { status: ResourceStatus.PUBLISHED } } } } },
       orderBy: { nameEs: 'asc' },
     }),
+    getActiveLocales(),
   ])
   if (!country) notFound()
 
@@ -36,6 +39,13 @@ export default async function EditCountryPage({
     'use server'
     const { user } = await getSession()
     if (!user || user.role !== 'ADMIN') return
+    const submittedLocales = fd.getAll('enabledLocales') as string[]
+    // Empty means "no restriction" and must stay empty. Any non-empty
+    // selection always keeps the default locale in, even though its
+    // checkbox is disabled in the form and never actually submits —
+    // excluding 'es' would 404 the URL almost all real traffic uses.
+    const enabledLocales =
+      submittedLocales.length === 0 ? [] : Array.from(new Set([DEFAULT_LOCALE, ...submittedLocales]))
     await prisma.country.update({
       where: { slug },
       data: {
@@ -47,10 +57,20 @@ export default async function EditCountryPage({
         flag: (fd.get('flag') as string).trim(),
         cca2: (fd.get('cca2') as string).trim().toLowerCase() || null,
         active: fd.get('active') === 'on',
+        enabledLocales,
       },
+    })
+    await logAction({
+      userEmail: user.email,
+      action: 'COUNTRY_UPDATE',
+      entityType: 'country',
+      entityId: slug,
+      entityName: (fd.get('nameEs') as string).trim(),
+      countrySlug: slug,
     })
     revalidatePath('/admin')
     for (const l of LOCALES) revalidatePath(`/${l}`)
+    for (const l of LOCALES) revalidatePath(`/${l}/${slug}`)
     redirect('/admin')
   }
 
@@ -140,6 +160,33 @@ export default async function EditCountryPage({
         <div className="grid grid-cols-2 gap-4">
           <F label="Nombre en alemán" name="nameDe" defaultValue={country.nameDe ?? ''} />
           <F label="Bandera (emoji)" name="flag" defaultValue={country.flag} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Idiomas ofrecidos en este país
+            <span className="text-xs text-gray-400 font-normal ml-1">
+              (ninguno marcado = todos los idiomas activos del sitio; español siempre incluido)
+            </span>
+          </label>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {activeLocales.map((l) => {
+              const isDefault = l.code === DEFAULT_LOCALE
+              return (
+                <label key={l.code} className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="enabledLocales"
+                    value={l.code}
+                    defaultChecked={isDefault || country.enabledLocales.includes(l.code)}
+                    disabled={isDefault}
+                    className="h-4 w-4 rounded disabled:opacity-50"
+                  />
+                  <span className="text-sm text-gray-700">{LOCALE_LABELS[l.code]}</span>
+                </label>
+              )
+            })}
+          </div>
         </div>
 
         <label className="flex items-center gap-2 cursor-pointer">

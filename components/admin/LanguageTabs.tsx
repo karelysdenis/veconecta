@@ -6,6 +6,8 @@ const PLACEHOLDERS: Record<Locale, string> = {
   es: 'Descripción del recurso en español…',
   en: 'Resource description in English…',
   pt: 'Descrição do recurso em português…',
+  fr: 'Description de la ressource en français…',
+  de: 'Ressourcenbeschreibung auf Deutsch…',
 }
 
 const LANGS = LOCALES.map((code) => ({

@@ -3,15 +3,19 @@
 import { useState, useRef, useEffect } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter } from 'next/navigation'
-import { locales } from '@/i18n'
-import { LOCALE_LABELS } from '@/lib/locale-content'
+import { effectiveLocalesForCountry } from '@/lib/locale-content'
+import type { ActiveLocale } from '@/lib/locale-active'
 
 export function LangPopover({
   direction = 'up',
   className,
+  activeLocales,
+  countryLocaleMap,
 }: {
   direction?: 'up' | 'down'
   className?: string
+  activeLocales: ActiveLocale[]
+  countryLocaleMap: Record<string, string[]>
 }) {
   const [open, setOpen] = useState(false)
   const locale = useLocale()
@@ -19,6 +23,17 @@ export function LangPopover({
   const router = useRouter()
   const ref = useRef<HTMLDivElement>(null)
   const t = useTranslations('nav')
+
+  // /es/spain/... → 'spain'; '' on the homepage or non-country pages, which
+  // means "no restriction" (effectiveLocalesForCountry falls back to the
+  // full active set for any slug with no entry in countryLocaleMap).
+  const countrySlug = pathname.split('/')[2] ?? ''
+  const locales = effectiveLocalesForCountry(
+    countrySlug,
+    activeLocales.map((l) => l.code),
+    countryLocaleMap,
+  )
+  const options = activeLocales.filter((l) => locales.includes(l.code))
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -70,13 +85,13 @@ export function LangPopover({
         <div
           className={`absolute ${popoverPosition} bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden min-w-[140px] z-50`}
         >
-          {locales.map((l) => (
+          {options.map((l) => (
             <button
-              key={l}
-              onClick={() => switchLocale(l)}
+              key={l.code}
+              onClick={() => switchLocale(l.code)}
               className="w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 text-left"
             >
-              {l === locale ? (
+              {l.code === locale ? (
                 <svg
                   className="w-4 h-4 text-red-700 shrink-0"
                   fill="currentColor"
@@ -93,12 +108,12 @@ export function LangPopover({
               )}
               <span
                 className={
-                  l === locale
+                  l.code === locale
                     ? 'font-medium text-gray-900'
                     : 'text-gray-600'
                 }
               >
-                {LOCALE_LABELS[l] ?? l.toUpperCase()}
+                {l.label}
               </span>
             </button>
           ))}

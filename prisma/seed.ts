@@ -30,6 +30,7 @@ async function main() {
       { slug: 'chile',     nameEs: 'Chile',           nameEn: 'Chile',          namePt: 'Chile',         flag: '🇨🇱', cca2: 'cl', active: true },
       { slug: 'mexico',    nameEs: 'México',          nameEn: 'Mexico',         namePt: 'México',        flag: '🇲🇽', cca2: 'mx', active: true },
       { slug: 'ecuador',   nameEs: 'Ecuador',         nameEn: 'Ecuador',        namePt: 'Equador',       flag: '🇪🇨', cca2: 'ec', active: true },
+      { slug: 'germany',   nameEs: 'Alemania',        nameEn: 'Germany',        namePt: 'Alemanha',      nameDe: 'Deutschland', flag: '🇩🇪', cca2: 'de', active: true },
     ],
     skipDuplicates: true,
   })

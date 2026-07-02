@@ -1,8 +1,17 @@
 import Link from 'next/link'
 import { LangPopover } from './LangPopover'
 import { SearchOverlay } from './SearchOverlay'
+import type { ActiveLocale } from '@/lib/locale-active'
 
-export function AppHeader({ locale }: { locale: string }) {
+export function AppHeader({
+  locale,
+  activeLocales,
+  countryLocaleMap,
+}: {
+  locale: string
+  activeLocales: ActiveLocale[]
+  countryLocaleMap: Record<string, string[]>
+}) {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 h-[68px] bg-white border-b border-black/[0.08]">
       <div className="max-w-2xl mx-auto h-full flex items-center justify-between px-5">
@@ -11,7 +20,7 @@ export function AppHeader({ locale }: { locale: string }) {
         </Link>
         <div className="flex items-center gap-3.5 text-[#141414]">
           <SearchOverlay locale={locale} triggerClassName="hidden md:block" />
-          <LangPopover direction="down" />
+          <LangPopover direction="down" activeLocales={activeLocales} countryLocaleMap={countryLocaleMap} />
         </div>
       </div>
     </header>

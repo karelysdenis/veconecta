@@ -6,7 +6,8 @@ import { ActionCard } from '@/components/ActionCard'
 import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
 import { flagUrl } from '@/lib/country-iso'
-import { localizeSuffixed, LOCALES, INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { localizeSuffixed, INTL_LOCALE, effectiveLocalesForCountry, type Locale } from '@/lib/locale-content'
+import { getActiveLocales, getCountryLocaleMap } from '@/lib/locale-active'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -28,14 +29,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, country: urlSlug } = await params
 
-  const [country, t] = await Promise.all([
+  const [country, t, activeLocales, countryLocaleMap] = await Promise.all([
     prisma.country.findUnique({ where: { slug: urlSlug, active: true } }),
     getTranslations({ locale, namespace: 'country' }),
+    getActiveLocales(),
+    getCountryLocaleMap(),
   ])
   if (!country) return {}
 
   const name = localizeSuffixed(country, 'name', locale) ?? country.nameEs
   const heading = t('fromCountry', { name })
+
+  const effectiveLocales = effectiveLocalesForCountry(
+    country.slug,
+    activeLocales.map((l) => l.code),
+    countryLocaleMap,
+  )
 
   return {
     title: `${heading}: ${locale === 'en' ? 'How to help with the Venezuela earthquake' : 'Cómo ayudar con el terremoto de Venezuela'} | VEconecta`,
@@ -51,7 +60,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://www.veconecta.org/${locale}/${urlSlug}`,
       languages: Object.fromEntries(
-        LOCALES.map((l) => [l, `https://www.veconecta.org/${l}/${country.slug}`]),
+        effectiveLocales.map((l) => [l, `https://www.veconecta.org/${l}/${country.slug}`]),
       ),
     },
   }
@@ -71,16 +80,27 @@ export default async function CountryPage({
     getTranslations('search'),
   ])
 
-  const country = await prisma.country.findUnique({
-    where: { slug: urlSlug, active: true },
-    include: {
-      resources: {
-        where: { status: ResourceStatus.PUBLISHED },
-        orderBy: { createdAt: 'asc' },
+  const [country, activeLocales, countryLocaleMap] = await Promise.all([
+    prisma.country.findUnique({
+      where: { slug: urlSlug, active: true },
+      include: {
+        resources: {
+          where: { status: ResourceStatus.PUBLISHED },
+          orderBy: { createdAt: 'asc' },
+        },
       },
-    },
-  })
+    }),
+    getActiveLocales(),
+    getCountryLocaleMap(),
+  ])
   if (!country) notFound()
+
+  const effectiveLocales = effectiveLocalesForCountry(
+    country.slug,
+    activeLocales.map((l) => l.code),
+    countryLocaleMap,
+  )
+  if (!effectiveLocales.includes(locale)) notFound()
 
   const slug = country.slug
 

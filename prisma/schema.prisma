@@ -46,6 +46,9 @@ model Country {
   flag          String
   cca2          String?
   active        Boolean    @default(true)
+  // Subset of Locale.code offered on this country's public pages. Empty = no
+  // restriction, use every active Locale (default/back-compat behavior).
+  enabledLocales String[]  @default([])
   lastUpdatedAt DateTime   @updatedAt
   resources     Resource[]
   cities        City[]
@@ -121,6 +124,15 @@ model Resource {
   @@index([notesPt(ops: raw("gin_trgm_ops"))], type: Gin)
   @@index([notesFr(ops: raw("gin_trgm_ops"))], type: Gin)
   @@index([notesDe(ops: raw("gin_trgm_ops"))], type: Gin)
+}
+
+// Which of the 5 locale codes with provisioned content columns (nameXx/notesXx
+// on Country/City/Resource) are currently live on the public site. Toggling
+// `active` here needs no migration or deploy — see lib/locale-content.ts.
+model Locale {
+  code   String  @id
+  active Boolean @default(true)
+  order  Int     @default(0)
 }
 
 model AuditLog {
