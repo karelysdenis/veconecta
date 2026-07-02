@@ -103,6 +103,8 @@
     "address": "Address",
     "schedule": "Hours",
     "free": "Free · No cost",
+    "city": "City",
+    "expiresOn": "Ends",
     "verifiedBy": "Verified by VEconecta",
     "goToResource": "Go to resource",
     "reportOutdated": "Incorrect or outdated info? Report it",

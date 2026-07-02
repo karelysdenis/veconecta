@@ -5,6 +5,7 @@ import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
+import { dueForReviewFilter } from '@/lib/review-config'
 
 function Flag({ cca2, slug, flag, size = 24 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
@@ -52,7 +53,7 @@ export default async function AdminDashboard() {
   const globalUrgentCount = await prisma.resource.count({
     where: {
       status: 'PUBLISHED',
-      expiresAt: { lte: new Date(Date.now() + 2 * 86400000) },
+      ...dueForReviewFilter(),
       ...(user.role === 'EDITOR' ? { countrySlug: { in: user.countrySlugs } } : {}),
     },
   })

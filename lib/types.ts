@@ -6,10 +6,10 @@ import { localizeBare } from './locale-content'
 
 export type SerializedResource = Omit<
   Resource,
-  'verifiedAt' | 'expiresAt' | 'createdAt' | 'updatedAt'
+  'verifiedAt' | 'validUntil' | 'createdAt' | 'updatedAt'
 > & {
   verifiedAt: string | null
-  expiresAt: string | null
+  validUntil: string | null
   createdAt: string
   updatedAt: string
 }
@@ -22,7 +22,7 @@ export function serializeResource(r: Resource): SerializedResource {
   return {
     ...r,
     verifiedAt: r.verifiedAt?.toISOString() ?? null,
-    expiresAt: r.expiresAt?.toISOString() ?? null,
+    validUntil: r.validUntil?.toISOString() ?? null,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
   }

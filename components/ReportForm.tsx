@@ -35,7 +35,7 @@ export function ReportForm({
   }
 
   return (
-    <div className="pt-2">
+    <div className="flex flex-col items-center">
       {!open ? (
         <button
           onClick={() => setOpen(true)}
@@ -46,7 +46,7 @@ export function ReportForm({
       ) : status === 'success' ? (
         <p className="font-sans font-light text-xs text-[#808080]">{t('success')}</p>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-2">
+        <form onSubmit={handleSubmit} className="space-y-2 w-full">
           <label className="block font-sans font-light text-xs text-[#808080]">{t('title')}</label>
           <textarea
             value={message}

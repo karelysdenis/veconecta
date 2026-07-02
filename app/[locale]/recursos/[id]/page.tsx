@@ -38,7 +38,7 @@ export default async function ResourceDetailPage({
 
   const resource = await prisma.resource.findUnique({
     where: { id, status: ResourceStatus.PUBLISHED },
-    include: { country: true },
+    include: { country: true, city: true },
   })
 
   if (!resource) notFound()
@@ -47,14 +47,14 @@ export default async function ResourceDetailPage({
   const displayName = localizeBare(resource, 'name', locale)
   const notes = localizeSuffixed(resource, 'notes', locale)
   const categoryLabel = tCat(resource.category)
+  const cityName = resource.city ? (localizeSuffixed(resource.city, 'name', locale) ?? resource.city.nameEs) : null
 
-  const verifiedDate = resource.verifiedAt
-    ? new Intl.DateTimeFormat(INTL_LOCALE[locale as Locale] ?? INTL_LOCALE.es, {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }).format(resource.verifiedAt)
-    : null
+  const intlLocale = INTL_LOCALE[locale as Locale] ?? INTL_LOCALE.es
+  const fmt = (date: Date) =>
+    new Intl.DateTimeFormat(intlLocale, { day: 'numeric', month: 'short', year: 'numeric' }).format(date)
+
+  const verifiedDate = resource.verifiedAt ? fmt(resource.verifiedAt) : null
+  const validUntilDate = resource.validUntil ? fmt(resource.validUntil) : null
 
   const isGlobal = resource.countrySlug === 'global'
   const countrySlug = isGlobal ? null : resource.countrySlug
@@ -88,10 +88,10 @@ export default async function ResourceDetailPage({
           <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
             {displayName}
           </h1>
-          {verifiedDate && (
-            <p className="font-sans font-light text-[13px] text-[#808080] mt-1">
-              {tDetail('verifiedBy')} · {verifiedDate}
-            </p>
+          {validUntilDate && (
+            <span className="inline-flex items-center font-sans font-medium text-[11px] text-guacamaya bg-amber-50 rounded-full px-2 py-0.5 mt-2">
+              {tDetail('expiresOn')} {validUntilDate}
+            </span>
           )}
         </div>
 
@@ -103,8 +103,14 @@ export default async function ResourceDetailPage({
         )}
 
         {/* Key info */}
-        {(resource.url || resource.phone || resource.bizum || resource.address || resource.schedule || resource.free) && (
+        {(resource.url || resource.phone || resource.bizum || resource.address || resource.schedule || resource.free || cityName) && (
           <div className="divide-y divide-[rgba(20,20,20,0.08)] border-t border-[rgba(20,20,20,0.08)]">
+            {cityName && (
+              <div className="py-3 flex items-center justify-between gap-4">
+                <span className="font-sans text-[13px] text-[#808080] shrink-0">{tDetail('city')}</span>
+                <span className="font-sans text-[13px] text-[#141414]">{cityName}</span>
+              </div>
+            )}
             {resource.free && (
               <div className="py-3 flex items-center justify-between">
                 <span className="font-sans text-[13px] text-[#808080]">{tDetail('free')}</span>
@@ -176,8 +182,15 @@ export default async function ResourceDetailPage({
           </a>
         )}
 
-        {/* Report — very low prominence */}
-        <ReportForm countrySlug={resource.countrySlug} resourceId={resource.id} />
+        {verifiedDate && (
+          <p className="font-sans font-light text-[13px] text-guacamaya text-center">
+            {tDetail('verifiedBy')} · {verifiedDate}
+          </p>
+        )}
+
+        <div className="pt-6 border-t border-[rgba(20,20,20,0.08)]">
+          <ReportForm countrySlug={resource.countrySlug} resourceId={resource.id} />
+        </div>
       </div>
     </main>
   )

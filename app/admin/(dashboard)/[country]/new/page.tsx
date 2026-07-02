@@ -55,7 +55,7 @@ export default async function NewResourcePage({
     const { user } = await getSession()
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
-    const expiresRaw = fd.get('expiresAt') as string
+    const validUntilRaw = fd.get('validUntil') as string
     const name = (fd.get('name') as string).trim()
     const cityId = await resolveCityId(country, fd)
     const resource = await prisma.resource.create({
@@ -76,7 +76,7 @@ export default async function NewResourcePage({
         notesEs: (fd.get('notesEs') as string).trim() || null,
         notesEn: (fd.get('notesEn') as string).trim() || null,
         notesPt: (fd.get('notesPt') as string).trim() || null,
-        expiresAt: expiresRaw ? new Date(expiresRaw) : null,
+        validUntil: validUntilRaw ? new Date(validUntilRaw) : null,
         verifiedAt: user.role === 'ADMIN' ? new Date() : null,
         verifiedBy: user.role === 'ADMIN' ? user.email : null,
       },
@@ -132,7 +132,7 @@ export default async function NewResourcePage({
 
         <F label="Dirección" name="address" />
         <F label="Horario" name="schedule" />
-        <F label="Vence (fecha)" name="expiresAt" type="date" />
+        <F label="Válido hasta (solo si el recurso tiene fecha de fin)" name="validUntil" type="date" />
 
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" name="free" defaultChecked className="h-4 w-4 rounded" />

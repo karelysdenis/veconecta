@@ -133,7 +133,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'global',
@@ -146,7 +146,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'global',
@@ -159,7 +159,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'global',
@@ -172,7 +172,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'global',
@@ -185,7 +185,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'global',
@@ -198,7 +198,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'global',
@@ -211,7 +211,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'global',
@@ -255,7 +255,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'spain',
@@ -268,7 +268,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'spain',
@@ -282,7 +282,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'spain',
@@ -296,7 +296,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'spain',
@@ -309,7 +309,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'spain',
@@ -324,7 +324,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'spain',
@@ -337,7 +337,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'spain',
@@ -350,7 +350,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'spain',
@@ -365,7 +365,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'spain',
@@ -425,7 +425,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'usa',
@@ -453,7 +453,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'usa',
@@ -468,7 +468,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'usa',
@@ -483,7 +483,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'usa',
@@ -516,7 +516,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -528,7 +528,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -541,7 +541,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -556,7 +556,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'colombia',
@@ -571,7 +571,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'colombia',
@@ -586,7 +586,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-02'),
+        validUntil: exp('2026-07-02'),
       },
       {
         countrySlug: 'colombia',
@@ -601,7 +601,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -615,7 +615,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -630,7 +630,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -645,7 +645,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -660,7 +660,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -675,7 +675,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -690,7 +690,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'colombia',
@@ -724,7 +724,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'argentina',
@@ -750,7 +750,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'argentina',
@@ -764,7 +764,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'argentina',
@@ -778,7 +778,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'argentina',
@@ -792,7 +792,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'argentina',
@@ -806,7 +806,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'argentina',
@@ -820,7 +820,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
     ],
   })
@@ -841,7 +841,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'mexico',
@@ -855,7 +855,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
     ],
   })
@@ -877,7 +877,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'ecuador',
@@ -891,7 +891,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'ecuador',
@@ -906,7 +906,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
     ],
   })
@@ -927,7 +927,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'peru',
@@ -941,7 +941,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
     ],
   })
@@ -973,7 +973,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -986,7 +986,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -1000,7 +1000,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -1014,7 +1014,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -1028,7 +1028,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -1042,7 +1042,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -1056,7 +1056,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -1070,7 +1070,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'chile',
@@ -1084,7 +1084,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
     ],
   })
@@ -1116,7 +1116,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
       {
         countrySlug: 'brazil',
@@ -1129,7 +1129,7 @@ async function main() {
         status: ResourceStatus.PUBLISHED,
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
-        expiresAt: exp('2026-07-03'),
+        validUntil: exp('2026-07-03'),
       },
     ],
   })

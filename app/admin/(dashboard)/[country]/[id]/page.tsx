@@ -66,7 +66,7 @@ export default async function EditResourcePage({
     const { user } = await getSession()
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
-    const expiresRaw = fd.get('expiresAt') as string
+    const validUntilRaw = fd.get('validUntil') as string
     const name = (fd.get('name') as string).trim()
     const isAdmin = user.role === 'ADMIN'
     const newStatus = fd.get('status') as ResourceStatus
@@ -89,7 +89,7 @@ export default async function EditResourcePage({
         notesEs: (fd.get('notesEs') as string).trim() || null,
         notesEn: (fd.get('notesEn') as string).trim() || null,
         notesPt: (fd.get('notesPt') as string).trim() || null,
-        expiresAt: expiresRaw ? new Date(expiresRaw) : null,
+        validUntil: validUntilRaw ? new Date(validUntilRaw) : null,
         verifiedAt: isAdmin ? new Date() : undefined,
         verifiedBy: isAdmin ? user.email : undefined,
       },
@@ -102,8 +102,8 @@ export default async function EditResourcePage({
     redirect(returnTo)
   }
 
-  const expFormatted = resource.expiresAt
-    ? resource.expiresAt.toISOString().split('T')[0]
+  const validUntilFormatted = resource.validUntil
+    ? resource.validUntil.toISOString().split('T')[0]
     : ''
 
   return (
@@ -150,7 +150,7 @@ export default async function EditResourcePage({
         <CitySelect cities={cities} defaultValue={resource.cityId ?? ''} />
         <F label="Dirección" name="address" defaultValue={resource.address ?? ''} />
         <F label="Horario" name="schedule" defaultValue={resource.schedule ?? ''} />
-        <F label="Vence (fecha)" name="expiresAt" type="date" defaultValue={expFormatted} />
+        <F label="Válido hasta (solo si el recurso tiene fecha de fin)" name="validUntil" type="date" defaultValue={validUntilFormatted} />
 
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" name="free" defaultChecked={resource.free} className="h-4 w-4 rounded" />

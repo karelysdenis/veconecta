@@ -103,6 +103,8 @@
     "address": "Adresse",
     "schedule": "Öffnungszeiten",
     "free": "Kostenlos · Keine Kosten",
+    "city": "Stadt",
+    "expiresOn": "Endet",
     "verifiedBy": "Verifiziert von VEconecta",
     "goToResource": "Zur Ressource",
     "reportOutdated": "Falsche oder veraltete Information? Melden",

@@ -8,6 +8,7 @@ import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { LOCALES } from '@/lib/locale-content'
 import { fetchResourcesByIds } from '@/lib/resource-review'
+import { dueForReviewFilter } from '@/lib/review-config'
 
 const CATEGORY_LABELS: Record<string, string> = {
   FIND_FAMILY: 'Encontrar familia',
@@ -41,18 +42,18 @@ export default async function GlobalReviewPage({
     : await prisma.resource.findMany({
         where: {
           status: 'PUBLISHED',
-          expiresAt: { lte: new Date(Date.now() + 2 * 86400000) },
+          ...dueForReviewFilter(),
           ...(editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {}),
         },
         orderBy: [
-          { expiresAt: 'asc' },
+          { verifiedAt: { sort: 'asc', nulls: 'first' } },
           { createdAt: 'asc' },
         ],
         include: { city: true },
       })
 
   // Snapshot the queue as a fixed list of IDs so confirming a resource (which
-  // changes its expiresAt and would otherwise drop it out of the urgent filter)
+  // updates verifiedAt and would otherwise drop it out of the pending filter)
   // doesn't reshuffle indices mid-review. Confirmed items stay visible/navigable.
   if (!idsParam && resources.length > 0) {
     redirect(`/admin/review?ids=${resources.map((r) => r.id).join(',')}&i=0`)
@@ -83,7 +84,6 @@ export default async function GlobalReviewPage({
       data: {
         verifiedAt: new Date(),
         verifiedBy: user.email,
-        expiresAt: new Date(Date.now() + 5 * 86400000),
       },
     })
     await logAction({
@@ -110,7 +110,7 @@ export default async function GlobalReviewPage({
         <Breadcrumb />
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center space-y-3">
           <p className="text-gray-500 text-sm">
-            ¡Sin urgentes! Todos los temporales tienen vigencia suficiente.
+            ¡Al día! No hay recursos pendientes de revisión.
           </p>
           <div>
             <Link href="/admin" className="text-sm text-gray-400 hover:underline">
@@ -262,24 +262,18 @@ export default async function GlobalReviewPage({
           </div>
         )}
 
-        {/* Expiry */}
-        {resource.expiresAt && (() => {
-          const ms = resource.expiresAt!.getTime() - Date.now()
-          const days = Math.ceil(ms / 86400000)
-          return (
-            <div className={`text-sm font-medium px-3 py-2 rounded-lg text-center ${
-              ms < 0
-                ? 'bg-red-50 text-red-700 border border-red-200'
-                : days <= 2
-                ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                : 'bg-green-50 text-green-700 border border-green-200'
-            }`}>
-              {ms < 0
-                ? `Vencido hace ${Math.abs(days)} día${Math.abs(days) !== 1 ? 's' : ''}`
-                : `Vence en ${days} día${days !== 1 ? 's' : ''}`}
-            </div>
-          )
-        })()}
+        {/* Fecha de fin (solo cuando el contenido tiene vigencia editorial) */}
+        {resource.validUntil && (
+          <div className={`text-sm font-medium px-3 py-2 rounded-lg text-center ${
+            resource.validUntil < new Date()
+              ? 'bg-red-50 text-red-700 border border-red-200'
+              : 'bg-blue-50 text-blue-700 border border-blue-200'
+          }`}>
+            {resource.validUntil < new Date()
+              ? `Venció el ${new Intl.DateTimeFormat('es-ES').format(resource.validUntil)}`
+              : `Válido hasta ${new Intl.DateTimeFormat('es-ES').format(resource.validUntil)}`}
+          </div>
+        )}
 
         {/* Notes */}
         {resource.notesEs && (

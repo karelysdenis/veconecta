@@ -8,6 +8,7 @@ import { flagUrl } from '@/lib/country-iso'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { LOCALES } from '@/lib/locale-content'
+import { reviewCutoff, REVIEW_CYCLE_DAYS } from '@/lib/review-config'
 
 function Flag({ cca2, slug, flag, size = 32 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
@@ -25,26 +26,30 @@ const CATEGORY_LABELS: Record<string, string> = {
   MENTAL_HEALTH: 'Salud mental',
 }
 
-function DaysLeft({ date }: { date: Date | null }) {
-  if (!date) return null
-  const ms = date.getTime() - Date.now()
-  if (ms < 0) {
-    return (
-      <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-100 text-red-700">
-        Vencido
-      </span>
-    )
-  }
-  const days = Math.ceil(ms / 86400000)
-  if (days <= 2) {
-    return (
-      <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">
-        {days}d
-      </span>
-    )
-  }
-  return (
+function VerificationAge({ verifiedAt }: { verifiedAt: Date | null }) {
+  if (!verifiedAt) return (
+    <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-orange-100 text-orange-700">
+      Sin verificar
+    </span>
+  )
+  const days = Math.floor((Date.now() - verifiedAt.getTime()) / 86400000)
+  if (days === 0) return (
     <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-green-100 text-green-700">
+      Hoy
+    </span>
+  )
+  if (days < REVIEW_CYCLE_DAYS - 2) return (
+    <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-green-100 text-green-700">
+      {days}d
+    </span>
+  )
+  if (days < REVIEW_CYCLE_DAYS) return (
+    <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">
+      {days}d
+    </span>
+  )
+  return (
+    <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-100 text-red-700">
       {days}d
     </span>
   )
@@ -79,8 +84,9 @@ export default async function AdminCountryPage({
 
   const drafts = countryRecord.resources.filter((r) => r.status === 'DRAFT')
   const published = countryRecord.resources.filter((r) => r.status === 'PUBLISHED')
+  const cutoff = reviewCutoff()
   const urgentCount = published.filter(
-    (r) => r.expiresAt !== null && r.expiresAt <= new Date(Date.now() + 2 * 86400000)
+    (r) => !r.verifiedAt || r.verifiedAt <= cutoff
   ).length
 
   async function publishResource(formData: FormData) {
@@ -90,7 +96,7 @@ export default async function AdminCountryPage({
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const now = new Date()
-    const existing = await prisma.resource.findUnique({ where: { id }, select: { expiresAt: true, countrySlug: true } })
+    const existing = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
     if (!existing || existing.countrySlug !== country) return
     const resource = await prisma.resource.update({
       where: { id },
@@ -98,9 +104,6 @@ export default async function AdminCountryPage({
         status: 'PUBLISHED',
         verifiedAt: user.role === 'ADMIN' ? now : null,
         verifiedBy: user.role === 'ADMIN' ? user.email : null,
-        expiresAt: existing?.expiresAt != null
-          ? new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000)
-          : null,
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_PUBLISH', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
@@ -115,13 +118,11 @@ export default async function AdminCountryPage({
     const id = formData.get('id') as string
     const { user } = await getSession()
     if (!user || user.role !== 'ADMIN') return
-    const existing = await prisma.resource.findUnique({ where: { id }, select: { expiresAt: true } })
     const resource = await prisma.resource.update({
       where: { id },
       data: {
         verifiedAt: new Date(),
         verifiedBy: user.email,
-        ...(existing?.expiresAt != null ? { expiresAt: new Date(Date.now() + 5 * 86400000) } : {}),
       },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_CONFIRM', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
@@ -130,6 +131,23 @@ export default async function AdminCountryPage({
     revalidatePath('/admin')
     for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
     for (const l of LOCALES) revalidatePath(`/${l}`)
+  }
+
+  async function duplicateResource(formData: FormData) {
+    'use server'
+    const id = formData.get('id') as string
+    const { user } = await getSession()
+    if (!user) return
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
+    const src = await prisma.resource.findUnique({ where: { id } })
+    if (!src || src.countrySlug !== country) return
+    const { id: _id, createdAt: _c, updatedAt: _u, verifiedAt: _va, verifiedBy: _vb, status: _s, ...fields } = src
+    const copy = await prisma.resource.create({
+      data: { ...fields, status: 'DRAFT', verifiedAt: null, verifiedBy: null },
+    })
+    await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: copy.id, entityName: copy.name, countrySlug: country })
+    await touchCountry(country)
+    revalidatePath(`/admin/${country}`)
   }
 
   async function archiveResource(formData: FormData) {
@@ -201,7 +219,7 @@ export default async function AdminCountryPage({
                         {CATEGORY_LABELS[r.category] ?? r.category}
                       </span>
                       {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
-                      <DaysLeft date={r.expiresAt} />
+                      <VerificationAge verifiedAt={r.verifiedAt} />
                     </div>
                     <p className="font-medium text-sm text-gray-900">{r.name}</p>
                     <div className="flex flex-wrap gap-x-3 mt-1">
@@ -214,6 +232,12 @@ export default async function AdminCountryPage({
                     </div>
                   </div>
                   <div className="flex gap-2 shrink-0">
+                    <form action={duplicateResource}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button type="submit" className="text-xs border border-gray-300 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-50" title="Duplicar">
+                        ⎘
+                      </button>
+                    </form>
                     <Link
                       href={`/admin/${country}/${r.id}`}
                       className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
@@ -258,10 +282,10 @@ export default async function AdminCountryPage({
                       {CATEGORY_LABELS[r.category] ?? r.category}
                     </span>
                     {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
-                    <DaysLeft date={r.expiresAt} />
-                    {!r.verifiedAt && (
-                      <span className="text-[10px] font-medium text-orange-700 border border-orange-200 bg-orange-50 px-1.5 py-0.5 rounded">
-                        Sin confirmar
+                    <VerificationAge verifiedAt={r.verifiedAt} />
+                    {r.validUntil && (
+                      <span className="text-[10px] font-medium text-blue-700 border border-blue-200 bg-blue-50 px-1.5 py-0.5 rounded">
+                        Hasta {new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short' }).format(r.validUntil)}
                       </span>
                     )}
                   </div>
@@ -287,6 +311,12 @@ export default async function AdminCountryPage({
                       </button>
                     </form>
                   )}
+                  <form action={duplicateResource}>
+                    <input type="hidden" name="id" value={r.id} />
+                    <button type="submit" className="text-xs border border-gray-300 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-50" title="Duplicar">
+                      ⎘
+                    </button>
+                  </form>
                   <Link
                     href={`/admin/${country}/${r.id}`}
                     className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"

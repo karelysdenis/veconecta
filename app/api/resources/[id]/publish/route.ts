@@ -20,7 +20,6 @@ export async function POST(
     if (!resource) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
     const now = new Date()
-    const expiresAt = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000)
 
     await prisma.resource.update({
       where: { id },
@@ -28,7 +27,6 @@ export async function POST(
         status: 'PUBLISHED',
         verifiedAt: now,
         verifiedBy: user.email,
-        expiresAt,
       },
     })
 
