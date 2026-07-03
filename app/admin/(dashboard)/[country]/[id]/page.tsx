@@ -54,10 +54,13 @@ export default async function EditResourcePage({
 
   const returnTo = sanitizeReturnTo(rawReturnTo, `/admin/${country}`)
 
-  const [resource, countryRecord, cities] = await Promise.all([
+  const [resource, countryRecord, cities, allCountries] = await Promise.all([
     prisma.resource.findUnique({ where: { id } }),
     prisma.country.findUnique({ where: { slug: country } }),
     prisma.city.findMany({ where: { countrySlug: country }, orderBy: { nameEs: 'asc' } }),
+    user.role === 'ADMIN'
+      ? prisma.country.findMany({ where: { active: true }, orderBy: { nameEs: 'asc' }, select: { slug: true, nameEs: true } })
+      : Promise.resolve(null),
   ])
   if (!resource || resource.countrySlug !== country) notFound()
 
@@ -66,11 +69,22 @@ export default async function EditResourcePage({
     const { user } = await getSession()
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
+
+    // Ownership guard: verify the resource belongs to the country in the URL
+    const existing = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
+    if (!existing || existing.countrySlug !== country) return
+
+    const isAdmin = user.role === 'ADMIN'
+    const requestedCountry = (fd.get('countrySlug') as string) || country
+    // Validate the target country exists and is active before trusting it
+    const newCountrySlug = isAdmin && requestedCountry !== country
+      ? (await prisma.country.findFirst({ where: { slug: requestedCountry, active: true }, select: { slug: true } }))?.slug ?? country
+      : country
+    const countryChanged = newCountrySlug !== country
     const validUntilRaw = fd.get('validUntil') as string
     const name = (fd.get('name') as string).trim()
-    const isAdmin = user.role === 'ADMIN'
     const newStatus = fd.get('status') as ResourceStatus
-    const cityId = await resolveCityId(country, fd)
+    const cityId = countryChanged ? null : await resolveCityId(country, fd)
     await prisma.resource.update({
       where: { id },
       data: {
@@ -82,6 +96,7 @@ export default async function EditResourcePage({
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
         bizum: (fd.get('bizum') as string).trim() || null,
+        countrySlug: newCountrySlug,
         cityId,
         address: (fd.get('address') as string).trim() || null,
         schedule: (fd.get('schedule') as string).trim() || null,
@@ -94,12 +109,18 @@ export default async function EditResourcePage({
         verifiedBy: isAdmin ? user.email : undefined,
       },
     })
-    await logAction({ userEmail: user.email, action: 'RESOURCE_UPDATE', entityType: 'resource', entityId: id, entityName: name, countrySlug: country, detail: newStatus })
+    const logDetail = countryChanged ? `${country} → ${newCountrySlug}` : newStatus
+    await logAction({ userEmail: user.email, action: 'RESOURCE_UPDATE', entityType: 'resource', entityId: id, entityName: name, countrySlug: newCountrySlug, detail: logDetail })
     await touchCountry(country)
+    if (countryChanged) await touchCountry(newCountrySlug)
     revalidatePath(`/admin/${country}`)
+    revalidatePath(`/admin/${country}/review`)
+    revalidatePath(`/admin/${newCountrySlug}`)
+    revalidatePath(`/admin/${newCountrySlug}/review`)
     for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}/${newCountrySlug}`)
     for (const l of LOCALES) revalidatePath(`/${l}`)
-    redirect(returnTo)
+    redirect(countryChanged ? `/admin/${newCountrySlug}` : returnTo)
   }
 
   const validUntilFormatted = resource.validUntil
@@ -134,6 +155,22 @@ export default async function EditResourcePage({
             pt: resource.namePt ?? '',
           }} />
         </div>
+
+        {allCountries && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">País</label>
+            <select
+              name="countrySlug"
+              defaultValue={resource.countrySlug}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              {allCountries.map((c) => (
+                <option key={c.slug} value={c.slug}>{c.nameEs}</option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-400 mt-1">Al cambiar de país la ciudad se restablece</p>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-4">
           <Sel label="Categoría" name="category" value={resource.category} opts={CATEGORIES} labels={CATEGORY_LABELS} />
