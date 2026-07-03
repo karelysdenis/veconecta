@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Calendar } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
@@ -97,8 +98,9 @@ export default async function ResourceDetailPage({
             {displayName}
           </h1>
           {eventRangeStr && (
-            <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5 mt-2">
-              📅 {eventRangeStr}
+            <span className="inline-flex items-center gap-1 font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5 mt-2">
+              <Calendar size={11} strokeWidth={2.5} className="shrink-0" />
+              {eventRangeStr}
             </span>
           )}
           {validUntilDate && (

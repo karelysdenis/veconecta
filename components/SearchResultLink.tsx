@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Calendar } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getResourceName, type SerializedCity } from '@/lib/types'
@@ -74,8 +75,9 @@ export function SearchResultLink({
             </Link>
           )}
           {eventRangeStr && (
-            <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
-              📅 {eventRangeStr}
+            <span className="inline-flex items-center gap-1 font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+              <Calendar size={11} strokeWidth={2.5} className="shrink-0" />
+              {eventRangeStr}
             </span>
           )}
           {isGlobal ? (

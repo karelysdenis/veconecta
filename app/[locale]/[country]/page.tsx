@@ -116,7 +116,7 @@ export default async function CountryPage({
       where: { countrySlug: slug },
       include: {
         _count: {
-          select: { resources: { where: { status: ResourceStatus.PUBLISHED } } },
+          select: { resources: { where: { status: ResourceStatus.PUBLISHED, ...notPastEventFilter() } } },
         },
       },
     }),

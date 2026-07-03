@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { Calendar } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import type { SerializedResource } from '@/lib/types'
 import { getResourceName } from '@/lib/types'
@@ -60,8 +61,9 @@ export function ResourceLink({
               </Link>
             )}
             {eventRangeStr && (
-              <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
-                📅 {eventRangeStr}
+              <span className="inline-flex items-center gap-1 font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+                <Calendar size={11} strokeWidth={2.5} className="shrink-0" />
+                {eventRangeStr}
               </span>
             )}
             {expiresStr && (

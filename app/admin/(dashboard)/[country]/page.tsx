@@ -1,4 +1,5 @@
 import { notFound, redirect } from 'next/navigation'
+import { Calendar } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { ResourceStatus } from '@prisma/client'
@@ -51,6 +52,21 @@ function VerificationAge({ verifiedAt }: { verifiedAt: Date | null }) {
   return (
     <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-100 text-red-700">
       {days}d
+    </span>
+  )
+}
+
+function EventChip({ eventStartsAt, eventEndsAt }: { eventStartsAt: Date | null; eventEndsAt: Date | null }) {
+  const range = formatEventRange(
+    eventStartsAt?.toISOString() ?? null,
+    eventEndsAt?.toISOString() ?? null,
+    'es',
+  )
+  if (!range) return null
+  return (
+    <span className="inline-flex items-center gap-1 text-[10px] font-medium text-caribe border border-caribe/30 bg-caribe/10 px-1.5 py-0.5 rounded">
+      <Calendar size={10} strokeWidth={2.5} className="shrink-0" />
+      {range}
     </span>
   )
 }
@@ -284,13 +300,7 @@ export default async function AdminCountryPage({
                     {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
                     <VerificationAge verifiedAt={r.verifiedAt} />
                     {r.kind === 'EVENT' && (
-                      <span className="text-[10px] font-medium text-caribe border border-caribe/30 bg-caribe/10 px-1.5 py-0.5 rounded">
-                        📅 {formatEventRange(
-                          r.eventStartsAt?.toISOString() ?? null,
-                          r.eventEndsAt?.toISOString() ?? null,
-                          'es',
-                        )}
-                      </span>
+                      <EventChip eventStartsAt={r.eventStartsAt} eventEndsAt={r.eventEndsAt} />
                     )}
                     {r.validUntil && (
                       <span className="text-[10px] font-medium text-blue-700 border border-blue-200 bg-blue-50 px-1.5 py-0.5 rounded">

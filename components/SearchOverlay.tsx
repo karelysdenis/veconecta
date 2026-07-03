@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { Search, X, Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain } from 'lucide-react'
+import { Search, X, Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import type { ResourceCategory, ResourceKind } from '@prisma/client'
@@ -314,8 +314,9 @@ function ResultRow({
             </Link>
           )}
           {eventRangeStr && (
-            <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
-              📅 {eventRangeStr}
+            <span className="inline-flex items-center gap-1 font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+              <Calendar size={11} strokeWidth={2.5} className="shrink-0" />
+              {eventRangeStr}
             </span>
           )}
           {isGlobal ? (

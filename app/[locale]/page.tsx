@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { CountrySelector } from '@/components/CountrySelector'
 import { INTL_LOCALE, isCountryVisibleInLocale, type Locale } from '@/lib/locale-content'
+import { notPastEventFilter } from '@/lib/resource-visibility'
 import { ResourceStatus } from '@prisma/client'
 import { Globe } from 'lucide-react'
 
@@ -24,12 +25,12 @@ export default async function HomePage({
       orderBy: { slug: 'asc' },
       include: {
         _count: {
-          select: { resources: { where: { status: ResourceStatus.PUBLISHED } } },
+          select: { resources: { where: { status: ResourceStatus.PUBLISHED, ...notPastEventFilter() } } },
         },
       },
     }),
     prisma.resource.count({
-      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
+      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED, ...notPastEventFilter() },
     }),
   ])
   // Don't offer a country whose page would 404 in this locale.
