@@ -25,6 +25,9 @@ const GLOBAL_SELECT = {
   country: {
     select: { nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true, enabledLocales: true },
   },
+  city: {
+    select: { slug: true, nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true },
+  },
 } as const
 
 const CATEGORY_ORDER: ResourceCategory[] = [

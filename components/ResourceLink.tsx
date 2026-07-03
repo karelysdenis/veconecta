@@ -24,13 +24,19 @@ export function ResourceLink({
     }).format(new Date(iso))
 
   const expiresStr = resource.validUntil ? fmt(resource.validUntil) : null
+  const cityName = resource.city
+    ? (localizeSuffixed(resource.city, 'name', locale) ?? resource.city.nameEs)
+    : null
+  const cityHref = resource.city ? `/${locale}/${resource.countrySlug}/${resource.city.slug}` : null
 
   return (
-    <Link
-      href={`/${locale}/recursos/${resource.id}`}
-      className="flex items-center justify-between gap-3 min-h-14 px-5 py-3 border-t border-[rgba(20,20,20,0.08)] hover:bg-guacamaya/5 transition-colors"
-    >
-      <div className="flex-1 min-w-0">
+    <div className="relative flex items-center justify-between gap-3 min-h-14 px-5 py-3 border-t border-[rgba(20,20,20,0.08)] hover:bg-guacamaya/5 transition-colors">
+      <Link
+        href={`/${locale}/recursos/${resource.id}`}
+        className="absolute inset-0"
+        aria-label={name}
+      />
+      <div className="flex-1 min-w-0 pointer-events-none">
         <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">
           {name}
         </p>
@@ -39,13 +45,25 @@ export function ResourceLink({
             {notes}
           </p>
         )}
-        {expiresStr && (
-          <span className="inline-flex items-center font-sans font-medium text-[11px] text-guacamaya bg-amber-50 rounded-full px-2 py-0.5 mt-1">
-            {tDetail('expiresOn')} {expiresStr}
-          </span>
+        {(cityName || expiresStr) && (
+          <div className="flex items-center gap-1.5 mt-1">
+            {cityName && cityHref && (
+              <Link
+                href={cityHref}
+                className="pointer-events-auto relative z-10 font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5 hover:bg-gray-200 transition-colors"
+              >
+                {cityName}
+              </Link>
+            )}
+            {expiresStr && (
+              <span className="inline-flex items-center font-sans font-medium text-[11px] text-guacamaya bg-amber-50 rounded-full px-2 py-0.5">
+                {tDetail('expiresOn')} {expiresStr}
+              </span>
+            )}
+          </div>
         )}
       </div>
-      <span className="text-[#b8b8b8] text-base shrink-0 select-none">›</span>
-    </Link>
+      <span className="text-[#b8b8b8] text-base shrink-0 select-none pointer-events-none">›</span>
+    </div>
   )
 }

@@ -35,6 +35,7 @@ export default async function GlobalPage({
   const raw = await prisma.resource.findMany({
     where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
     orderBy: { createdAt: 'asc' },
+    include: { city: true },
   })
 
   const resources = raw.map(serializeResource)

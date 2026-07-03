@@ -74,10 +74,12 @@ export default async function CityPage({
     prisma.resource.findMany({
       where: { countrySlug, status: ResourceStatus.PUBLISHED },
       orderBy: { createdAt: 'asc' },
+      include: { city: true },
     }),
     prisma.resource.findMany({
       where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
       orderBy: { createdAt: 'asc' },
+      include: { city: true },
     }),
   ])
 

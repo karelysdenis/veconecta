@@ -87,6 +87,7 @@ export default async function CountryPage({
         resources: {
           where: { status: ResourceStatus.PUBLISHED },
           orderBy: { createdAt: 'asc' },
+          include: { city: true },
         },
       },
     }),
@@ -108,6 +109,7 @@ export default async function CountryPage({
     prisma.resource.findMany({
       where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
       orderBy: { createdAt: 'asc' },
+      include: { city: true },
     }),
     prisma.city.findMany({
       where: { countrySlug: slug },

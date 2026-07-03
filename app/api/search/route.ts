@@ -22,6 +22,9 @@ const RESOURCE_SELECT = {
       enabledLocales: true,
     },
   },
+  city: {
+    select: { slug: true, nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true },
+  },
 } as const
 
 export async function GET(request: Request) {

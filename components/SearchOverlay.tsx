@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import type { ResourceCategory } from '@prisma/client'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
-import { getResourceName } from '@/lib/types'
+import { getResourceName, type SerializedCity } from '@/lib/types'
 import { localizeSuffixed } from '@/lib/locale-content'
 
 type Result = {
@@ -18,6 +18,7 @@ type Result = {
     flag: string
     cca2: string | null
   }
+  city: SerializedCity | null
 }
 
 type CountryResult = {
@@ -273,6 +274,10 @@ function ResultRow({
   const name = getResourceName(result, locale)
   const notes = localizeSuffixed(result, 'notes', locale)
   const countryName = localizeSuffixed(result.country, 'name', locale) ?? result.country.nameEs
+  const cityName = result.city
+    ? (localizeSuffixed(result.city, 'name', locale) ?? result.city.nameEs)
+    : null
+  const cityHref = result.city ? `/${locale}/${result.countrySlug}/${result.city.slug}` : null
 
   const isGlobal = result.countrySlug === 'global'
   const flagSrc = result.country.cca2
@@ -280,17 +285,28 @@ function ResultRow({
     : isoFlagUrl(result.countrySlug, 'w40')
 
   return (
-    <Link
-      href={`/${locale}/recursos/${result.id}`}
-      onClick={onClose}
-      className="flex items-center justify-between gap-3 min-h-14 px-5 py-3 border-t border-[rgba(20,20,20,0.08)] hover:bg-guacamaya/5 transition-colors"
-    >
-      <div className="flex-1 min-w-0">
+    <div className="relative flex items-center justify-between gap-3 min-h-14 px-5 py-3 border-t border-[rgba(20,20,20,0.08)] hover:bg-guacamaya/5 transition-colors">
+      <Link
+        href={`/${locale}/recursos/${result.id}`}
+        onClick={onClose}
+        className="absolute inset-0"
+        aria-label={name}
+      />
+      <div className="flex-1 min-w-0 pointer-events-none">
         <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">{name}</p>
         {notes && (
           <p className="font-sans font-light text-[13px] text-[#808080] mt-0.5 leading-snug line-clamp-1">{notes}</p>
         )}
         <div className="flex items-center gap-1.5 mt-1">
+          {cityName && cityHref && (
+            <Link
+              href={cityHref}
+              onClick={onClose}
+              className="pointer-events-auto relative z-10 font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5 hover:bg-gray-200 transition-colors"
+            >
+              {cityName}
+            </Link>
+          )}
           {isGlobal ? (
             <span className="font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5">{tSearch('international')}</span>
           ) : (
@@ -301,7 +317,7 @@ function ResultRow({
           )}
         </div>
       </div>
-      <span className="text-[#b8b8b8] text-base shrink-0 select-none">›</span>
-    </Link>
+      <span className="text-[#b8b8b8] text-base shrink-0 select-none pointer-events-none">›</span>
+    </div>
   )
 }
