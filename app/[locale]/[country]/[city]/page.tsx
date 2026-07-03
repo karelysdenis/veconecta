@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
-import { notPastEventFilter } from '@/lib/resource-visibility'
+import { notPastEventFilter, MIN_CITY_RESOURCES } from '@/lib/resource-visibility'
 import { flagUrl } from '@/lib/country-iso'
 import { localizeSuffixed, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
@@ -37,12 +37,26 @@ export async function generateMetadata({
 
   const countryName = localizeSuffixed(country, 'name', locale) ?? country.nameEs
 
+  // Below MIN_CITY_RESOURCES the page is mostly national/global resources
+  // shared with every other under-threshold city in the country — keep it
+  // reachable (e.g. from a resource's city pill) but don't let it compete
+  // with near-duplicate content in search results.
+  const cityResourceCount = await prisma.resource.count({
+    where: {
+      countrySlug: country.slug,
+      cityId: cityRecord.id,
+      status: ResourceStatus.PUBLISHED,
+      ...notPastEventFilter(),
+    },
+  })
+
   return {
     title: `${cityName}, ${countryName} | VEconecta`,
     description:
       locale === 'en'
         ? `Verified resources for Venezuelans in ${cityName}, ${countryName}.`
         : `Recursos verificados para venezolanos en ${cityName}, ${countryName}.`,
+    ...(cityResourceCount < MIN_CITY_RESOURCES ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: 'website',
       siteName: 'VEconecta',

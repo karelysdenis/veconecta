@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
-import { notPastEventFilter } from '@/lib/resource-visibility'
+import { notPastEventFilter, MIN_CITY_RESOURCES } from '@/lib/resource-visibility'
 import { flagUrl } from '@/lib/country-iso'
 import { localizeSuffixed, INTL_LOCALE, effectiveLocalesForCountry, type Locale } from '@/lib/locale-content'
 import { getActiveLocales, getCountryLocaleMap } from '@/lib/locale-active'
@@ -125,7 +125,7 @@ export default async function CountryPage({
   const name = localizeSuffixed(country, 'name', locale) ?? country.nameEs
 
   const realCities: CityEntry[] = citiesWithCount
-    .filter((c) => c._count.resources > 0)
+    .filter((c) => c._count.resources >= MIN_CITY_RESOURCES)
     .map((c) => ({
       name: localizeSuffixed(c, 'name', locale) ?? c.nameEs,
       slug: c.slug,

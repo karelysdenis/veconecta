@@ -7,3 +7,12 @@ export function notPastEventFilter() {
     ],
   }
 }
+
+/**
+ * Minimum genuinely city-scoped published resources before a city gets its
+ * own promoted destination (shown in the country's city picker, indexable).
+ * Below this, the country page's flat list already surfaces the city's
+ * resources (with a city pill) — a dedicated page would mostly repeat the
+ * same national/global resources as every other under-threshold city.
+ */
+export const MIN_CITY_RESOURCES = 5
