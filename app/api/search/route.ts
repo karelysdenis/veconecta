@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { ResourceStatus } from '@prisma/client'
 import { isCountryVisibleInLocale } from '@/lib/locale-content'
+import { notPastEventFilter } from '@/lib/resource-visibility'
 
 const RESOURCE_SELECT = {
   id: true,
@@ -11,6 +12,9 @@ const RESOURCE_SELECT = {
   nameDe: true,
   category: true,
   countrySlug: true,
+  kind: true,
+  eventStartsAt: true,
+  eventEndsAt: true,
   notesEs: true,
   notesEn: true,
   notesPt: true,
@@ -56,18 +60,23 @@ export async function GET(request: Request) {
   const rawResults = await prisma.resource.findMany({
     where: {
       status: ResourceStatus.PUBLISHED,
-      OR: [
-        { name: { contains: q, mode: 'insensitive' } },
-        { nameEn: { contains: q, mode: 'insensitive' } },
-        { namePt: { contains: q, mode: 'insensitive' } },
-        { nameFr: { contains: q, mode: 'insensitive' } },
-        { nameDe: { contains: q, mode: 'insensitive' } },
-        { notesEs: { contains: q, mode: 'insensitive' } },
-        { notesEn: { contains: q, mode: 'insensitive' } },
-        { notesPt: { contains: q, mode: 'insensitive' } },
-        { notesFr: { contains: q, mode: 'insensitive' } },
-        { notesDe: { contains: q, mode: 'insensitive' } },
-        ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
+      AND: [
+        notPastEventFilter(),
+        {
+          OR: [
+            { name: { contains: q, mode: 'insensitive' } },
+            { nameEn: { contains: q, mode: 'insensitive' } },
+            { namePt: { contains: q, mode: 'insensitive' } },
+            { nameFr: { contains: q, mode: 'insensitive' } },
+            { nameDe: { contains: q, mode: 'insensitive' } },
+            { notesEs: { contains: q, mode: 'insensitive' } },
+            { notesEn: { contains: q, mode: 'insensitive' } },
+            { notesPt: { contains: q, mode: 'insensitive' } },
+            { notesFr: { contains: q, mode: 'insensitive' } },
+            { notesDe: { contains: q, mode: 'insensitive' } },
+            ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
+          ],
+        },
       ],
     },
     select: RESOURCE_SELECT,
@@ -81,7 +90,7 @@ export async function GET(request: Request) {
   let fallback: typeof results = []
   if (results.length === 0) {
     fallback = (await prisma.resource.findMany({
-      where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global' },
+      where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global', ...notPastEventFilter() },
       select: RESOURCE_SELECT,
       orderBy: { createdAt: 'asc' },
       take: 50,

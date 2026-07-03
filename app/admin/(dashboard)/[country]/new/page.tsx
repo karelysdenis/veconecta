@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
-import { ResourceCategory, ResourceStatus } from '@prisma/client'
+import { ResourceCategory, ResourceKind, ResourceStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { UrlField } from '@/components/admin/UrlField'
@@ -10,8 +10,9 @@ import { NameTabs } from '@/components/admin/NameTabs'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
-import { LOCALES } from '@/lib/locale-content'
+import { LOCALES, localizedFieldsFromForm } from '@/lib/locale-content'
 import { CitySelect } from '@/components/admin/CitySelect'
+import { KindDateFields } from '@/components/admin/KindDateFields'
 import { resolveCityId } from '@/lib/city'
 
 const CATEGORIES = Object.values(ResourceCategory)
@@ -56,14 +57,16 @@ export default async function NewResourcePage({
     if (!user) return
     if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
     const validUntilRaw = fd.get('validUntil') as string
+    const kind = (fd.get('kind') as ResourceKind) || ResourceKind.PERMANENT
+    const eventStartsAtRaw = fd.get('eventStartsAt') as string
+    const eventEndsAtRaw = fd.get('eventEndsAt') as string
     const name = (fd.get('name') as string).trim()
     const cityId = await resolveCityId(country, fd)
     const resource = await prisma.resource.create({
       data: {
         countrySlug: country,
         name,
-        nameEn: (fd.get('nameEn') as string).trim() || null,
-        namePt: (fd.get('namePt') as string).trim() || null,
+        ...localizedFieldsFromForm(fd, 'name'),
         category: fd.get('category') as ResourceCategory,
         status: (fd.get('status') as ResourceStatus) || ResourceStatus.DRAFT,
         url: (fd.get('url') as string).trim() || null,
@@ -74,9 +77,11 @@ export default async function NewResourcePage({
         schedule: (fd.get('schedule') as string).trim() || null,
         free: fd.get('free') === 'on',
         notesEs: (fd.get('notesEs') as string).trim() || null,
-        notesEn: (fd.get('notesEn') as string).trim() || null,
-        notesPt: (fd.get('notesPt') as string).trim() || null,
-        validUntil: validUntilRaw ? new Date(validUntilRaw) : null,
+        ...localizedFieldsFromForm(fd, 'notes'),
+        kind,
+        validUntil: kind === ResourceKind.PERMANENT && validUntilRaw ? new Date(validUntilRaw) : null,
+        eventStartsAt: kind === ResourceKind.EVENT && eventStartsAtRaw ? new Date(eventStartsAtRaw) : null,
+        eventEndsAt: kind === ResourceKind.EVENT && eventEndsAtRaw ? new Date(eventEndsAtRaw) : null,
         verifiedAt: user.role === 'ADMIN' ? new Date() : null,
         verifiedBy: user.role === 'ADMIN' ? user.email : null,
       },
@@ -132,7 +137,7 @@ export default async function NewResourcePage({
 
         <F label="Dirección" name="address" />
         <F label="Horario" name="schedule" />
-        <F label="Válido hasta (solo si el recurso tiene fecha de fin)" name="validUntil" type="date" />
+        <KindDateFields />
 
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" name="free" defaultChecked className="h-4 w-4 rounded" />

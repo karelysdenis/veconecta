@@ -6,6 +6,7 @@ import { SearchResultLink } from '@/components/SearchResultLink'
 import { SearchInput } from '@/components/SearchInput'
 import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, type LucideIcon } from 'lucide-react'
 import { localizeSuffixed, isCountryVisibleInLocale } from '@/lib/locale-content'
+import { notPastEventFilter } from '@/lib/resource-visibility'
 import type { Metadata } from 'next'
 
 const GLOBAL_SELECT = {
@@ -17,6 +18,9 @@ const GLOBAL_SELECT = {
   nameDe: true,
   category: true,
   countrySlug: true,
+  kind: true,
+  eventStartsAt: true,
+  eventEndsAt: true,
   notesEs: true,
   notesEn: true,
   notesPt: true,
@@ -114,18 +118,23 @@ export default async function SearchPage({
     ? await prisma.resource.findMany({
         where: {
           status: ResourceStatus.PUBLISHED,
-          OR: [
-            { name: { contains: query, mode: 'insensitive' } },
-            { nameEn: { contains: query, mode: 'insensitive' } },
-            { namePt: { contains: query, mode: 'insensitive' } },
-            { nameFr: { contains: query, mode: 'insensitive' } },
-            { nameDe: { contains: query, mode: 'insensitive' } },
-            { notesEs: { contains: query, mode: 'insensitive' } },
-            { notesEn: { contains: query, mode: 'insensitive' } },
-            { notesPt: { contains: query, mode: 'insensitive' } },
-            { notesFr: { contains: query, mode: 'insensitive' } },
-            { notesDe: { contains: query, mode: 'insensitive' } },
-            ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
+          AND: [
+            notPastEventFilter(),
+            {
+              OR: [
+                { name: { contains: query, mode: 'insensitive' } },
+                { nameEn: { contains: query, mode: 'insensitive' } },
+                { namePt: { contains: query, mode: 'insensitive' } },
+                { nameFr: { contains: query, mode: 'insensitive' } },
+                { nameDe: { contains: query, mode: 'insensitive' } },
+                { notesEs: { contains: query, mode: 'insensitive' } },
+                { notesEn: { contains: query, mode: 'insensitive' } },
+                { notesPt: { contains: query, mode: 'insensitive' } },
+                { notesFr: { contains: query, mode: 'insensitive' } },
+                { notesDe: { contains: query, mode: 'insensitive' } },
+                ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
+              ],
+            },
           ],
         },
         select: GLOBAL_SELECT,
@@ -139,7 +148,7 @@ export default async function SearchPage({
 
   const fallback = query.length >= 2 && results.length === 0
     ? (await prisma.resource.findMany({
-        where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global' },
+        where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global', ...notPastEventFilter() },
         select: GLOBAL_SELECT,
         orderBy: { createdAt: 'asc' },
         take: 50,

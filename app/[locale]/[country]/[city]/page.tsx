@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
+import { notPastEventFilter } from '@/lib/resource-visibility'
 import { flagUrl } from '@/lib/country-iso'
 import { localizeSuffixed, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
@@ -72,12 +73,12 @@ export default async function CityPage({
   const [cityRecord, allCountryResources, globalResources] = await Promise.all([
     prisma.city.findFirst({ where: { countrySlug, slug: citySlug } }),
     prisma.resource.findMany({
-      where: { countrySlug, status: ResourceStatus.PUBLISHED },
+      where: { countrySlug, status: ResourceStatus.PUBLISHED, ...notPastEventFilter() },
       orderBy: { createdAt: 'asc' },
       include: { city: true },
     }),
     prisma.resource.findMany({
-      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
+      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED, ...notPastEventFilter() },
       orderBy: { createdAt: 'asc' },
       include: { city: true },
     }),

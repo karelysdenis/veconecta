@@ -3,6 +3,7 @@ import { getSession } from '@/lib/lucia'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
+import { localizedFieldsFromForm } from '@/lib/locale-content'
 
 export default async function EditCityPage({
   params,
@@ -27,10 +28,7 @@ export default async function EditCityPage({
       where: { id: cityId, countrySlug: slug },
       data: {
         nameEs,
-        nameEn: (fd.get('nameEn') as string).trim() || null,
-        namePt: (fd.get('namePt') as string).trim() || null,
-        nameFr: (fd.get('nameFr') as string).trim() || null,
-        nameDe: (fd.get('nameDe') as string).trim() || null,
+        ...localizedFieldsFromForm(fd, 'name'),
       },
     })
     revalidatePath(`/admin/countries/${slug}`)

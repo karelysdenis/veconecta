@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
-import { ResourceCategory, ResourceStatus } from '@prisma/client'
+import { ResourceCategory, ResourceKind, ResourceStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { UrlField } from '@/components/admin/UrlField'
@@ -10,8 +10,9 @@ import { NameTabs } from '@/components/admin/NameTabs'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
-import { LOCALES } from '@/lib/locale-content'
+import { LOCALES, localizedFieldsFromForm, localizedDefaultValues } from '@/lib/locale-content'
 import { CitySelect } from '@/components/admin/CitySelect'
+import { KindDateFields } from '@/components/admin/KindDateFields'
 import { resolveCityId } from '@/lib/city'
 
 const CATEGORIES = Object.values(ResourceCategory)
@@ -82,6 +83,9 @@ export default async function EditResourcePage({
       : country
     const countryChanged = newCountrySlug !== country
     const validUntilRaw = fd.get('validUntil') as string
+    const kind = (fd.get('kind') as ResourceKind) || ResourceKind.PERMANENT
+    const eventStartsAtRaw = fd.get('eventStartsAt') as string
+    const eventEndsAtRaw = fd.get('eventEndsAt') as string
     const name = (fd.get('name') as string).trim()
     const newStatus = fd.get('status') as ResourceStatus
     const cityId = countryChanged ? null : await resolveCityId(country, fd)
@@ -89,8 +93,7 @@ export default async function EditResourcePage({
       where: { id },
       data: {
         name,
-        nameEn: (fd.get('nameEn') as string).trim() || null,
-        namePt: (fd.get('namePt') as string).trim() || null,
+        ...localizedFieldsFromForm(fd, 'name'),
         category: fd.get('category') as ResourceCategory,
         status: newStatus,
         url: (fd.get('url') as string).trim() || null,
@@ -102,9 +105,11 @@ export default async function EditResourcePage({
         schedule: (fd.get('schedule') as string).trim() || null,
         free: fd.get('free') === 'on',
         notesEs: (fd.get('notesEs') as string).trim() || null,
-        notesEn: (fd.get('notesEn') as string).trim() || null,
-        notesPt: (fd.get('notesPt') as string).trim() || null,
-        validUntil: validUntilRaw ? new Date(validUntilRaw) : null,
+        ...localizedFieldsFromForm(fd, 'notes'),
+        kind,
+        validUntil: kind === ResourceKind.PERMANENT && validUntilRaw ? new Date(validUntilRaw) : null,
+        eventStartsAt: kind === ResourceKind.EVENT && eventStartsAtRaw ? new Date(eventStartsAtRaw) : null,
+        eventEndsAt: kind === ResourceKind.EVENT && eventEndsAtRaw ? new Date(eventEndsAtRaw) : null,
         verifiedAt: isAdmin ? new Date() : undefined,
         verifiedBy: isAdmin ? user.email : undefined,
       },
@@ -125,6 +130,12 @@ export default async function EditResourcePage({
 
   const validUntilFormatted = resource.validUntil
     ? resource.validUntil.toISOString().split('T')[0]
+    : ''
+  const eventStartsAtFormatted = resource.eventStartsAt
+    ? resource.eventStartsAt.toISOString().split('T')[0]
+    : ''
+  const eventEndsAtFormatted = resource.eventEndsAt
+    ? resource.eventEndsAt.toISOString().split('T')[0]
     : ''
 
   return (
@@ -149,11 +160,7 @@ export default async function EditResourcePage({
       <form action={save} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
         <div>
           <p className="text-sm font-medium text-gray-700 mb-2">Nombre por idioma</p>
-          <NameTabs defaultValues={{
-            es: resource.name,
-            en: resource.nameEn ?? '',
-            pt: resource.namePt ?? '',
-          }} />
+          <NameTabs defaultValues={{ es: resource.name, ...localizedDefaultValues(resource, 'name') }} />
         </div>
 
         {allCountries && (
@@ -187,7 +194,12 @@ export default async function EditResourcePage({
         <CitySelect cities={cities} defaultValue={resource.cityId ?? ''} />
         <F label="Dirección" name="address" defaultValue={resource.address ?? ''} />
         <F label="Horario" name="schedule" defaultValue={resource.schedule ?? ''} />
-        <F label="Válido hasta (solo si el recurso tiene fecha de fin)" name="validUntil" type="date" defaultValue={validUntilFormatted} />
+        <KindDateFields
+          defaultKind={resource.kind}
+          defaultValidUntil={validUntilFormatted}
+          defaultEventStartsAt={eventStartsAtFormatted}
+          defaultEventEndsAt={eventEndsAtFormatted}
+        />
 
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" name="free" defaultChecked={resource.free} className="h-4 w-4 rounded" />
@@ -196,11 +208,7 @@ export default async function EditResourcePage({
 
         <div>
           <p className="text-sm font-medium text-gray-700 mb-2">Descripción por idioma</p>
-          <LanguageTabs defaultValues={{
-            es: resource.notesEs ?? '',
-            en: resource.notesEn ?? '',
-            pt: resource.notesPt ?? '',
-          }} />
+          <LanguageTabs defaultValues={{ es: resource.notesEs ?? '', ...localizedDefaultValues(resource, 'notes') }} />
         </div>
 
         <div className="flex justify-end gap-3 pt-2">

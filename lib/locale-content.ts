@@ -33,6 +33,22 @@ export const INTL_LOCALE: Record<Locale, string> = {
   de: 'de-DE',
 }
 
+/** "8–9 jul" for a multi-day event, "5 jul" when start/end are the same day or only one is set. */
+export function formatEventRange(
+  startIso: string | null,
+  endIso: string | null,
+  locale: Locale,
+): string | null {
+  if (!startIso && !endIso) return null
+  const fmt = new Intl.DateTimeFormat(INTL_LOCALE[locale], { day: 'numeric', month: 'short' })
+  const start = startIso ? new Date(startIso) : null
+  const end = endIso ? new Date(endIso) : null
+  if (start && end && start.getTime() !== end.getTime()) {
+    return `${fmt.format(start)} – ${fmt.format(end)}`
+  }
+  return fmt.format((end ?? start) as Date)
+}
+
 // Column suffix per locale: name + suffix = nameEn, namePt...
 export const LOCALE_SUFFIX: Record<Locale, string> = {
   es: 'Es',
@@ -40,6 +56,38 @@ export const LOCALE_SUFFIX: Record<Locale, string> = {
   pt: 'Pt',
   fr: 'Fr',
   de: 'De',
+}
+
+/**
+ * Reads `${base}${suffix}` (nameEn, notesDe, ...) for every non-'es' locale
+ * from a resource/country admin form submission — trimmed, empty → null.
+ * Adding a locale to LOCALES makes it read here automatically; no per-field
+ * lines to keep in sync (that drift is what silently dropped fr/de resource
+ * translations before).
+ */
+export function localizedFieldsFromForm(fd: FormData, base: string): Record<string, string | null> {
+  const out: Record<string, string | null> = {}
+  for (const l of LOCALES) {
+    if (l === 'es') continue
+    const key = `${base}${LOCALE_SUFFIX[l]}`
+    const raw = fd.get(key)
+    out[key] = typeof raw === 'string' ? (raw.trim() || null) : null
+  }
+  return out
+}
+
+/** Builds the {en, pt, fr, de, ...} defaultValues object NameTabs/LanguageTabs expect from a stored record. */
+export function localizedDefaultValues(
+  record: Record<string, unknown>,
+  base: string,
+): Partial<Record<Locale, string>> {
+  const out: Partial<Record<Locale, string>> = {}
+  for (const l of LOCALES) {
+    if (l === 'es') continue
+    const val = record[`${base}${LOCALE_SUFFIX[l]}`]
+    out[l] = typeof val === 'string' ? val : ''
+  }
+  return out
 }
 
 function field(record: object, base: string, locale: string): string | null {

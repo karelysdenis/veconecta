@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { CityList, type CityEntry } from '@/components/CityList'
 import { serializeResource } from '@/lib/types'
+import { notPastEventFilter } from '@/lib/resource-visibility'
 import { flagUrl } from '@/lib/country-iso'
 import { localizeSuffixed, INTL_LOCALE, effectiveLocalesForCountry, type Locale } from '@/lib/locale-content'
 import { getActiveLocales, getCountryLocaleMap } from '@/lib/locale-active'
@@ -85,7 +86,7 @@ export default async function CountryPage({
       where: { slug: urlSlug, active: true },
       include: {
         resources: {
-          where: { status: ResourceStatus.PUBLISHED },
+          where: { status: ResourceStatus.PUBLISHED, ...notPastEventFilter() },
           orderBy: { createdAt: 'asc' },
           include: { city: true },
         },
@@ -107,7 +108,7 @@ export default async function CountryPage({
 
   const [globalResources, citiesWithCount] = await Promise.all([
     prisma.resource.findMany({
-      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
+      where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED, ...notPastEventFilter() },
       orderBy: { createdAt: 'asc' },
       include: { city: true },
     }),

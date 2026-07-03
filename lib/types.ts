@@ -8,10 +8,12 @@ export type SerializedCity = Pick<City, 'slug' | 'nameEs' | 'nameEn' | 'namePt' 
 
 export type SerializedResource = Omit<
   Resource,
-  'verifiedAt' | 'validUntil' | 'createdAt' | 'updatedAt'
+  'verifiedAt' | 'validUntil' | 'eventStartsAt' | 'eventEndsAt' | 'createdAt' | 'updatedAt'
 > & {
   verifiedAt: string | null
   validUntil: string | null
+  eventStartsAt: string | null
+  eventEndsAt: string | null
   createdAt: string
   updatedAt: string
   city: SerializedCity | null
@@ -26,6 +28,8 @@ export function serializeResource(r: Resource & { city?: City | null }): Seriali
     ...r,
     verifiedAt: r.verifiedAt?.toISOString() ?? null,
     validUntil: r.validUntil?.toISOString() ?? null,
+    eventStartsAt: r.eventStartsAt?.toISOString() ?? null,
+    eventEndsAt: r.eventEndsAt?.toISOString() ?? null,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
     city: r.city ?? null,

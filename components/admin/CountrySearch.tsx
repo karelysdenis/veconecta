@@ -8,6 +8,8 @@ type CountryOption = {
   nameEs: string
   nameEn: string
   namePt: string
+  nameFr: string
+  nameDe: string
 }
 
 type ApiCountry = {
@@ -15,6 +17,8 @@ type ApiCountry = {
   translations: {
     spa?: { common: string }
     por?: { common: string }
+    fra?: { common: string }
+    deu?: { common: string }
   }
   flag: string
   cca2: string
@@ -36,10 +40,12 @@ function toOption(c: ApiCountry): CountryOption {
     nameEs: c.translations?.spa?.common ?? c.name.common,
     nameEn: c.name.common,
     namePt: c.translations?.por?.common ?? c.name.common,
+    nameFr: c.translations?.fra?.common ?? c.name.common,
+    nameDe: c.translations?.deu?.common ?? c.name.common,
   }
 }
 
-const EMPTY: CountryOption = { slug: '', cca2: '', flag: '', nameEs: '', nameEn: '', namePt: '' }
+const EMPTY: CountryOption = { slug: '', cca2: '', flag: '', nameEs: '', nameEn: '', namePt: '', nameFr: '', nameDe: '' }
 const cache: { data: CountryOption[] | null } = { data: null }
 
 export function CountrySearch() {
@@ -76,7 +82,9 @@ export function CountrySearch() {
         return (
           normalize(c.nameEs).includes(q) ||
           normalize(c.nameEn).includes(q) ||
-          normalize(c.namePt).includes(q)
+          normalize(c.namePt).includes(q) ||
+          normalize(c.nameFr).includes(q) ||
+          normalize(c.nameDe).includes(q)
         )
       }).slice(0, 7)
     : []
@@ -173,6 +181,10 @@ export function CountrySearch() {
       <div className="grid grid-cols-2 gap-4">
         <F label="Nombre en portugués" name="namePt" value={form.namePt} onChange={field('namePt')} placeholder="França" />
         <F label="Bandera (emoji)" name="flag" value={form.flag} onChange={field('flag')} placeholder="🇫🇷" />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <F label="Nombre en francés" name="nameFr" value={form.nameFr} onChange={field('nameFr')} placeholder="France" />
+        <F label="Nombre en alemán" name="nameDe" value={form.nameDe} onChange={field('nameDe')} placeholder="Frankreich" />
       </div>
     </div>
   )

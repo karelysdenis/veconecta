@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import type { SerializedResource } from '@/lib/types'
 import { getResourceName } from '@/lib/types'
-import { localizeSuffixed, INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { localizeSuffixed, formatEventRange, INTL_LOCALE, type Locale } from '@/lib/locale-content'
 
 export function ResourceLink({
   resource,
@@ -23,7 +23,11 @@ export function ResourceLink({
       year: 'numeric',
     }).format(new Date(iso))
 
-  const expiresStr = resource.validUntil ? fmt(resource.validUntil) : null
+  const isEvent = resource.kind === 'EVENT'
+  const expiresStr = !isEvent && resource.validUntil ? fmt(resource.validUntil) : null
+  const eventRangeStr = isEvent
+    ? formatEventRange(resource.eventStartsAt, resource.eventEndsAt, locale)
+    : null
   const cityName = resource.city
     ? (localizeSuffixed(resource.city, 'name', locale) ?? resource.city.nameEs)
     : null
@@ -45,7 +49,7 @@ export function ResourceLink({
             {notes}
           </p>
         )}
-        {(cityName || expiresStr) && (
+        {(cityName || eventRangeStr || expiresStr) && (
           <div className="flex items-center gap-1.5 mt-1">
             {cityName && cityHref && (
               <Link
@@ -54,6 +58,11 @@ export function ResourceLink({
               >
                 {cityName}
               </Link>
+            )}
+            {eventRangeStr && (
+              <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+                📅 {eventRangeStr}
+              </span>
             )}
             {expiresStr && (
               <span className="inline-flex items-center font-sans font-medium text-[11px] text-guacamaya bg-amber-50 rounded-full px-2 py-0.5">

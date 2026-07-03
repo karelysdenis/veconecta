@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { cityToSlug } from '@/lib/slugify'
-import { LOCALES } from '@/lib/locale-content'
+import { LOCALES, localizedFieldsFromForm } from '@/lib/locale-content'
 import { logAction } from '@/lib/audit'
 import { ConfirmButton } from '@/components/admin/ConfirmButton'
 
@@ -46,11 +46,9 @@ export default async function EditCountryPage({
     await prisma.country.update({
       where: { slug },
       data: {
+        ...localizedFieldsFromForm(fd, 'name'),
         nameEs: (fd.get('nameEs') as string).trim(),
         nameEn: (fd.get('nameEn') as string).trim(),
-        namePt: (fd.get('namePt') as string).trim() || null,
-        nameFr: (fd.get('nameFr') as string).trim() || null,
-        nameDe: (fd.get('nameDe') as string).trim() || null,
         flag: (fd.get('flag') as string).trim(),
         cca2: (fd.get('cca2') as string).trim().toLowerCase() || null,
         active: fd.get('active') === 'on',
@@ -82,10 +80,7 @@ export default async function EditCountryPage({
           countrySlug: slug,
           slug: cityToSlug(nameEs),
           nameEs,
-          nameEn: (fd.get('nameEn') as string).trim() || null,
-          namePt: (fd.get('namePt') as string).trim() || null,
-          nameFr: (fd.get('nameFr') as string).trim() || null,
-          nameDe: (fd.get('nameDe') as string).trim() || null,
+          ...localizedFieldsFromForm(fd, 'name'),
         },
       })
     } catch (e: unknown) {

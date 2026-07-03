@@ -3,16 +3,19 @@ import { useState, useEffect, useRef } from 'react'
 import { Search, X, Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import type { ResourceCategory } from '@prisma/client'
+import type { ResourceCategory, ResourceKind } from '@prisma/client'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getResourceName, type SerializedCity } from '@/lib/types'
-import { localizeSuffixed } from '@/lib/locale-content'
+import { localizeSuffixed, formatEventRange, type Locale } from '@/lib/locale-content'
 
 type Result = {
   id: string
   name: string
   category: ResourceCategory
   countrySlug: string
+  kind: ResourceKind
+  eventStartsAt: string | null
+  eventEndsAt: string | null
   country: {
     nameEs: string
     flag: string
@@ -278,6 +281,9 @@ function ResultRow({
     ? (localizeSuffixed(result.city, 'name', locale) ?? result.city.nameEs)
     : null
   const cityHref = result.city ? `/${locale}/${result.countrySlug}/${result.city.slug}` : null
+  const eventRangeStr = result.kind === 'EVENT'
+    ? formatEventRange(result.eventStartsAt, result.eventEndsAt, locale as Locale)
+    : null
 
   const isGlobal = result.countrySlug === 'global'
   const flagSrc = result.country.cca2
@@ -306,6 +312,11 @@ function ResultRow({
             >
               {cityName}
             </Link>
+          )}
+          {eventRangeStr && (
+            <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+              📅 {eventRangeStr}
+            </span>
           )}
           {isGlobal ? (
             <span className="font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5">{tSearch('international')}</span>

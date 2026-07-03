@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
-import { LOCALES } from '@/lib/locale-content'
+import { LOCALES, formatEventRange } from '@/lib/locale-content'
 import { reviewCutoff, REVIEW_CYCLE_DAYS } from '@/lib/review-config'
 
 function Flag({ cca2, slug, flag, size = 32 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
@@ -234,7 +234,7 @@ export default async function AdminCountryPage({
                   <div className="flex gap-2 shrink-0">
                     <form action={duplicateResource}>
                       <input type="hidden" name="id" value={r.id} />
-                      <button type="submit" className="text-xs border border-gray-300 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-50" title="Duplicar">
+                      <button type="submit" className="text-lg leading-none border border-gray-300 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-50" title="Duplicar">
                         ⎘
                       </button>
                     </form>
@@ -283,6 +283,15 @@ export default async function AdminCountryPage({
                     </span>
                     {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
                     <VerificationAge verifiedAt={r.verifiedAt} />
+                    {r.kind === 'EVENT' && (
+                      <span className="text-[10px] font-medium text-caribe border border-caribe/30 bg-caribe/10 px-1.5 py-0.5 rounded">
+                        📅 {formatEventRange(
+                          r.eventStartsAt?.toISOString() ?? null,
+                          r.eventEndsAt?.toISOString() ?? null,
+                          'es',
+                        )}
+                      </span>
+                    )}
                     {r.validUntil && (
                       <span className="text-[10px] font-medium text-blue-700 border border-blue-200 bg-blue-50 px-1.5 py-0.5 rounded">
                         Hasta {new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short' }).format(r.validUntil)}
@@ -313,7 +322,7 @@ export default async function AdminCountryPage({
                   )}
                   <form action={duplicateResource}>
                     <input type="hidden" name="id" value={r.id} />
-                    <button type="submit" className="text-xs border border-gray-300 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-50" title="Duplicar">
+                    <button type="submit" className="text-lg leading-none border border-gray-300 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-50" title="Duplicar">
                       ⎘
                     </button>
                   </form>

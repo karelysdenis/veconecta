@@ -105,12 +105,16 @@ model Resource {
   verifiedAt  DateTime?
   verifiedBy  String?
   validUntil  DateTime?
+  kind          ResourceKind @default(PERMANENT)
+  eventStartsAt DateTime?
+  eventEndsAt   DateTime?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
   @@index([status])
   @@index([countrySlug])
   @@index([cityId])
+  @@index([kind])
 
   // Trigram indexes back the ILIKE '%term%' substring search in /api/search
   // and /buscar — a plain btree index can't accelerate that query shape.
@@ -168,6 +172,11 @@ model CommunityReport {
 enum Role {
   ADMIN
   EDITOR
+}
+
+enum ResourceKind {
+  PERMANENT
+  EVENT
 }
 
 enum ResourceCategory {

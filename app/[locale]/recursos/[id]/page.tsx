@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ReportForm } from '@/components/ReportForm'
-import { localizeBare, localizeSuffixed, INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { localizeBare, localizeSuffixed, formatEventRange, INTL_LOCALE, type Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -54,7 +54,15 @@ export default async function ResourceDetailPage({
     new Intl.DateTimeFormat(intlLocale, { day: 'numeric', month: 'short', year: 'numeric' }).format(date)
 
   const verifiedDate = resource.verifiedAt ? fmt(resource.verifiedAt) : null
-  const validUntilDate = resource.validUntil ? fmt(resource.validUntil) : null
+  const isEvent = resource.kind === 'EVENT'
+  const validUntilDate = !isEvent && resource.validUntil ? fmt(resource.validUntil) : null
+  const eventRangeStr = isEvent
+    ? formatEventRange(
+        resource.eventStartsAt?.toISOString() ?? null,
+        resource.eventEndsAt?.toISOString() ?? null,
+        locale as Locale,
+      )
+    : null
 
   const isGlobal = resource.countrySlug === 'global'
   const countrySlug = isGlobal ? null : resource.countrySlug
@@ -88,6 +96,11 @@ export default async function ResourceDetailPage({
           <h1 className="font-display font-extrabold text-[28px] leading-[1.1] tracking-[-0.01em] text-[#141414]">
             {displayName}
           </h1>
+          {eventRangeStr && (
+            <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5 mt-2">
+              📅 {eventRangeStr}
+            </span>
+          )}
           {validUntilDate && (
             <span className="inline-flex items-center font-sans font-medium text-[11px] text-guacamaya bg-amber-50 rounded-full px-2 py-0.5 mt-2">
               {tDetail('expiresOn')} {validUntilDate}

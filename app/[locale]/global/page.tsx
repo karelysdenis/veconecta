@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { serializeResource } from '@/lib/types'
+import { notPastEventFilter } from '@/lib/resource-visibility'
 import type { Locale } from '@/lib/locale-content'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 
@@ -33,7 +34,7 @@ export default async function GlobalPage({
   ])
 
   const raw = await prisma.resource.findMany({
-    where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED },
+    where: { countrySlug: 'global', status: ResourceStatus.PUBLISHED, ...notPastEventFilter() },
     orderBy: { createdAt: 'asc' },
     include: { city: true },
   })

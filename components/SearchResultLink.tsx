@@ -2,12 +2,16 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getResourceName, type SerializedCity } from '@/lib/types'
-import { localizeSuffixed } from '@/lib/locale-content'
+import { localizeSuffixed, formatEventRange, type Locale } from '@/lib/locale-content'
+import type { ResourceKind } from '@prisma/client'
 
 type ResourceWithCountry = {
   id: string
   name: string
   countrySlug: string
+  kind: ResourceKind
+  eventStartsAt: Date | null
+  eventEndsAt: Date | null
   country: {
     nameEs: string
     cca2: string | null
@@ -30,6 +34,13 @@ export function SearchResultLink({
     ? (localizeSuffixed(resource.city, 'name', locale) ?? resource.city.nameEs)
     : null
   const cityHref = resource.city ? `/${locale}/${resource.countrySlug}/${resource.city.slug}` : null
+  const eventRangeStr = resource.kind === 'EVENT'
+    ? formatEventRange(
+        resource.eventStartsAt?.toISOString() ?? null,
+        resource.eventEndsAt?.toISOString() ?? null,
+        locale as Locale,
+      )
+    : null
 
   const isGlobal = resource.countrySlug === 'global'
 
@@ -61,6 +72,11 @@ export function SearchResultLink({
             >
               {cityName}
             </Link>
+          )}
+          {eventRangeStr && (
+            <span className="inline-flex items-center font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+              📅 {eventRangeStr}
+            </span>
           )}
           {isGlobal ? (
             <span className="font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5">
