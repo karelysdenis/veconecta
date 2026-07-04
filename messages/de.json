@@ -58,8 +58,7 @@
     "lastUpdated": "Aktualisiert: {date}",
     "noResources": "Ressourcen in Vorbereitung — schau bald wieder vorbei.",
     "fromCountry": "Von {name}",
-    "whatYouCanDo": "Das kannst du jetzt sofort tun:",
-    "availableAnywhere": "Verfügbar von jedem Land aus"
+    "whatYouCanDo": "Das kannst du jetzt sofort tun:"
   },
   "search": {
     "title": "Suchen",
@@ -68,7 +67,8 @@
     "noResults": "Keine Ergebnisse für „{query}“",
     "resultsCount": "{count} {count, plural, one {Ergebnis} other {Ergebnisse}} für „{query}“",
     "fallbackIntro": "Keine Ergebnisse für „{query}“. Diese Ressourcen sind von jedem Land aus verfügbar:",
-    "international": "International"
+    "international": "International",
+    "anyCountry": "Jedes Land"
   },
   "searchOverlay": {
     "placeholder": "Ressourcen suchen…",
@@ -100,6 +100,7 @@
     "website": "Webseite",
     "phone": "Telefon",
     "bizum": "Bizum",
+    "paymentKey": "Zahlungsschlüssel",
     "address": "Adresse",
     "schedule": "Öffnungszeiten",
     "free": "Kostenlos · Keine Kosten",

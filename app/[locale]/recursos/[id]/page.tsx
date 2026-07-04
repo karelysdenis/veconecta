@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ReportForm } from '@/components/ReportForm'
 import { localizeBare, localizeSuffixed, formatEventRange, INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { cleanUrlDisplay } from '@/lib/format-url'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -17,9 +18,17 @@ export async function generateMetadata({
   const resource = await prisma.resource.findUnique({ where: { id } })
   if (!resource) return {}
   const resourceName = localizeBare(resource, 'name', locale)
+  const description = localizeSuffixed(resource, 'notes', locale) ?? undefined
   return {
     title: `${resourceName} | VEconecta`,
-    description: localizeSuffixed(resource, 'notes', locale) ?? undefined,
+    description,
+    openGraph: {
+      type: 'website',
+      siteName: 'VEconecta',
+      title: `${resourceName} | VEconecta`,
+      description,
+      images: [{ url: '/api/og', width: 1200, height: 630 }],
+    },
   }
 }
 
@@ -68,9 +77,8 @@ export default async function ResourceDetailPage({
   const isGlobal = resource.countrySlug === 'global'
   const countrySlug = isGlobal ? null : resource.countrySlug
 
-  const urlDisplay = resource.url
-    ? resource.url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-    : null
+  const urlDisplay = resource.url ? cleanUrlDisplay(resource.url) : null
+  const paymentLabel = resource.countrySlug === 'spain' ? tDetail('bizum') : tDetail('paymentKey')
 
   return (
     <main className="min-h-screen bg-white pb-10">
@@ -118,7 +126,7 @@ export default async function ResourceDetailPage({
         )}
 
         {/* Key info */}
-        {(resource.url || resource.phone || resource.bizum || resource.address || resource.schedule || resource.free || cityName) && (
+        {(resource.url || resource.phone || resource.paymentKey || resource.address || resource.schedule || resource.free || cityName) && (
           <div className="divide-y divide-[rgba(20,20,20,0.08)] border-t border-[rgba(20,20,20,0.08)]">
             {cityName && (
               <div className="py-3 flex items-center justify-between gap-4">
@@ -145,10 +153,10 @@ export default async function ResourceDetailPage({
                 </a>
               </div>
             )}
-            {resource.bizum && (
+            {resource.paymentKey && (
               <div className="py-3 flex items-center justify-between gap-4">
-                <span className="font-sans text-[13px] text-[#808080] shrink-0">{tDetail('bizum')}</span>
-                <span className="font-sans font-semibold text-[13px] text-[#141414]">{resource.bizum}</span>
+                <span className="font-sans text-[13px] text-[#808080] shrink-0">{paymentLabel}</span>
+                <span className="font-sans font-semibold text-[13px] text-[#141414]">{resource.paymentKey}</span>
               </div>
             )}
             {resource.phone && (

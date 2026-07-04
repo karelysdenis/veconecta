@@ -92,7 +92,7 @@ model Resource {
   city        City?            @relation(fields: [cityId], references: [id])
   url         String?
   phone       String?
-  bizum       String?
+  paymentKey  String?
   address     String?
   schedule    String?
   free        Boolean          @default(false)

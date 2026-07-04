@@ -14,8 +14,10 @@ export function ResourceLink({
   locale: Locale
 }) {
   const tDetail = useTranslations('resourceDetail')
+  const tSearch = useTranslations('search')
   const name = getResourceName(resource, locale)
   const notes = localizeSuffixed(resource, 'notes', locale)
+  const isGlobal = resource.countrySlug === 'global'
 
   const fmt = (iso: string) =>
     new Intl.DateTimeFormat(INTL_LOCALE[locale], {
@@ -50,7 +52,7 @@ export function ResourceLink({
             {notes}
           </p>
         )}
-        {(cityName || eventRangeStr || expiresStr) && (
+        {(cityName || isGlobal || eventRangeStr || expiresStr) && (
           <div className="flex items-center gap-1.5 mt-1">
             {cityName && cityHref && (
               <Link
@@ -59,6 +61,11 @@ export function ResourceLink({
               >
                 {cityName}
               </Link>
+            )}
+            {isGlobal && (
+              <span className="font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+                {tSearch('anyCountry')}
+              </span>
             )}
             {eventRangeStr && (
               <span className="inline-flex items-center gap-1 font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">

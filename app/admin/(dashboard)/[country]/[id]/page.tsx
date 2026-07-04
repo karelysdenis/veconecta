@@ -12,6 +12,7 @@ import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
 import { LOCALES, localizedFieldsFromForm, localizedDefaultValues } from '@/lib/locale-content'
 import { CitySelect } from '@/components/admin/CitySelect'
+import { PaymentKeyField } from '@/components/admin/PaymentKeyField'
 import { KindDateFields } from '@/components/admin/KindDateFields'
 import { resolveCityId } from '@/lib/city'
 
@@ -98,7 +99,7 @@ export default async function EditResourcePage({
         status: newStatus,
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
-        bizum: (fd.get('bizum') as string).trim() || null,
+        paymentKey: (fd.get('paymentKey') as string).trim() || null,
         countrySlug: newCountrySlug,
         cityId,
         address: (fd.get('address') as string).trim() || null,
@@ -188,7 +189,7 @@ export default async function EditResourcePage({
 
         <div className="grid grid-cols-2 gap-4">
           <F label="Teléfono / WhatsApp" name="phone" defaultValue={resource.phone ?? ''} />
-          <F label="Bizum" name="bizum" defaultValue={resource.bizum ?? ''} />
+          <PaymentKeyField initialCountrySlug={resource.countrySlug} defaultValue={resource.paymentKey ?? ''} />
         </div>
 
         <CitySelect cities={cities} defaultValue={resource.cityId ?? ''} />

@@ -227,7 +227,7 @@ export default async function ReviewPage({
         )}
 
         {/* Contact / location */}
-        {(resource.phone || resource.bizum || resource.address || resource.schedule) && (
+        {(resource.phone || resource.paymentKey || resource.address || resource.schedule) && (
           <div className="grid grid-cols-2 gap-3 text-sm">
             {resource.phone && (
               <div>
@@ -235,10 +235,10 @@ export default async function ReviewPage({
                 <p className="text-gray-700">{resource.phone}</p>
               </div>
             )}
-            {resource.bizum && (
+            {resource.paymentKey && (
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">Bizum</p>
-                <p className="text-gray-700">{resource.bizum}</p>
+                <p className="text-xs text-gray-400 mb-0.5">{country === 'spain' ? 'Bizum' : 'Clave de pago'}</p>
+                <p className="text-gray-700">{resource.paymentKey}</p>
               </div>
             )}
             {resource.address && (

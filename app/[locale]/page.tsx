@@ -6,8 +6,29 @@ import { INTL_LOCALE, isCountryVisibleInLocale, type Locale } from '@/lib/locale
 import { notPastEventFilter } from '@/lib/resource-visibility'
 import { ResourceStatus } from '@prisma/client'
 import { Globe } from 'lucide-react'
+import type { Metadata } from 'next'
 
 export const revalidate = 3600
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const isEn = locale === 'en'
+  return {
+    title: isEn ? 'Help Venezuela from wherever you are | VEconecta' : 'Ayuda a Venezuela desde donde estás | VEconecta',
+    description: isEn
+      ? 'Verified resources for Venezuelans abroad: donations, free calls, and how to find missing family, by country of residence.'
+      : 'Recursos verificados para venezolanos en el exterior: donaciones, llamadas gratis, búsqueda de familiares, por país de residencia.',
+    openGraph: {
+      type: 'website',
+      siteName: 'VEconecta',
+      images: [{ url: '/api/og', width: 1200, height: 630 }],
+    },
+  }
+}
 
 export default async function HomePage({
   params,
@@ -73,6 +94,10 @@ export default async function HomePage({
           <br />
           {t('heroPost')}
         </h1>
+        <p className="font-sans font-normal text-[15px] text-[#4a4a4a] mt-3">
+          {t('selectCountry')}{' '}
+          {totalResources > 0 && t('verifiedResources', { count: totalResources })}
+        </p>
       </div>
 
       {/* Date band */}

@@ -55,7 +55,7 @@ export async function GET() {
             color: 'rgba(255,255,255,0.6)',
           }}
         >
-          veconecta.vercel.app
+          veconecta.org
         </div>
       </div>
     ),

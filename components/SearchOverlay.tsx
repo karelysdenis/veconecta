@@ -320,7 +320,7 @@ function ResultRow({
             </span>
           )}
           {isGlobal ? (
-            <span className="font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5">{tSearch('international')}</span>
+            <span className="font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">{tSearch('anyCountry')}</span>
           ) : (
             <>
               {flagSrc && <img src={flagSrc} width={14} height={10} alt="" className="object-cover rounded-[2px] shrink-0" />}

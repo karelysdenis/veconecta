@@ -68,10 +68,15 @@ export async function generateMetadata({
   const query = q.trim().slice(0, 100)
 
   const t = await getTranslations({ locale, namespace: 'search' })
-  if (!query) {
-    return { title: `${t('title')} | VEconecta` }
+  const openGraph: Metadata['openGraph'] = {
+    type: 'website',
+    siteName: 'VEconecta',
+    images: [{ url: '/api/og', width: 1200, height: 630 }],
   }
-  return { title: `"${query}" — ${t('title')} | VEconecta` }
+  if (!query) {
+    return { title: `${t('title')} | VEconecta`, openGraph }
+  }
+  return { title: `"${query}" — ${t('title')} | VEconecta`, openGraph }
 }
 
 export default async function SearchPage({

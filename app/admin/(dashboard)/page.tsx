@@ -70,14 +70,24 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold text-gray-900">Países</h1>
-          <div className="flex items-center gap-2">
+        <div className="mb-4">
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-xl font-bold text-gray-900">Países</h1>
+            {user.role === 'ADMIN' && (
+              <Link
+                href="/admin/countries/new"
+                className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 whitespace-nowrap shrink-0"
+              >
+                + País
+              </Link>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2 mt-3">
             <Link
               href="/admin/review"
-              className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-1.5"
+              className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-1.5 whitespace-nowrap"
             >
-              Revisar todo
+              Revisar
               {globalUrgentCount > 0 && (
                 <span className="text-xs bg-orange-500 text-white px-1.5 py-0.5 rounded-full leading-none">
                   {globalUrgentCount}
@@ -88,21 +98,21 @@ export default async function AdminDashboard() {
               <>
                 <Link
                   href="/admin/languages"
-                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 whitespace-nowrap"
                 >
                   Idiomas
                 </Link>
                 <Link
                   href="/admin/users"
-                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 whitespace-nowrap"
                 >
                   Usuarios
                 </Link>
                 <Link
-                  href="/admin/countries/new"
-                  className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+                  href="/admin/activity"
+                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 whitespace-nowrap"
                 >
-                  + Nuevo país
+                  Logs
                 </Link>
               </>
             )}

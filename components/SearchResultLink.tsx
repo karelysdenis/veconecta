@@ -81,8 +81,8 @@ export function SearchResultLink({
             </span>
           )}
           {isGlobal ? (
-            <span className="font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5">
-              {t('international')}
+            <span className="font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+              {t('anyCountry')}
             </span>
           ) : (
             <>

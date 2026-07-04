@@ -73,11 +73,7 @@ export default async function CityPage({
   const { locale, country: urlSlug, city: citySlug } = await params
   setRequestLocale(locale)
 
-  const [t, tNav, tSearch] = await Promise.all([
-    getTranslations('country'),
-    getTranslations('nav'),
-    getTranslations('search'),
-  ])
+  const tNav = await getTranslations('nav')
 
   const country = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
   if (!country) notFound()
@@ -111,23 +107,16 @@ export default async function CityPage({
   const serializedCity = cityResources.map(serializeResource)
   const serializedGlobal = globalResources.map(serializeResource)
 
-  const cityByCategory = CATEGORY_ORDER.reduce(
+  const resourcesByCategory = CATEGORY_ORDER.reduce(
     (acc, cat) => {
-      acc[cat] = serializedCity.filter((r) => r.category === cat)
+      acc[cat] = [
+        ...serializedCity.filter((r) => r.category === cat),
+        ...serializedGlobal.filter((r) => r.category === cat),
+      ]
       return acc
     },
     {} as Record<ResourceCategory, typeof serializedCity>,
   )
-
-  const globalByCategory = CATEGORY_ORDER.reduce(
-    (acc, cat) => {
-      acc[cat] = serializedGlobal.filter((r) => r.category === cat)
-      return acc
-    },
-    {} as Record<ResourceCategory, typeof serializedGlobal>,
-  )
-
-  const hasGlobal = serializedGlobal.length > 0
 
   const totalResources = cityResources.length + globalResources.length
 
@@ -174,41 +163,14 @@ export default async function CityPage({
         </div>
       </div>
 
-      {/* Sección de la ciudad */}
       {CATEGORY_ORDER.map((category) => (
         <ActionCard
           key={category}
           category={category}
-          resources={cityByCategory[category] ?? []}
+          resources={resourcesByCategory[category] ?? []}
           locale={locale as Locale}
         />
       ))}
-
-      {/* Sección internacional */}
-      {hasGlobal && (
-        <>
-          <div className="h-px bg-[rgba(20,20,20,0.12)]" />
-          <div className="bg-[#f0f6f9] px-5 py-5">
-            <div className="flex items-center gap-2 mb-0.5">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#184e68" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              <span className="font-sans font-bold text-sm text-[#184e68] uppercase tracking-widest">
-                {tSearch('international')}
-              </span>
-            </div>
-            <p className="font-sans text-sm text-[#184e68]/60">
-              {t('availableAnywhere')}
-            </p>
-          </div>
-          {CATEGORY_ORDER.map((category) => (
-            <ActionCard
-              key={`global-${category}`}
-              category={category}
-              resources={globalByCategory[category] ?? []}
-              locale={locale as Locale}
-            />
-          ))}
-        </>
-      )}
 
       <div className="h-px bg-[rgba(20,20,20,0.12)]" />
 

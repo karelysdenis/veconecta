@@ -71,7 +71,7 @@ export default async function NewResourcePage({
         status: (fd.get('status') as ResourceStatus) || ResourceStatus.DRAFT,
         url: (fd.get('url') as string).trim() || null,
         phone: (fd.get('phone') as string).trim() || null,
-        bizum: (fd.get('bizum') as string).trim() || null,
+        paymentKey: (fd.get('paymentKey') as string).trim() || null,
         cityId,
         address: (fd.get('address') as string).trim() || null,
         schedule: (fd.get('schedule') as string).trim() || null,
@@ -132,7 +132,7 @@ export default async function NewResourcePage({
 
         <div className="grid grid-cols-2 gap-4">
           <F label="Teléfono / WhatsApp" name="phone" />
-          <F label="Bizum" name="bizum" />
+          <F label={country === 'spain' ? 'Bizum' : 'Clave de pago'} name="paymentKey" />
         </div>
 
         <F label="Dirección" name="address" />
