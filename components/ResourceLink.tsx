@@ -57,14 +57,14 @@ export function ResourceLink({
             {cityName && cityHref && (
               <Link
                 href={cityHref}
-                className="pointer-events-auto relative z-10 inline-flex items-center gap-1 font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5 hover:bg-gray-200 transition-colors"
+                className="pointer-events-auto relative z-10 inline-flex items-center gap-1 font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5 hover:bg-caribe/20 transition-colors"
               >
                 <MapPin size={11} strokeWidth={2.5} className="shrink-0" />
                 {cityName}
               </Link>
             )}
             {isGlobal && (
-              <span className="font-sans font-medium text-[11px] text-caribe bg-caribe/10 rounded-full px-2 py-0.5">
+              <span className="font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5">
                 {tSearch('anyCountry')}
               </span>
             )}
