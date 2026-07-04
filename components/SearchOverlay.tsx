@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { Search, X, Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, Calendar } from 'lucide-react'
+import { Search, X, Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, Calendar, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import type { ResourceCategory, ResourceKind } from '@prisma/client'
@@ -31,8 +31,8 @@ type CountryResult = {
 }
 
 const CATEGORY_ORDER: ResourceCategory[] = [
-  'FIND_FAMILY', 'CALL_FREE', 'DONATE_MONEY', 'SEND_MONEY',
-  'DONATE_PHYSICALLY', 'DIGITAL_BRIDGE', 'CONSULAR', 'MENTAL_HEALTH',
+  'DONATE_PHYSICALLY', 'DONATE_MONEY', 'FIND_FAMILY', 'CALL_FREE',
+  'SEND_MONEY', 'DIGITAL_BRIDGE', 'CONSULAR', 'MENTAL_HEALTH',
 ]
 
 const CATEGORY_ICONS = {
@@ -308,8 +308,9 @@ function ResultRow({
             <Link
               href={cityHref}
               onClick={onClose}
-              className="pointer-events-auto relative z-10 font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5 hover:bg-gray-200 transition-colors"
+              className="pointer-events-auto relative z-10 inline-flex items-center gap-1 font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5 hover:bg-gray-200 transition-colors"
             >
+              <MapPin size={11} strokeWidth={2.5} className="shrink-0" />
               {cityName}
             </Link>
           )}

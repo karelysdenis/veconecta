@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { Calendar } from 'lucide-react'
+import { Calendar, MapPin } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import type { SerializedResource } from '@/lib/types'
 import { getResourceName } from '@/lib/types'
@@ -57,8 +57,9 @@ export function ResourceLink({
             {cityName && cityHref && (
               <Link
                 href={cityHref}
-                className="pointer-events-auto relative z-10 font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5 hover:bg-gray-200 transition-colors"
+                className="pointer-events-auto relative z-10 inline-flex items-center gap-1 font-sans text-[11px] text-[#808080] bg-gray-100 rounded-full px-2 py-0.5 hover:bg-gray-200 transition-colors"
               >
+                <MapPin size={11} strokeWidth={2.5} className="shrink-0" />
                 {cityName}
               </Link>
             )}
