@@ -2,7 +2,6 @@ import { notFound, redirect } from 'next/navigation'
 import { Calendar } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
-import { ResourceStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
@@ -10,10 +9,23 @@ import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { LOCALES, formatEventRange } from '@/lib/locale-content'
 import { reviewCutoff, REVIEW_CYCLE_DAYS } from '@/lib/review-config'
+import { ConfirmButton } from '@/components/admin/ConfirmButton'
 
 function Flag({ cca2, slug, flag, size = 32 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
   return <FlagImage src={src} flag={flag} size={size} />
+}
+
+type SessionUser = { email: string; role: 'ADMIN' | 'EDITOR'; countrySlugs: string[] }
+
+function canManageCountry(user: SessionUser | null, targetCountry: string): user is SessionUser {
+  if (!user) return false
+  return user.role === 'ADMIN' || user.countrySlugs.includes(targetCountry)
+}
+
+async function resourceInCountry(id: string, targetCountry: string) {
+  const existing = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
+  return existing?.countrySlug === targetCountry
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -89,7 +101,6 @@ export default async function AdminCountryPage({
     where: { slug: country },
     include: {
       resources: {
-        where: { status: { not: ResourceStatus.ARCHIVED } },
         orderBy: [{ status: 'asc' }, { category: 'asc' }, { createdAt: 'asc' }],
         include: { city: true },
       },
@@ -100,6 +111,7 @@ export default async function AdminCountryPage({
 
   const drafts = countryRecord.resources.filter((r) => r.status === 'DRAFT')
   const published = countryRecord.resources.filter((r) => r.status === 'PUBLISHED')
+  const archived = countryRecord.resources.filter((r) => r.status === 'ARCHIVED')
   const cutoff = reviewCutoff()
   const urgentCount = published.filter(
     (r) => !r.verifiedAt || r.verifiedAt <= cutoff
@@ -109,11 +121,9 @@ export default async function AdminCountryPage({
     'use server'
     const id = formData.get('id') as string
     const { user } = await getSession()
-    if (!user) return
-    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
+    if (!canManageCountry(user, country)) return
     const now = new Date()
-    const existing = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
-    if (!existing || existing.countrySlug !== country) return
+    if (!(await resourceInCountry(id, country))) return
     const resource = await prisma.resource.update({
       where: { id },
       data: {
@@ -153,8 +163,7 @@ export default async function AdminCountryPage({
     'use server'
     const id = formData.get('id') as string
     const { user } = await getSession()
-    if (!user) return
-    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
+    if (!canManageCountry(user, country)) return
     const src = await prisma.resource.findUnique({ where: { id } })
     if (!src || src.countrySlug !== country) return
     const { id: _id, createdAt: _c, updatedAt: _u, verifiedAt: _va, verifiedBy: _vb, status: _s, ...fields } = src
@@ -170,12 +179,27 @@ export default async function AdminCountryPage({
     'use server'
     const id = formData.get('id') as string
     const { user } = await getSession()
-    if (!user) return
-    if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) return
-    const existing = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
-    if (!existing || existing.countrySlug !== country) return
+    if (!canManageCountry(user, country)) return
+    if (!(await resourceInCountry(id, country))) return
     const resource = await prisma.resource.update({ where: { id }, data: { status: 'ARCHIVED' } })
     await logAction({ userEmail: user.email, action: 'RESOURCE_ARCHIVE', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
+    await touchCountry(country)
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
+    revalidatePath('/admin')
+  }
+
+  async function restoreResource(formData: FormData) {
+    'use server'
+    const id = formData.get('id') as string
+    const { user } = await getSession()
+    if (!canManageCountry(user, country)) return
+    if (!(await resourceInCountry(id, country))) return
+    // Always restores to DRAFT (never straight to PUBLISHED): we don't track what the
+    // resource's status was before archiving, so this forces a review rather than
+    // risking a never-verified draft going live silently.
+    const resource = await prisma.resource.update({ where: { id }, data: { status: 'DRAFT' } })
+    await logAction({ userEmail: user.email, action: 'RESOURCE_RESTORE', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country })
     await touchCountry(country)
     for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
     for (const l of LOCALES) revalidatePath(`/${l}`)
@@ -228,26 +252,15 @@ export default async function AdminCountryPage({
                 key={r.id}
                 className="bg-white border border-amber-200 rounded-lg p-4"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
-                        {CATEGORY_LABELS[r.category] ?? r.category}
-                      </span>
-                      {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
-                      <VerificationAge verifiedAt={r.verifiedAt} />
-                    </div>
-                    <p className="font-medium text-sm text-gray-900">{r.name}</p>
-                    <div className="flex flex-wrap gap-x-3 mt-1">
-                      {r.phone && <span className="text-xs text-gray-500">📞 {r.phone}</span>}
-                      {r.url && (
-                        <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 truncate max-w-[200px]">
-                          {r.url.replace(/^https?:\/\//, '')}
-                        </a>
-                      )}
-                    </div>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                      {CATEGORY_LABELS[r.category] ?? r.category}
+                    </span>
+                    {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
+                    <VerificationAge verifiedAt={r.verifiedAt} />
                   </div>
-                  <div className="flex gap-2 shrink-0">
+                  <div className="flex gap-2 shrink-0 flex-wrap justify-end">
                     <form action={duplicateResource}>
                       <input type="hidden" name="id" value={r.id} />
                       <button type="submit" className="text-lg leading-none border border-gray-300 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-50" title="Duplicar">
@@ -266,13 +279,23 @@ export default async function AdminCountryPage({
                         Publicar
                       </button>
                     </form>
-                    <form action={archiveResource}>
-                      <input type="hidden" name="id" value={r.id} />
-                      <button type="submit" className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50">
-                        Archivar
-                      </button>
-                    </form>
+                    <ConfirmButton
+                      action={archiveResource}
+                      hiddenFields={{ id: r.id }}
+                      label="Archivar"
+                      message={`¿Archivar "${r.name}"?`}
+                      className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50"
+                    />
                   </div>
+                </div>
+                <p className="font-medium text-sm text-gray-900 w-full mt-2">{r.name}</p>
+                <div className="flex flex-wrap gap-x-3 mt-1">
+                  {r.phone && <span className="text-xs text-gray-500">📞 {r.phone}</span>}
+                  {r.url && (
+                    <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 truncate max-w-[200px]">
+                      {r.url.replace(/^https?:\/\//, '')}
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
@@ -291,34 +314,23 @@ export default async function AdminCountryPage({
               key={r.id}
               className="bg-white border border-green-200 rounded-lg p-4"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <span className="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
-                      {CATEGORY_LABELS[r.category] ?? r.category}
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                    {CATEGORY_LABELS[r.category] ?? r.category}
+                  </span>
+                  {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
+                  <VerificationAge verifiedAt={r.verifiedAt} />
+                  {r.kind === 'EVENT' && (
+                    <EventChip eventStartsAt={r.eventStartsAt} eventEndsAt={r.eventEndsAt} />
+                  )}
+                  {r.validUntil && (
+                    <span className="text-[10px] font-medium text-blue-700 border border-blue-200 bg-blue-50 px-1.5 py-0.5 rounded">
+                      Hasta {new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short' }).format(r.validUntil)}
                     </span>
-                    {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
-                    <VerificationAge verifiedAt={r.verifiedAt} />
-                    {r.kind === 'EVENT' && (
-                      <EventChip eventStartsAt={r.eventStartsAt} eventEndsAt={r.eventEndsAt} />
-                    )}
-                    {r.validUntil && (
-                      <span className="text-[10px] font-medium text-blue-700 border border-blue-200 bg-blue-50 px-1.5 py-0.5 rounded">
-                        Hasta {new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short' }).format(r.validUntil)}
-                      </span>
-                    )}
-                  </div>
-                  <p className="font-medium text-sm text-gray-900">{r.name}</p>
-                  <div className="flex flex-wrap gap-x-3 mt-1">
-                    {r.phone && <span className="text-xs text-gray-500">📞 {r.phone}</span>}
-                    {r.verifiedAt && (
-                      <span className="text-xs text-gray-400">
-                        Confirmado {new Intl.DateTimeFormat('es-ES').format(r.verifiedAt)}
-                      </span>
-                    )}
-                  </div>
+                  )}
                 </div>
-                <div className="flex gap-2 shrink-0">
+                <div className="flex gap-2 shrink-0 flex-wrap justify-end">
                   {user.role === 'ADMIN' && !r.verifiedAt && (
                     <form action={confirmResource}>
                       <input type="hidden" name="id" value={r.id} />
@@ -342,21 +354,73 @@ export default async function AdminCountryPage({
                   >
                     Editar
                   </Link>
-                  <form action={archiveResource}>
-                    <input type="hidden" name="id" value={r.id} />
-                    <button
-                      type="submit"
-                      className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50"
-                    >
-                      Archivar
-                    </button>
-                  </form>
+                  <ConfirmButton
+                    action={archiveResource}
+                    hiddenFields={{ id: r.id }}
+                    label="Archivar"
+                    message={`¿Archivar "${r.name}"?`}
+                    className="text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded hover:bg-red-50"
+                  />
                 </div>
+              </div>
+              <p className="font-medium text-sm text-gray-900 w-full mt-2">{r.name}</p>
+              <div className="flex flex-wrap gap-x-3 mt-1">
+                {r.phone && <span className="text-xs text-gray-500">📞 {r.phone}</span>}
+                {r.verifiedAt && (
+                  <span className="text-xs text-gray-400">
+                    Confirmado {new Intl.DateTimeFormat('es-ES').format(r.verifiedAt)}
+                  </span>
+                )}
               </div>
             </div>
           ))}
         </div>
       </section>
+      )}
+
+      {archived.length > 0 && (
+        <details className="group">
+          <summary className="text-base font-semibold text-gray-500 mb-3 cursor-pointer select-none list-none flex items-center gap-2">
+            <span className="inline-block transition-transform group-open:rotate-90">▸</span>
+            Archivados ({archived.length})
+          </summary>
+          <div className="space-y-2 mt-3">
+            {archived.map((r) => (
+              <div
+                key={r.id}
+                className="bg-gray-50 border border-gray-200 rounded-lg p-4"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                      {CATEGORY_LABELS[r.category] ?? r.category}
+                    </span>
+                    {r.city && <span className="text-xs text-gray-400">{r.city.nameEs}</span>}
+                  </div>
+                  <div className="flex gap-2 shrink-0 flex-wrap justify-end">
+                    <Link
+                      href={`/admin/${country}/${r.id}`}
+                      className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
+                    >
+                      Editar
+                    </Link>
+                    <form action={restoreResource}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button
+                        type="submit"
+                        title="Vuelve a Borradores; no se publica automáticamente"
+                        className="text-xs bg-gray-700 text-white px-3 py-1.5 rounded hover:bg-gray-800"
+                      >
+                        Restaurar a borrador
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                <p className="font-medium text-sm text-gray-600 w-full mt-2">{r.name}</p>
+              </div>
+            ))}
+          </div>
+        </details>
       )}
     </div>
   )

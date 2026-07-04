@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function ConfirmButton({
   action,
@@ -20,7 +20,24 @@ export function ConfirmButton({
   disabledReason?: string
   className?: string
 }) {
-  const [confirming, setConfirming] = useState(false)
+  const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const cancelRef = useRef<HTMLButtonElement>(null)
+
+  function close() {
+    setOpen(false)
+    triggerRef.current?.focus()
+  }
+
+  useEffect(() => {
+    if (!open) return
+    cancelRef.current?.focus()
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') close()
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [open])
 
   if (disabled) {
     return (
@@ -33,32 +50,45 @@ export function ConfirmButton({
     )
   }
 
-  if (!confirming) {
-    return (
-      <button type="button" onClick={() => setConfirming(true)} className={className}>
+  return (
+    <>
+      <button ref={triggerRef} type="button" onClick={() => setOpen(true)} className={className}>
         {label}
       </button>
-    )
-  }
-
-  return (
-    <div className="inline-flex items-center gap-2 flex-wrap justify-end">
-      <span className="text-xs text-gray-600">{message}</span>
-      <form action={action}>
-        {Object.entries(hiddenFields ?? {}).map(([k, v]) => (
-          <input key={k} type="hidden" name={k} value={v} />
-        ))}
-        <button type="submit" className="text-xs bg-red-700 text-white px-2.5 py-1 rounded">
-          {confirmLabel}
-        </button>
-      </form>
-      <button
-        type="button"
-        onClick={() => setConfirming(false)}
-        className="text-xs border border-gray-300 text-gray-600 px-2.5 py-1 rounded"
-      >
-        Cancelar
-      </button>
-    </div>
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={message}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={close}
+        >
+          <div
+            className="bg-white rounded-xl shadow-lg max-w-sm w-full p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-sm text-gray-700 mb-4">{message}</p>
+            <div className="flex justify-end gap-2">
+              <button
+                ref={cancelRef}
+                type="button"
+                onClick={close}
+                className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <form action={action}>
+                {Object.entries(hiddenFields ?? {}).map(([k, v]) => (
+                  <input key={k} type="hidden" name={k} value={v} />
+                ))}
+                <button type="submit" className="text-xs bg-red-700 text-white px-3 py-1.5 rounded hover:bg-red-800">
+                  {confirmLabel}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

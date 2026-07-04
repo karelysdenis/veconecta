@@ -6,6 +6,7 @@ export type AuditAction =
   | 'RESOURCE_CONFIRM'
   | 'RESOURCE_PUBLISH'
   | 'RESOURCE_ARCHIVE'
+  | 'RESOURCE_RESTORE'
   | 'USER_INVITE'
   | 'USER_UPDATE'
   | 'USER_DELETE'

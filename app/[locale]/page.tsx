@@ -42,7 +42,7 @@ export default async function HomePage({
   const latestDate = countries
     .map((c) => c.lastUpdatedAt)
     .filter(Boolean)
-    .sort()
+    .sort((a, b) => a.getTime() - b.getTime())
     .at(-1)
 
   const formattedDate = latestDate
