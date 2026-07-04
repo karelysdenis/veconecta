@@ -57,9 +57,6 @@ export default async function HomePage({
   // Don't offer a country whose page would 404 in this locale.
   const countries = allCountries.filter((c) => isCountryVisibleInLocale(c.enabledLocales, locale))
 
-  const totalResources =
-    countries.reduce((sum, c) => sum + c._count.resources, 0) + globalCount
-
   const latestDate = countries
     .map((c) => c.lastUpdatedAt)
     .filter(Boolean)
@@ -94,10 +91,6 @@ export default async function HomePage({
           <br />
           {t('heroPost')}
         </h1>
-        <p className="font-sans font-normal text-[15px] text-[#4a4a4a] mt-3">
-          {t('selectCountry')}{' '}
-          {totalResources > 0 && t('verifiedResources', { count: totalResources })}
-        </p>
       </div>
 
       {/* Date band */}
