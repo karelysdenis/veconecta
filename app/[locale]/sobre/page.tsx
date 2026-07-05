@@ -55,7 +55,7 @@ function AboutContentEs() {
   return (
     <div className="space-y-5 font-sans font-light text-[15px] text-[#141414] leading-relaxed">
       <p>
-        VEconecta es una iniciativa creada por un grupo de venezolanas en la diáspora tras los
+        Somos un grupo de venezolanas en la diáspora que creamos esta iniciativa tras los
         terremotos del 24 de junio.
       </p>
 
@@ -119,7 +119,7 @@ function AboutContentEn() {
   return (
     <div className="space-y-5 font-sans font-light text-[15px] text-[#141414] leading-relaxed">
       <p>
-        VEconecta is an initiative created by a group of Venezuelan women in the diaspora following
+        We are a group of Venezuelan women in the diaspora who created this initiative following
         the June 24 earthquakes.
       </p>
 
