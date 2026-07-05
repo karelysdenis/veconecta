@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 
@@ -34,14 +33,6 @@ export default async function AboutPage({
 
   return (
     <main className="min-h-screen bg-white px-5 pt-8 pb-10">
-      <nav className="flex items-center gap-1.5 mb-6 text-sm">
-        <Link href={`/${locale}`} className="text-caribe hover:underline">
-          {isEn ? 'Home' : 'Inicio'}
-        </Link>
-        <span className="text-[#b8b8b8]">›</span>
-        <span className="text-[#141414]">{t('footer.about')}</span>
-      </nav>
-
       <h1 className="font-display font-extrabold text-[24px] leading-[1.15] tracking-[-0.01em] text-[#141414] mb-6">
         {t('about.title')}
       </h1>
