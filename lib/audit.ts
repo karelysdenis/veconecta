@@ -14,11 +14,14 @@ export type AuditAction =
   | 'COUNTRY_UPDATE'
   | 'COUNTRY_DELETE'
   | 'LOCALE_TOGGLE'
+  | 'POST_CREATE'
+  | 'POST_EDIT'
+  | 'POST_DELETE'
 
 export async function logAction(params: {
   userEmail: string
   action: AuditAction
-  entityType: 'resource' | 'user' | 'country' | 'locale'
+  entityType: 'resource' | 'user' | 'country' | 'locale' | 'post'
   entityId?: string
   entityName?: string
   countrySlug?: string

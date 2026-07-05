@@ -1,6 +1,6 @@
 // prisma/seed.ts
 import { PrismaClient, ResourceCategory, ResourceStatus } from '@prisma/client'
-import { cityToSlug } from '../lib/slugify'
+import { slugify } from '../lib/slugify'
 
 const prisma = new PrismaClient()
 
@@ -60,7 +60,7 @@ async function main() {
   const createdCities = await Promise.all(
     cityData.map(({ countrySlug, nameEs, nameEn, namePt }) =>
       prisma.city.create({
-        data: { countrySlug, slug: cityToSlug(nameEs), nameEs, nameEn, namePt },
+        data: { countrySlug, slug: slugify(nameEs), nameEs, nameEn, namePt },
       })
     )
   )

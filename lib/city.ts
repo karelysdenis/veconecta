@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { cityToSlug } from '@/lib/slugify'
+import { slugify } from '@/lib/slugify'
 
 /**
  * Resolves a resource's city from form input: an existing `cityId`, or a
@@ -10,7 +10,7 @@ import { cityToSlug } from '@/lib/slugify'
 export async function resolveCityId(countrySlug: string, fd: FormData): Promise<string | null> {
   const newCityName = (fd.get('newCityName') as string | null)?.trim()
   if (newCityName) {
-    const slug = cityToSlug(newCityName)
+    const slug = slugify(newCityName)
     try {
       const city = await prisma.city.create({
         data: { countrySlug, slug, nameEs: newCityName },

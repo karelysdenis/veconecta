@@ -1,5 +1,5 @@
-export function cityToSlug(city: string): string {
-  return city
+export function slugify(input: string): string {
+  return input
     .toLowerCase()
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')

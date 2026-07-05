@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
-import { cityToSlug } from '@/lib/slugify'
+import { slugify } from '@/lib/slugify'
 import { LOCALES, localizedFieldsFromForm } from '@/lib/locale-content'
 import { logAction } from '@/lib/audit'
 import { ConfirmButton } from '@/components/admin/ConfirmButton'
@@ -78,7 +78,7 @@ export default async function EditCountryPage({
       await prisma.city.create({
         data: {
           countrySlug: slug,
-          slug: cityToSlug(nameEs),
+          slug: slugify(nameEs),
           nameEs,
           ...localizedFieldsFromForm(fd, 'name'),
         },
