@@ -10,13 +10,9 @@ export function AppFooter() {
       <p className="font-sans font-light text-xs text-[#808080] leading-relaxed max-w-sm">
         {t('disclaimer')}
       </p>
-      <p className="font-sans font-light text-xs text-[#808080] flex items-center gap-3">
+      <p className="font-sans font-light text-xs text-[#808080]">
         <Link href={`/${locale}/sobre`} className="hover:text-[#141414] transition-colors">
           {t('footer.about')}
-        </Link>
-        <span className="text-[#d0d0d0]">·</span>
-        <Link href={`/${locale}/noticias`} className="hover:text-[#141414] transition-colors">
-          {t('footer.news')}
         </Link>
       </p>
       <p className="font-sans font-light text-xs text-[#b8b8b8]">
