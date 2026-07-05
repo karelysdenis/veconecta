@@ -139,6 +139,21 @@ model Locale {
   order  Int     @default(0)
 }
 
+model Post {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  titleEn     String?
+  body        String
+  bodyEn      String?
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([status])
+}
+
 model AuditLog {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
@@ -194,4 +209,9 @@ enum ResourceStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
 }
