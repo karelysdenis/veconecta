@@ -32,6 +32,7 @@ export default async function EditUpdatePage({
     const titleEn = (fd.get('titleEn') as string | null)?.trim() || null
     const body = (fd.get('body') as string).trim()
     const bodyEn = (fd.get('bodyEn') as string | null)?.trim() || null
+    const imageUrl = (fd.get('imageUrl') as string | null)?.trim() || null
     const status = (fd.get('status') as PostStatus) || PostStatus.DRAFT
     const isFirstPublish = status === PostStatus.PUBLISHED && post.publishedAt === null
 
@@ -43,6 +44,7 @@ export default async function EditUpdatePage({
         titleEn,
         body,
         bodyEn,
+        imageUrl,
         status,
         publishedAt: isFirstPublish ? new Date() : undefined,
       },
@@ -102,6 +104,7 @@ export default async function EditUpdatePage({
         <F label="Título (inglés)" name="titleEn" defaultValue={post.titleEn ?? ''} />
         <TA label="Cuerpo (español)" name="body" defaultValue={post.body} required rows={8} />
         <TA label="Cuerpo (inglés)" name="bodyEn" defaultValue={post.bodyEn ?? ''} rows={8} />
+        <F label="URL de imagen" name="imageUrl" defaultValue={post.imageUrl ?? ''} note="Horizontal, opcional" />
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
@@ -145,13 +148,16 @@ export default async function EditUpdatePage({
 }
 
 function F({
-  label, name, defaultValue = '', required = false,
+  label, name, defaultValue = '', required = false, note,
 }: {
-  label: string; name: string; defaultValue?: string; required?: boolean
+  label: string; name: string; defaultValue?: string; required?: boolean; note?: string
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+        {note && <span className="text-xs text-gray-400 font-normal ml-1">({note})</span>}
+      </label>
       <input
         type="text"
         name={name}

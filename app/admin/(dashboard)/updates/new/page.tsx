@@ -22,6 +22,7 @@ export default async function NewUpdatePage() {
     const titleEn = (fd.get('titleEn') as string | null)?.trim() || null
     const body = (fd.get('body') as string).trim()
     const bodyEn = (fd.get('bodyEn') as string | null)?.trim() || null
+    const imageUrl = (fd.get('imageUrl') as string | null)?.trim() || null
     const status = (fd.get('status') as PostStatus) || PostStatus.DRAFT
 
     const baseSlug = slugify(title)
@@ -39,6 +40,7 @@ export default async function NewUpdatePage() {
         titleEn,
         body,
         bodyEn,
+        imageUrl,
         status,
         publishedAt: status === PostStatus.PUBLISHED ? new Date() : null,
       },
@@ -74,6 +76,7 @@ export default async function NewUpdatePage() {
         <F label="Título (inglés)" name="titleEn" />
         <TA label="Cuerpo (español)" name="body" required rows={8} />
         <TA label="Cuerpo (inglés)" name="bodyEn" rows={8} />
+        <F label="URL de imagen" name="imageUrl" note="Horizontal, opcional" />
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
@@ -104,13 +107,16 @@ export default async function NewUpdatePage() {
 }
 
 function F({
-  label, name, defaultValue = '', required = false,
+  label, name, defaultValue = '', required = false, note,
 }: {
-  label: string; name: string; defaultValue?: string; required?: boolean
+  label: string; name: string; defaultValue?: string; required?: boolean; note?: string
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+        {note && <span className="text-xs text-gray-400 font-normal ml-1">({note})</span>}
+      </label>
       <input
         type="text"
         name={name}

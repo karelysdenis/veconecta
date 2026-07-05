@@ -20,7 +20,9 @@ export async function generateMetadata({
       type: 'website',
       siteName: 'VEconecta',
       title: `${title} | VEconecta`,
-      images: [{ url: '/api/og', width: 1200, height: 630 }],
+      images: post.imageUrl
+        ? [{ url: post.imageUrl, width: 1200, height: 630 }]
+        : [{ url: '/api/og', width: 1200, height: 630 }],
     },
   }
 }
@@ -64,6 +66,14 @@ export default async function NoticiaDetailPage({
         <p className="font-sans font-light text-[13px] text-[#808080] mb-6">
           {t('publishedOn', { date: fmt(post.publishedAt) })}
         </p>
+      )}
+
+      {post.imageUrl && (
+        <img
+          src={post.imageUrl}
+          alt=""
+          className="w-full aspect-video object-cover rounded-xl mb-6"
+        />
       )}
 
       <div className="space-y-4 font-sans font-light text-[15px] text-[#141414] leading-relaxed whitespace-pre-line">

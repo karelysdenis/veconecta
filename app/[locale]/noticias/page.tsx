@@ -69,6 +69,13 @@ export default async function NoticiasPage({
               href={`/${locale}/noticias/${post.slug}`}
               className="block py-5 hover:bg-guacamaya/5 transition-colors -mx-5 px-5"
             >
+              {post.imageUrl && (
+                <img
+                  src={post.imageUrl}
+                  alt=""
+                  className="w-full aspect-video object-cover rounded-lg mb-3"
+                />
+              )}
               <p className="font-sans font-light text-[13px] text-[#808080] mb-1">
                 {post.publishedAt ? fmt(post.publishedAt) : ''}
               </p>
