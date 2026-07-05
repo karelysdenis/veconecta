@@ -1,5 +1,11 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { setRequestLocale } from 'next-intl/server'
+import { InstagramEmbed } from '@/components/InstagramEmbed'
 import type { Metadata } from 'next'
+
+const INSTAGRAM_POSTS = [
+  'https://www.instagram.com/p/DaJDAHrAUXF/',
+  'https://www.instagram.com/reel/DaATx6Jjaoi/',
+]
 
 export async function generateMetadata({
   params,
@@ -28,16 +34,17 @@ export default async function AboutPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const t = await getTranslations()
   const isEn = locale === 'en'
 
   return (
     <main className="min-h-screen bg-white px-5 pt-8 pb-10">
-      <h1 className="font-display font-extrabold text-[24px] leading-[1.15] tracking-[-0.01em] text-[#141414] mb-6">
-        {t('about.title')}
-      </h1>
-
       {isEn ? <AboutContentEn /> : <AboutContentEs />}
+
+      <div className="mt-10 pt-8 border-t border-[rgba(20,20,20,0.08)] space-y-6">
+        {INSTAGRAM_POSTS.map((url) => (
+          <InstagramEmbed key={url} url={url} />
+        ))}
+      </div>
     </main>
   )
 }

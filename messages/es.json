@@ -80,7 +80,7 @@
   },
   "footer": {
     "cta": "¿Tienes algo que compartir?",
-    "about": "Sobre",
+    "about": "Sobre VEconecta",
     "news": "Noticias"
   },
   "nav": {
@@ -112,9 +112,6 @@
     "goToResource": "Visitar sitio web",
     "reportOutdated": "¿Información incorrecta o desactualizada? Repórtalo",
     "callNow": "Llamar ahora"
-  },
-  "about": {
-    "title": "Sobre VEconecta"
   },
   "updates": {
     "title": "Noticias",

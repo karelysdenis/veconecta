@@ -80,7 +80,7 @@
   },
   "footer": {
     "cta": "Möchtest du etwas teilen?",
-    "about": "Über uns",
+    "about": "Über VEconecta",
     "news": "Neuigkeiten"
   },
   "nav": {
@@ -112,9 +112,6 @@
     "goToResource": "Website besuchen",
     "reportOutdated": "Falsche oder veraltete Information? Melden",
     "callNow": "Jetzt anrufen"
-  },
-  "about": {
-    "title": "Über VEconecta"
   },
   "updates": {
     "title": "Neuigkeiten",
