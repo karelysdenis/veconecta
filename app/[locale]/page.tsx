@@ -20,8 +20,8 @@ export async function generateMetadata({
   return {
     title: isEn ? 'Help Venezuela from wherever you are | VEconecta' : 'Ayuda a Venezuela desde donde estás | VEconecta',
     description: isEn
-      ? 'Verified resources for Venezuelans abroad: donations, free calls, and how to find missing family, by country of residence.'
-      : 'Recursos verificados para venezolanos en el exterior: donaciones, llamadas gratis, búsqueda de familiares, por país de residencia.',
+      ? 'Verified initiatives for Venezuelans abroad: donations, free calls, and how to find missing family, by country of residence.'
+      : 'Iniciativas verificadas para venezolanos en el exterior: donaciones, llamadas gratis, búsqueda de familiares, por país de residencia.',
     openGraph: {
       type: 'website',
       siteName: 'VEconecta',

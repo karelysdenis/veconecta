@@ -7,12 +7,12 @@
     "heroPre": "Help",
     "heroCountry": "Venezuela",
     "heroPost": "from where you are",
-    "verifiedResources": "{count} verified resources",
+    "verifiedResources": "{count} verified initiatives",
     "selectCountry": "Select your country of residence.",
     "updatedAt": "updated {date}",
     "globalSection": "From anywhere in the world",
-    "sectionLabel": "Resources by country",
-    "emergencyBanner": "Yaracuy Earthquake · Verified emergency resources"
+    "sectionLabel": "Initiatives by country",
+    "emergencyBanner": "Yaracuy Earthquake · Verified emergency initiatives"
   },
   "categories": {
     "FIND_FAMILY": "Find family members",
@@ -53,10 +53,10 @@
     "success": "Thank you. We'll review your report within a few hours.",
     "error": "Error sending. Please try again."
   },
-  "disclaimer": "VEconecta is an independent citizen initiative. We verify information before publishing, but resources change fast. Always confirm before acting.",
+  "disclaimer": "VEconecta is an independent citizen initiative. We verify information before publishing, but initiatives change fast. Always confirm before acting.",
   "country": {
     "lastUpdated": "Updated: {date}",
-    "noResources": "Resources in preparation — check back soon.",
+    "noResources": "Initiatives in preparation — check back soon.",
     "fromCountry": "From {name}",
     "whatYouCanDo": "Here's what you can do right now:"
   },
@@ -66,16 +66,16 @@
     "typeHint": "Type at least 2 characters to search",
     "noResults": "No results for \"{query}\"",
     "resultsCount": "{count} {count, plural, one {result} other {results}} for \"{query}\"",
-    "fallbackIntro": "No results for \"{query}\". These resources are available from any country:",
+    "fallbackIntro": "No results for \"{query}\". These initiatives are available from any country:",
     "international": "International",
     "anyCountry": "Any country"
   },
   "searchOverlay": {
-    "placeholder": "Search resources…",
+    "placeholder": "Search initiatives…",
     "typeHint": "Type to search…",
     "loading": "Searching…",
     "noResults": "No results for \"{query}\"",
-    "fallbackIntro": "No results for \"{query}\". These resources are available from any country:",
+    "fallbackIntro": "No results for \"{query}\". These initiatives are available from any country:",
     "close": "Close"
   },
   "footer": {
@@ -92,10 +92,10 @@
   },
   "city": {
     "selectCity": "Select your city or region",
-    "activeSection": "CITIES WITH ACTIVE RESOURCES",
+    "activeSection": "CITIES WITH ACTIVE INITIATIVES",
     "filterPlaceholder": "Filter cities...",
-    "resources": "{count} {count, plural, one {resource} other {resources}}",
-    "backToCountry": "All resources"
+    "resources": "{count} {count, plural, one {initiative} other {initiatives}}",
+    "backToCountry": "All initiatives"
   },
   "resourceDetail": {
     "keyInfo": "KEY INFORMATION",

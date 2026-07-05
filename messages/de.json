@@ -7,12 +7,12 @@
     "heroPre": "Hilf",
     "heroCountry": "Venezuela",
     "heroPost": "von wo auch immer du bist",
-    "verifiedResources": "{count} verifizierte Ressourcen",
+    "verifiedResources": "{count} verifizierte Initiativen",
     "selectCountry": "Wähle dein Wohnsitzland.",
     "updatedAt": "aktualisiert am {date}",
     "globalSection": "Von jedem Land aus",
-    "sectionLabel": "Ressourcen nach Land",
-    "emergencyBanner": "Erdbeben Yaracuy · Verifizierte Notfallressourcen"
+    "sectionLabel": "Initiativen nach Land",
+    "emergencyBanner": "Erdbeben Yaracuy · Verifizierte Notfallinitiativen"
   },
   "categories": {
     "FIND_FAMILY": "Familie finden",
@@ -53,10 +53,10 @@
     "success": "Danke. Wir prüfen deine Meldung innerhalb der nächsten Stunden.",
     "error": "Fehler beim Senden. Bitte erneut versuchen."
   },
-  "disclaimer": "VEconecta ist eine unabhängige Bürgerinitiative. Wir verifizieren Informationen vor der Veröffentlichung, aber Ressourcen ändern sich schnell. Bestätige immer, bevor du handelst.",
+  "disclaimer": "VEconecta ist eine unabhängige Bürgerinitiative. Wir verifizieren Informationen vor der Veröffentlichung, aber Initiativen ändern sich schnell. Bestätige immer, bevor du handelst.",
   "country": {
     "lastUpdated": "Aktualisiert: {date}",
-    "noResources": "Ressourcen in Vorbereitung — schau bald wieder vorbei.",
+    "noResources": "Initiativen in Vorbereitung — schau bald wieder vorbei.",
     "fromCountry": "Von {name}",
     "whatYouCanDo": "Das kannst du jetzt sofort tun:"
   },
@@ -66,16 +66,16 @@
     "typeHint": "Gib mindestens 2 Zeichen ein, um zu suchen",
     "noResults": "Keine Ergebnisse für „{query}“",
     "resultsCount": "{count} {count, plural, one {Ergebnis} other {Ergebnisse}} für „{query}“",
-    "fallbackIntro": "Keine Ergebnisse für „{query}“. Diese Ressourcen sind von jedem Land aus verfügbar:",
+    "fallbackIntro": "Keine Ergebnisse für „{query}“. Diese Initiativen sind von jedem Land aus verfügbar:",
     "international": "International",
     "anyCountry": "Jedes Land"
   },
   "searchOverlay": {
-    "placeholder": "Ressourcen suchen…",
+    "placeholder": "Initiativen suchen…",
     "typeHint": "Zum Suchen tippen…",
     "loading": "Suche läuft…",
     "noResults": "Keine Ergebnisse für „{query}“",
-    "fallbackIntro": "Keine Ergebnisse für „{query}“. Diese Ressourcen sind von jedem Land aus verfügbar:",
+    "fallbackIntro": "Keine Ergebnisse für „{query}“. Diese Initiativen sind von jedem Land aus verfügbar:",
     "close": "Schließen"
   },
   "footer": {
@@ -92,10 +92,10 @@
   },
   "city": {
     "selectCity": "Wähle deine Stadt oder Region",
-    "activeSection": "STÄDTE MIT AKTIVEN RESSOURCEN",
+    "activeSection": "STÄDTE MIT AKTIVEN INITIATIVEN",
     "filterPlaceholder": "Städte filtern...",
-    "resources": "{count} {count, plural, one {Ressource} other {Ressourcen}}",
-    "backToCountry": "Alle Ressourcen"
+    "resources": "{count} {count, plural, one {Initiative} other {Initiativen}}",
+    "backToCountry": "Alle Initiativen"
   },
   "resourceDetail": {
     "keyInfo": "WICHTIGE INFORMATIONEN",

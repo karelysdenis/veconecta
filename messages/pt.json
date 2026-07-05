@@ -7,12 +7,12 @@
     "heroPre": "Ajude a",
     "heroCountry": "Venezuela",
     "heroPost": "de onde você estiver",
-    "verifiedResources": "{count} recursos verificados",
+    "verifiedResources": "{count} iniciativas verificadas",
     "selectCountry": "Selecione seu país de residência.",
     "updatedAt": "atualizado em {date}",
     "globalSection": "De qualquer país",
-    "sectionLabel": "Recursos por país",
-    "emergencyBanner": "Terremoto em Yaracuy · Recursos de emergência verificados"
+    "sectionLabel": "Iniciativas por país",
+    "emergencyBanner": "Terremoto em Yaracuy · Iniciativas de emergência verificadas"
   },
   "categories": {
     "FIND_FAMILY": "Encontrar familiares",
@@ -53,10 +53,10 @@
     "success": "Obrigado. Vamos revisar seu relatório nas próximas horas.",
     "error": "Erro ao enviar. Tente novamente."
   },
-  "disclaimer": "VEconecta é uma iniciativa cidadã independente. Verificamos a informação antes de publicá-la, mas os recursos mudam rápido. Confirme sempre antes de agir.",
+  "disclaimer": "VEconecta é uma iniciativa cidadã independente. Verificamos a informação antes de publicá-la, mas as iniciativas mudam rápido. Confirme sempre antes de agir.",
   "country": {
     "lastUpdated": "Atualizado: {date}",
-    "noResources": "Recursos em preparação — volte em breve.",
+    "noResources": "Iniciativas em preparação — volte em breve.",
     "fromCountry": "De {name}",
     "whatYouCanDo": "Isto é o que você pode fazer agora mesmo:"
   },
@@ -66,7 +66,7 @@
     "typeHint": "Digite pelo menos 2 caracteres para pesquisar",
     "noResults": "Sem resultados para \"{query}\"",
     "resultsCount": "{count} {count, plural, one {resultado} other {resultados}} para \"{query}\"",
-    "fallbackIntro": "Sem resultados para \"{query}\". Estes recursos estão disponíveis de qualquer país:",
+    "fallbackIntro": "Sem resultados para \"{query}\". Estas iniciativas estão disponíveis de qualquer país:",
     "international": "Internacional",
     "anyCountry": "Qualquer país"
   },
@@ -75,7 +75,7 @@
     "typeHint": "Digite para pesquisar…",
     "loading": "Pesquisando…",
     "noResults": "Sem resultados para \"{query}\"",
-    "fallbackIntro": "Sem resultados para \"{query}\". Estes recursos estão disponíveis de qualquer país:",
+    "fallbackIntro": "Sem resultados para \"{query}\". Estas iniciativas estão disponíveis de qualquer país:",
     "close": "Fechar"
   },
   "footer": {
@@ -92,10 +92,10 @@
   },
   "city": {
     "selectCity": "Selecione sua cidade ou região",
-    "activeSection": "CIDADES COM RECURSOS ATIVOS",
+    "activeSection": "CIDADES COM INICIATIVAS ATIVAS",
     "filterPlaceholder": "Filtrar cidades...",
-    "resources": "{count} {count, plural, one {recurso} other {recursos}}",
-    "backToCountry": "Todos os recursos"
+    "resources": "{count} {count, plural, one {iniciativa} other {iniciativas}}",
+    "backToCountry": "Todas as iniciativas"
   },
   "resourceDetail": {
     "keyInfo": "INFORMAÇÃO PRINCIPAL",

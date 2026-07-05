@@ -54,8 +54,8 @@ export async function generateMetadata({
     title: `${cityName}, ${countryName} | VEconecta`,
     description:
       locale === 'en'
-        ? `Verified resources for Venezuelans in ${cityName}, ${countryName}.`
-        : `Recursos verificados para venezolanos en ${cityName}, ${countryName}.`,
+        ? `Verified initiatives for Venezuelans in ${cityName}, ${countryName}.`
+        : `Iniciativas verificadas para venezolanos en ${cityName}, ${countryName}.`,
     ...(cityResourceCount < MIN_CITY_RESOURCES ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: 'website',

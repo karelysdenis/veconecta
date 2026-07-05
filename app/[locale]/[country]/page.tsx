@@ -51,8 +51,8 @@ export async function generateMetadata({
     title: `${heading}: ${locale === 'en' ? 'How to help with the Venezuela earthquake' : 'Cómo ayudar con el terremoto de Venezuela'} | VEconecta`,
     description:
       locale === 'en'
-        ? `Verified donation channels, free calls, and how to find missing family from ${name}. Updated resources for Venezuelans.`
-        : `Recursos verificados para venezolanos en ${name}: donaciones, llamadas gratis, búsqueda de familiares.`,
+        ? `Verified donation channels, free calls, and how to find missing family from ${name}. Updated initiatives for Venezuelans.`
+        : `Iniciativas verificadas para venezolanos en ${name}: donaciones, llamadas gratis, búsqueda de familiares.`,
     openGraph: {
       type: 'website',
       siteName: 'VEconecta',
