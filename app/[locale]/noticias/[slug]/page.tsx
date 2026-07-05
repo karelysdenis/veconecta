@@ -22,7 +22,7 @@ export async function generateMetadata({
       title: `${title} | VEconecta`,
       images: post.imageUrl
         ? [{ url: post.imageUrl, width: 1200, height: 630 }]
-        : [{ url: '/api/og', width: 1200, height: 630 }],
+        : [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
     },
   }
 }

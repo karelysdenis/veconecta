@@ -71,7 +71,7 @@ export async function generateMetadata({
   const openGraph: Metadata['openGraph'] = {
     type: 'website',
     siteName: 'VEconecta',
-    images: [{ url: '/api/og', width: 1200, height: 630 }],
+    images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
   }
   if (!query) {
     return { title: `${t('title')} | VEconecta`, openGraph }
