@@ -13,7 +13,7 @@ export async function GET() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#b91c1c',
+          backgroundColor: '#FFFFFF',
           padding: '60px',
         }}
       >
@@ -30,7 +30,7 @@ export async function GET() {
             style={{
               fontSize: '80px',
               fontWeight: 700,
-              color: 'white',
+              color: '#141414',
               letterSpacing: '-2px',
             }}
           >
@@ -40,19 +40,19 @@ export async function GET() {
         <div
           style={{
             fontSize: '36px',
-            color: 'rgba(255,255,255,0.9)',
+            color: '#184E68',
             textAlign: 'center',
             maxWidth: '800px',
             lineHeight: 1.4,
           }}
         >
-          Recursos verificados para venezolanos en el exterior
+          La diáspora venezolana conectada
         </div>
         <div
           style={{
             marginTop: '40px',
             fontSize: '24px',
-            color: 'rgba(255,255,255,0.6)',
+            color: 'rgba(20,20,20,0.5)',
           }}
         >
           veconecta.org
