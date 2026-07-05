@@ -29,7 +29,7 @@ export default async function AboutPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const t = await getTranslations('about')
+  const t = await getTranslations()
   const isEn = locale === 'en'
 
   return (
@@ -39,11 +39,11 @@ export default async function AboutPage({
           {isEn ? 'Home' : 'Inicio'}
         </Link>
         <span className="text-[#b8b8b8]">›</span>
-        <span className="text-[#141414]">{t('title')}</span>
+        <span className="text-[#141414]">{t('footer.about')}</span>
       </nav>
 
       <h1 className="font-display font-extrabold text-[24px] leading-[1.15] tracking-[-0.01em] text-[#141414] mb-6">
-        {t('title')}
+        {t('about.title')}
       </h1>
 
       {isEn ? <AboutContentEn /> : <AboutContentEs />}
