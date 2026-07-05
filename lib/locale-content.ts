@@ -16,6 +16,15 @@ export const LOCALES = ['es', 'en', 'pt', 'fr', 'de'] as const
 export type Locale = (typeof LOCALES)[number]
 export const DEFAULT_LOCALE: Locale = 'es'
 
+// Pages outside the country/city hierarchy whose content only exists in a
+// fixed subset of locales (e.g. static copy not translated yet). Keyed by
+// the first path segment after the locale (`/es/sobre` → `sobre`). Add an
+// entry here to keep LangPopover from offering a locale with no real
+// content for that page — remove the entry once it's fully translated.
+export const STATIC_PAGE_LOCALES: Partial<Record<string, readonly Locale[]>> = {
+  sobre: ['es', 'en'],
+}
+
 export const LOCALE_LABELS: Record<Locale, string> = {
   es: 'Español',
   en: 'English',

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter } from 'next/navigation'
-import { effectiveLocalesForCountry } from '@/lib/locale-content'
+import { effectiveLocalesForCountry, STATIC_PAGE_LOCALES } from '@/lib/locale-content'
 import type { ActiveLocale } from '@/lib/locale-active'
 
 export function LangPopover({
@@ -27,12 +27,11 @@ export function LangPopover({
   // /es/spain/... → 'spain'; '' on the homepage or non-country pages, which
   // means "no restriction" (effectiveLocalesForCountry falls back to the
   // full active set for any slug with no entry in countryLocaleMap).
-  const countrySlug = pathname.split('/')[2] ?? ''
-  const locales = effectiveLocalesForCountry(
-    countrySlug,
-    activeLocales.map((l) => l.code),
-    countryLocaleMap,
-  )
+  const segment = pathname.split('/')[2] ?? ''
+  const staticRestriction = STATIC_PAGE_LOCALES[segment]
+  const locales = staticRestriction
+    ? activeLocales.map((l) => l.code).filter((code) => staticRestriction.includes(code))
+    : effectiveLocalesForCountry(segment, activeLocales.map((l) => l.code), countryLocaleMap)
   const options = activeLocales.filter((l) => locales.includes(l.code))
 
   useEffect(() => {
