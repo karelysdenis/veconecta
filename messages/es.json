@@ -79,7 +79,9 @@
     "close": "Cerrar"
   },
   "footer": {
-    "cta": "¿Tienes un recurso para agregar?"
+    "cta": "¿Tienes algo que compartir?",
+    "about": "Sobre",
+    "news": "Noticias"
   },
   "nav": {
     "home": "Inicio",
@@ -110,5 +112,14 @@
     "goToResource": "Visitar sitio web",
     "reportOutdated": "¿Información incorrecta o desactualizada? Repórtalo",
     "callNow": "Llamar ahora"
+  },
+  "about": {
+    "title": "Sobre VEconecta"
+  },
+  "updates": {
+    "title": "Noticias",
+    "empty": "Aún no hay publicaciones.",
+    "publishedOn": "Publicado {date}",
+    "backToList": "Volver a Noticias"
   }
 }

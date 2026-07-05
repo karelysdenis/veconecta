@@ -79,7 +79,9 @@
     "close": "Fermer"
   },
   "footer": {
-    "cta": "Une ressource à ajouter ?"
+    "cta": "Quelque chose à partager ?",
+    "about": "À propos",
+    "news": "Actualités"
   },
   "nav": {
     "home": "Accueil",
@@ -110,5 +112,14 @@
     "goToResource": "Visiter le site",
     "reportOutdated": "Information incorrecte ou obsolète ? Signalez-le",
     "callNow": "Appeler maintenant"
+  },
+  "about": {
+    "title": "À propos de VEconecta"
+  },
+  "updates": {
+    "title": "Actualités",
+    "empty": "Pas encore de publications.",
+    "publishedOn": "Publié le {date}",
+    "backToList": "Retour aux actualités"
   }
 }

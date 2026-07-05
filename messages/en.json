@@ -79,7 +79,9 @@
     "close": "Close"
   },
   "footer": {
-    "cta": "Have a resource to add?"
+    "cta": "Have something to share?",
+    "about": "About",
+    "news": "News"
   },
   "nav": {
     "home": "Home",
@@ -110,5 +112,14 @@
     "goToResource": "Visit website",
     "reportOutdated": "Incorrect or outdated info? Report it",
     "callNow": "Call now"
+  },
+  "about": {
+    "title": "About VEconecta"
+  },
+  "updates": {
+    "title": "News",
+    "empty": "No posts yet.",
+    "publishedOn": "Published {date}",
+    "backToList": "Back to News"
   }
 }
