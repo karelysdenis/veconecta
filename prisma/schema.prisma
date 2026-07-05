@@ -146,6 +146,7 @@ model Post {
   titleEn     String?
   body        String
   bodyEn      String?
+  imageUrl    String?
   status      PostStatus @default(DRAFT)
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
