@@ -103,6 +103,12 @@ export default async function AdminDashboard() {
                   Idiomas
                 </Link>
                 <Link
+                  href="/admin/updates"
+                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 whitespace-nowrap"
+                >
+                  Noticias
+                </Link>
+                <Link
                   href="/admin/users"
                   className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 whitespace-nowrap"
                 >
