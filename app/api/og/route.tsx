@@ -4,11 +4,11 @@ import { LOCALES, DEFAULT_LOCALE, type Locale } from '@/lib/locale-content'
 export const runtime = 'edge'
 
 const TAGLINE: Record<Locale, string> = {
-  es: 'Iniciativas verificadas para que la ayuda llegue a quienes la necesitan.',
-  en: 'Verified initiatives so help reaches those who need it.',
-  pt: 'Iniciativas verificadas para que a ajuda chegue a quem precisa.',
-  fr: "Des initiatives vérifiées pour que l'aide arrive à ceux qui en ont besoin.",
-  de: 'Verifizierte Initiativen, damit Hilfe die erreicht, die sie brauchen.',
+  es: 'Iniciativas verificadas para que la ayuda llegue a quienes la necesitan',
+  en: 'Verified initiatives so help reaches those who need it',
+  pt: 'Iniciativas verificadas para que a ajuda chegue a quem precisa',
+  fr: "Des initiatives vérifiées pour que l'aide arrive à ceux qui en ont besoin",
+  de: 'Verifizierte Initiativen, damit Hilfe die erreicht, die sie brauchen',
 }
 
 export async function GET(req: Request) {
