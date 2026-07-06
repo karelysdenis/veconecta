@@ -73,7 +73,7 @@ export function resolveRows(
     const { phone, paymentKey } = splitPhonePayment(row.phoneRaw)
     const cityName = row.city?.trim() || null
     const cityIsNew = cityName
-      ? !(ctx.existingCityNames.get(countrySlug) ?? new Set<string>()).has(cityName.toLowerCase())
+      ? !(ctx.existingCityNames.get(countrySlug) ?? new Set<string>()).has(slugify(cityName))
       : false
 
     toCreate.push({

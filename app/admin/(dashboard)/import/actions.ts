@@ -10,6 +10,7 @@ import { authorizeRowsForConfirm } from '@/lib/import/authorize-rows'
 import { resolveOrCreateCityByName } from '@/lib/city'
 import { logAction, touchCountry } from '@/lib/audit'
 import { LOCALES } from '@/lib/locale-content'
+import { slugify } from '@/lib/slugify'
 import type { ImportPreview, NewCountryProposal, ResolvedCreate } from '@/lib/import/types'
 
 export type PreviewState = { preview: ImportPreview | null; error: string | null }
@@ -44,7 +45,7 @@ export async function previewImportAction(_prev: PreviewState, fd: FormData): Pr
   const existingCityNames = new Map<string, Set<string>>()
   for (const c of existingCities) {
     if (!existingCityNames.has(c.countrySlug)) existingCityNames.set(c.countrySlug, new Set())
-    existingCityNames.get(c.countrySlug)!.add(c.nameEs.toLowerCase())
+    existingCityNames.get(c.countrySlug)!.add(slugify(c.nameEs))
   }
 
   const preview = resolveRows(rows, {

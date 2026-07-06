@@ -106,6 +106,12 @@ describe('resolveRows', () => {
     expect(result.toCreate[0].cityIsNew).toBe(false)
   })
 
+  it('marks a city as not new when it matches an existing city that differs only by accents (same DB-level slug)', () => {
+    const ctx = { ...baseCtx, existingCityNames: new Map([['france', new Set(['nimes'])]]) }
+    const result = resolveRows([row({ city: 'Nîmes' })], ctx)
+    expect(result.toCreate[0].cityIsNew).toBe(false)
+  })
+
   it('counts rows with internal notes or priority for the non-blocking warning, regardless of outcome', () => {
     const result = resolveRows(
       [row({ internalNotes: 'verificar antes de publicar' }), row({ priority: 'alta', name: 'Otro' })],
