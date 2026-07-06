@@ -70,6 +70,7 @@ export async function confirmImportAction(fd: FormData) {
     userRole: user.role,
     editorCountrySlugs: user.countrySlugs,
     confirmedNewCountrySlugs,
+    newCountrySlugs: newCountries.map((c) => c.slug),
   })
 
   if (authorized.length === 0) redirect('/admin/import')

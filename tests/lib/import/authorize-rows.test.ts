@@ -37,24 +37,38 @@ describe('authorizeRowsForConfirm', () => {
       userRole: 'ADMIN',
       editorCountrySlugs: [],
       confirmedNewCountrySlugs: [],
+      newCountrySlugs: [],
     })
     expect(result).toHaveLength(1)
   })
 
-  it('keeps a new-country row for ADMIN only if the country slug was confirmed', () => {
+  it('keeps a new-country row for ADMIN only if the country slug was confirmed and proposed', () => {
     const rows = [make({ countryIsNew: true, countrySlug: 'nueva-nacion' })]
     const notConfirmed = authorizeRowsForConfirm(rows, {
       userRole: 'ADMIN',
       editorCountrySlugs: [],
       confirmedNewCountrySlugs: [],
+      newCountrySlugs: ['nueva-nacion'],
     })
     const confirmed = authorizeRowsForConfirm(rows, {
       userRole: 'ADMIN',
       editorCountrySlugs: [],
       confirmedNewCountrySlugs: ['nueva-nacion'],
+      newCountrySlugs: ['nueva-nacion'],
     })
     expect(notConfirmed).toHaveLength(0)
     expect(confirmed).toHaveLength(1)
+  })
+
+  it('drops a new-country row confirmed by slug but absent from the proposed newCountrySlugs (desynced/tampered hidden inputs)', () => {
+    const rows = [make({ countryIsNew: true, countrySlug: 'nueva-nacion' })]
+    const result = authorizeRowsForConfirm(rows, {
+      userRole: 'ADMIN',
+      editorCountrySlugs: [],
+      confirmedNewCountrySlugs: ['nueva-nacion'],
+      newCountrySlugs: [], // the country that would actually be created is empty — nothing backs this slug
+    })
+    expect(result).toHaveLength(0)
   })
 
   it('drops new-country rows for EDITOR even if marked confirmed (tampered input)', () => {
@@ -63,6 +77,7 @@ describe('authorizeRowsForConfirm', () => {
       userRole: 'EDITOR',
       editorCountrySlugs: [],
       confirmedNewCountrySlugs: ['nueva-nacion'],
+      newCountrySlugs: ['nueva-nacion'],
     })
     expect(result).toHaveLength(0)
   })
@@ -73,6 +88,7 @@ describe('authorizeRowsForConfirm', () => {
       userRole: 'EDITOR',
       editorCountrySlugs: ['france'],
       confirmedNewCountrySlugs: [],
+      newCountrySlugs: [],
     })
     expect(result).toHaveLength(0)
   })
@@ -83,6 +99,7 @@ describe('authorizeRowsForConfirm', () => {
       userRole: 'EDITOR',
       editorCountrySlugs: ['france'],
       confirmedNewCountrySlugs: [],
+      newCountrySlugs: [],
     })
     expect(result).toHaveLength(1)
   })
