@@ -66,7 +66,11 @@ export async function parseTrackerWorkbook(buffer: ArrayBuffer): Promise<Tracker
 
   let headerRowNumber = -1
   for (let r = 1; r <= 10 && headerRowNumber === -1; r++) {
-    if (cellText(sheet.getRow(r).getCell(1).value) === COLUMN_HEADERS.country) headerRowNumber = r
+    let hasCountryHeader = false
+    sheet.getRow(r).eachCell((cell) => {
+      if (cellText(cell.value) === COLUMN_HEADERS.country) hasCountryHeader = true
+    })
+    if (hasCountryHeader) headerRowNumber = r
   }
   if (headerRowNumber === -1) {
     throw new Error(`No se encontró la fila de encabezados (columna "${COLUMN_HEADERS.country}")`)

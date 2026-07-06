@@ -65,6 +65,22 @@ describe('parseTrackerWorkbook', () => {
     expect(rows[0].name).toBe('Sin emoji')
   })
 
+  it('finds the header row even when País is not the first column', async () => {
+    const reorderedHeaders = [HEADERS[1], HEADERS[0], ...HEADERS.slice(2)]
+    const dataRow = fullRow({ name: 'Reordenado' })
+    const reorderedDataRow = [dataRow[1], dataRow[0], ...dataRow.slice(2)]
+    const workbook = new ExcelJS.Workbook()
+    const sheet = workbook.addWorksheet('📋 Contenido por País')
+    sheet.addRow(['título'])
+    sheet.addRow(reorderedHeaders)
+    sheet.addRow(reorderedDataRow)
+    const buffer = (await workbook.xlsx.writeBuffer()) as ArrayBuffer
+    const rows = await parseTrackerWorkbook(buffer)
+    expect(rows).toHaveLength(1)
+    expect(rows[0].name).toBe('Reordenado')
+    expect(rows[0].country).toBe('Francia')
+  })
+
   it('throws when the sheet is missing', async () => {
     const workbook = new ExcelJS.Workbook()
     workbook.addWorksheet('Otra hoja')
