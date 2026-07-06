@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { previewImportAction, confirmImportAction, type PreviewState } from '@/app/admin/(dashboard)/import/actions'
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -125,17 +126,25 @@ export function ImportForm({ role }: { role: 'ADMIN' | 'EDITOR' }) {
                 </div>
               )}
 
-              <button
-                type="submit"
-                className="bg-red-700 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-red-800"
-              >
-                Confirmar import ({preview.toCreate.length})
-              </button>
+              <ConfirmButton count={preview.toCreate.length} />
             </form>
           )}
         </div>
       )}
     </div>
+  )
+}
+
+function ConfirmButton({ count }: { count: number }) {
+  const { pending } = useFormStatus()
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="bg-red-700 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-red-800 disabled:opacity-50"
+    >
+      {pending ? 'Importando…' : `Confirmar import (${count})`}
+    </button>
   )
 }
 

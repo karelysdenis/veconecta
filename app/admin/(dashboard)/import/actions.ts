@@ -100,6 +100,15 @@ export async function confirmImportAction(fd: FormData) {
     const cityIdCache = new Map<string, string>()
 
     for (const row of authorized) {
+      // Re-check against the DB inside the transaction: the preview's duplicate
+      // check ran against a snapshot that may be stale by the time this commits
+      // (double-click, resubmitted preview, a concurrent import of the same file).
+      const alreadyExists = await tx.resource.findFirst({
+        where: { countrySlug: row.countrySlug, name: row.name },
+        select: { id: true },
+      })
+      if (alreadyExists) continue
+
       let cityId: string | null = null
       if (row.cityName) {
         const cacheKey = `${row.countrySlug}::${row.cityName.toLowerCase()}`
@@ -143,6 +152,8 @@ export async function confirmImportAction(fd: FormData) {
       affectedCountrySlugs.add(row.countrySlug)
     }
   }, { timeout: 30_000 })
+
+  if (createdCount === 0) redirect('/admin/import')
 
   await logAction({
     userEmail: user.email,
