@@ -97,6 +97,10 @@ export async function confirmImportAction(fd: FormData) {
           create: {
             slug: proposal.slug,
             nameEs: proposal.nameEs,
+            // nameEn is required and the tracker has no English country name to
+            // draw from — mirror the Spanish text as a deliberate placeholder.
+            // Stays draft-only (active:false) until an ADMIN fixes it by hand at
+            // /admin/countries/[slug]; nothing else currently prompts them to.
             nameEn: proposal.nameEs,
             flag: '🏳️',
             cca2: proposal.cca2,
