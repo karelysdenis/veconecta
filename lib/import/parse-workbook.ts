@@ -1,7 +1,21 @@
 import ExcelJS from 'exceljs'
 import type { TrackerRow } from './types'
 
-const SHEET_NAME = '📋 Contenido por País'
+const SHEET_NAME = 'Contenido por País'
+
+/** Strips any leading emoji/symbol and normalizes case/accents, so a tab named
+ * "📋 Contenido por País" or "Contenido por país" or "🗂 CONTENIDO POR PAÍS"
+ * all match the same sheet — the icon isn't part of the contract. */
+function normalizeSheetName(name: string): string {
+  return name
+    .replace(/^[^\p{L}]+/u, '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+}
+
+const TARGET_SHEET_NAME = normalizeSheetName(SHEET_NAME)
 
 const COLUMN_HEADERS = {
   country: 'País',
@@ -47,7 +61,7 @@ export async function parseTrackerWorkbook(buffer: ArrayBuffer): Promise<Tracker
   const workbook = new ExcelJS.Workbook()
   await workbook.xlsx.load(buffer)
 
-  const sheet = workbook.getWorksheet(SHEET_NAME)
+  const sheet = workbook.worksheets.find((ws) => normalizeSheetName(ws.name) === TARGET_SHEET_NAME)
   if (!sheet) throw new Error(`Hoja "${SHEET_NAME}" no encontrada en el archivo`)
 
   let headerRowNumber = -1

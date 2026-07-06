@@ -23,7 +23,7 @@ export default async function ImportPage({
 
       <h1 className="text-xl font-bold text-gray-900 mb-2">Importar desde el PM tracker</h1>
       <p className="text-sm text-gray-500 mb-6">
-        Sube el Excel de seguimiento (hoja &quot;📋 Contenido por País&quot;) para crear los recursos nuevos como borrador.
+        Sube el Excel de seguimiento (hoja &quot;Contenido por País&quot;) para crear los recursos nuevos como borrador.
       </p>
 
       {success && (

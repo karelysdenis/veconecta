@@ -53,6 +53,18 @@ describe('parseTrackerWorkbook', () => {
     expect(rows.map((r) => r.name)).toEqual(['Primero', 'Segundo'])
   })
 
+  it('matches the sheet regardless of its emoji/icon prefix, case, or accents', async () => {
+    const workbook = new ExcelJS.Workbook()
+    const sheet = workbook.addWorksheet('CONTENIDO POR PAIS')
+    sheet.addRow(['título'])
+    sheet.addRow(HEADERS)
+    sheet.addRow(fullRow({ name: 'Sin emoji' }))
+    const buffer = (await workbook.xlsx.writeBuffer()) as ArrayBuffer
+    const rows = await parseTrackerWorkbook(buffer)
+    expect(rows).toHaveLength(1)
+    expect(rows[0].name).toBe('Sin emoji')
+  })
+
   it('throws when the sheet is missing', async () => {
     const workbook = new ExcelJS.Workbook()
     workbook.addWorksheet('Otra hoja')
