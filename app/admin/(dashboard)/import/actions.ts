@@ -15,6 +15,22 @@ import type { ImportPreview, NewCountryProposal, ResolvedCreate } from '@/lib/im
 
 export type PreviewState = { preview: ImportPreview | null; error: string | null }
 
+/** Groups a flat list of { countrySlug, ...} rows into countrySlug → Set<value>, for the
+ * duplicate/city-existence lookups resolveRows needs. */
+function groupByCountry<T>(
+  items: T[],
+  countrySlugOf: (item: T) => string,
+  valueOf: (item: T) => string,
+): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>()
+  for (const item of items) {
+    const countrySlug = countrySlugOf(item)
+    if (!map.has(countrySlug)) map.set(countrySlug, new Set())
+    map.get(countrySlug)!.add(valueOf(item))
+  }
+  return map
+}
+
 export async function previewImportAction(_prev: PreviewState, fd: FormData): Promise<PreviewState> {
   const { user } = await getSession()
   if (!user) return { preview: null, error: 'Sesión expirada, vuelve a iniciar sesión.' }
@@ -35,18 +51,10 @@ export async function previewImportAction(_prev: PreviewState, fd: FormData): Pr
   const countries = await prisma.country.findMany({ select: { slug: true, nameEs: true } })
 
   const existingResources = await prisma.resource.findMany({ select: { countrySlug: true, name: true } })
-  const existingResourceNames = new Map<string, Set<string>>()
-  for (const r of existingResources) {
-    if (!existingResourceNames.has(r.countrySlug)) existingResourceNames.set(r.countrySlug, new Set())
-    existingResourceNames.get(r.countrySlug)!.add(r.name)
-  }
+  const existingResourceNames = groupByCountry(existingResources, (r) => r.countrySlug, (r) => r.name)
 
   const existingCities = await prisma.city.findMany({ select: { countrySlug: true, nameEs: true } })
-  const existingCityNames = new Map<string, Set<string>>()
-  for (const c of existingCities) {
-    if (!existingCityNames.has(c.countrySlug)) existingCityNames.set(c.countrySlug, new Set())
-    existingCityNames.get(c.countrySlug)!.add(slugify(c.nameEs))
-  }
+  const existingCityNames = groupByCountry(existingCities, (c) => c.countrySlug, (c) => slugify(c.nameEs))
 
   const preview = resolveRows(rows, {
     countries,
