@@ -74,71 +74,74 @@ export async function confirmImportAction(fd: FormData) {
 
   if (authorized.length === 0) redirect('/admin/import')
 
-  if (user.role === 'ADMIN') {
-    for (const proposal of newCountries) {
-      if (!confirmedNewCountrySlugs.includes(proposal.slug)) continue
-      await prisma.country.upsert({
-        where: { slug: proposal.slug },
-        update: {},
-        create: {
-          slug: proposal.slug,
-          nameEs: proposal.nameEs,
-          nameEn: proposal.nameEs,
-          flag: '🏳️',
-          cca2: proposal.cca2,
-          active: false,
-        },
-      })
-    }
-  }
-
-  const cityIdCache = new Map<string, string>()
   const affectedCountrySlugs = new Set<string>()
   let createdCount = 0
 
-  for (const row of authorized) {
-    let cityId: string | null = null
-    if (row.cityName) {
-      const cacheKey = `${row.countrySlug}::${row.cityName.toLowerCase()}`
-      if (cityIdCache.has(cacheKey)) {
-        cityId = cityIdCache.get(cacheKey)!
-      } else {
-        cityId = await resolveOrCreateCityByName(row.countrySlug, row.cityName)
-        cityIdCache.set(cacheKey, cityId)
+  await prisma.$transaction(async (tx) => {
+    if (user.role === 'ADMIN') {
+      for (const proposal of newCountries) {
+        if (!confirmedNewCountrySlugs.includes(proposal.slug)) continue
+        await tx.country.upsert({
+          where: { slug: proposal.slug },
+          update: {},
+          create: {
+            slug: proposal.slug,
+            nameEs: proposal.nameEs,
+            nameEn: proposal.nameEs,
+            flag: '🏳️',
+            cca2: proposal.cca2,
+            active: false,
+          },
+        })
       }
     }
 
-    await prisma.resource.create({
-      data: {
-        countrySlug: row.countrySlug,
-        category: row.category,
-        name: row.name,
-        nameEn: row.nameEn,
-        namePt: row.namePt,
-        nameFr: row.nameFr,
-        nameDe: row.nameDe,
-        cityId,
-        url: row.url,
-        phone: row.phone,
-        paymentKey: row.paymentKey,
-        address: row.address,
-        schedule: row.schedule,
-        free: row.free,
-        notesEs: row.notesEs,
-        notesEn: row.notesEn,
-        notesPt: row.notesPt,
-        notesFr: row.notesFr,
-        notesDe: row.notesDe,
-        status: 'DRAFT',
-        kind: 'PERMANENT',
-        verifiedAt: null,
-        verifiedBy: null,
-        validUntil: row.validUntil ? new Date(row.validUntil) : null,
-      },
-    })
-    createdCount++
-    affectedCountrySlugs.add(row.countrySlug)
-  }
+    const cityIdCache = new Map<string, string>()
+
+    for (const row of authorized) {
+      let cityId: string | null = null
+      if (row.cityName) {
+        const cacheKey = `${row.countrySlug}::${row.cityName.toLowerCase()}`
+        if (cityIdCache.has(cacheKey)) {
+          cityId = cityIdCache.get(cacheKey)!
+        } else {
+          cityId = await resolveOrCreateCityByName(row.countrySlug, row.cityName, tx)
+          cityIdCache.set(cacheKey, cityId)
+        }
+      }
+
+      await tx.resource.create({
+        data: {
+          countrySlug: row.countrySlug,
+          category: row.category,
+          name: row.name,
+          nameEn: row.nameEn,
+          namePt: row.namePt,
+          nameFr: row.nameFr,
+          nameDe: row.nameDe,
+          cityId,
+          url: row.url,
+          phone: row.phone,
+          paymentKey: row.paymentKey,
+          address: row.address,
+          schedule: row.schedule,
+          free: row.free,
+          notesEs: row.notesEs,
+          notesEn: row.notesEn,
+          notesPt: row.notesPt,
+          notesFr: row.notesFr,
+          notesDe: row.notesDe,
+          status: 'DRAFT',
+          kind: 'PERMANENT',
+          verifiedAt: null,
+          verifiedBy: null,
+          validUntil: row.validUntil ? new Date(row.validUntil) : null,
+        },
+      })
+      createdCount++
+      affectedCountrySlugs.add(row.countrySlug)
+    }
+  }, { timeout: 30_000 })
 
   await logAction({
     userEmail: user.email,

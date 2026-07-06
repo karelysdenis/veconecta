@@ -35,6 +35,14 @@ describe('resolveOrCreateCityByName', () => {
     vi.mocked(prisma.city.create).mockRejectedValueOnce(new Error('boom'))
     await expect(resolveOrCreateCityByName('france', 'Paris')).rejects.toThrow('boom')
   })
+
+  it('uses an explicit client (e.g. a transaction) instead of the default prisma import when given one', async () => {
+    const tx = { city: { create: vi.fn().mockResolvedValueOnce({ id: 'tx-city' }), findUnique: vi.fn() } }
+    const id = await resolveOrCreateCityByName('france', 'Lyon', tx as never)
+    expect(id).toBe('tx-city')
+    expect(tx.city.create).toHaveBeenCalledWith({ data: { countrySlug: 'france', slug: 'lyon', nameEs: 'Lyon' } })
+    expect(prisma.city.create).not.toHaveBeenCalled()
+  })
 })
 
 describe('resolveCityId (form)', () => {
