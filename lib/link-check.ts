@@ -18,15 +18,16 @@ async function attemptFetch(url: string, method: 'HEAD' | 'GET', timeoutMs: numb
 }
 
 /**
- * Live check of a single URL. HEAD first (cheap); some servers reject HEAD
- * with 405, so a GET is attempted before giving up. Timeouts and network
- * errors resolve to "unknown", not "broken" — a transient failure on the
- * destination site shouldn't make a resource look dead.
+ * Live check of a single URL. HEAD first (cheap); many sites reject or block
+ * HEAD (405, or a bot-protection 403) even though GET works fine, so any
+ * non-ok HEAD response gets a GET retry before concluding the link is dead.
+ * Timeouts and network errors resolve to "unknown", not "broken" — a
+ * transient failure on the destination site shouldn't make a resource look dead.
  */
 export async function checkUrl(url: string, timeoutMs = 5000): Promise<LinkStatus> {
   try {
     let response = await attemptFetch(url, 'HEAD', timeoutMs)
-    if (response.status === 405) {
+    if (!response.ok) {
       response = await attemptFetch(url, 'GET', timeoutMs)
     }
     return response.ok ? 'ok' : 'broken'
