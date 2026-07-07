@@ -107,7 +107,7 @@ export default async function GlobalReviewPage({
   const prevI = idx > 0 ? idx - 1 : null
   const nextI = idx < total - 1 ? idx + 1 : null
   const afterConfirmI = nextI ?? idx
-  const idsQs = idsParam ? `&ids=${idsParam}` : ''
+  const idsQs = idsParam ? `&ids=${idsParam}&broken=${brokenCount}` : ''
 
   async function confirm(formData: FormData) {
     'use server'
@@ -115,6 +115,7 @@ export default async function GlobalReviewPage({
     const returnI = formData.get('returnI') as string
     const returnFilter = formData.get('returnFilter') as string
     const returnIds = formData.get('returnIds') as string
+    const returnBroken = formData.get('returnBroken') as string
     const { user } = await getSession()
     if (!user) return
     const row = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
@@ -145,7 +146,7 @@ export default async function GlobalReviewPage({
     for (const l of LOCALES) revalidatePath(`/${l}`)
 
     const fqs = returnFilter === 'all' ? '&filter=all' : ''
-    redirect(`/admin/review?i=${returnI}&ids=${returnIds}${fqs}`)
+    redirect(`/admin/review?i=${returnI}&ids=${returnIds}&broken=${returnBroken}${fqs}`)
   }
 
   async function archive(formData: FormData) {
@@ -154,6 +155,7 @@ export default async function GlobalReviewPage({
     const returnI = formData.get('returnI') as string
     const returnFilter = formData.get('returnFilter') as string
     const returnIds = formData.get('returnIds') as string
+    const returnBroken = formData.get('returnBroken') as string
     const { user } = await getSession()
     if (!user) return
     const row = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
@@ -178,7 +180,7 @@ export default async function GlobalReviewPage({
     for (const l of LOCALES) revalidatePath(`/${l}`)
 
     const fqs = returnFilter === 'all' ? '&filter=all' : ''
-    redirect(`/admin/review?i=${returnI}&ids=${returnIds}${fqs}`)
+    redirect(`/admin/review?i=${returnI}&ids=${returnIds}&broken=${returnBroken}${fqs}`)
   }
 
   if (total === 0) {
@@ -397,6 +399,7 @@ export default async function GlobalReviewPage({
                 returnI: String(afterConfirmI),
                 returnFilter: showAll ? 'all' : '',
                 returnIds: idsParam ?? '',
+                returnBroken: String(brokenCount),
               }}
               label="Archivar"
               message={`¿Archivar "${resource.name}"?`}
@@ -416,6 +419,7 @@ export default async function GlobalReviewPage({
                 <input type="hidden" name="returnI" value={String(afterConfirmI)} />
                 <input type="hidden" name="returnFilter" value={showAll ? 'all' : ''} />
                 <input type="hidden" name="returnIds" value={idsParam ?? ''} />
+                <input type="hidden" name="returnBroken" value={String(brokenCount)} />
                 <button
                   type="submit"
                   className="text-sm bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 font-medium"
@@ -429,6 +433,7 @@ export default async function GlobalReviewPage({
                 <input type="hidden" name="returnI" value={String(afterConfirmI)} />
                 <input type="hidden" name="returnFilter" value={showAll ? 'all' : ''} />
                 <input type="hidden" name="returnIds" value={idsParam ?? ''} />
+                <input type="hidden" name="returnBroken" value={String(brokenCount)} />
                 <button
                   type="submit"
                   className="text-sm border border-green-300 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 font-medium"
