@@ -29,6 +29,26 @@ describe('checkUrl', () => {
     expect(fetchMock.mock.calls[1][1]).toMatchObject({ method: 'GET' })
   })
 
+  it('falls back to GET when HEAD returns 403 (bot-protection blocking HEAD), and uses that result', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, status: 403 })
+      .mockResolvedValueOnce({ ok: true, status: 200 })
+    vi.stubGlobal('fetch', fetchMock)
+
+    expect(await checkUrl('https://example.com')).toBe('ok')
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(fetchMock.mock.calls[1][1]).toMatchObject({ method: 'GET' })
+  })
+
+  it('returns "broken" when both HEAD and the GET fallback fail', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 404 })
+    vi.stubGlobal('fetch', fetchMock)
+
+    expect(await checkUrl('https://example.com/missing')).toBe('broken')
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
   it('returns "unknown" when fetch aborts (timeout)', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new DOMException('Aborted', 'AbortError')))
     expect(await checkUrl('https://example.com', 10)).toBe('unknown')

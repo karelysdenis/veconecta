@@ -57,7 +57,8 @@ export default async function ReviewPage({
   if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
 
   const showAll = filter === 'all'
-  const filterQs = showAll ? '&filter=all' : ''
+  const brokenOnly = filter === 'broken'
+  const filterQs = showAll ? '&filter=all' : brokenOnly ? '&filter=broken' : ''
 
   const countryRecord = await prisma.country.findUnique({ where: { slug: country } })
   if (!countryRecord) notFound()
@@ -72,7 +73,7 @@ export default async function ReviewPage({
       where: {
         countrySlug: country,
         status: 'PUBLISHED',
-        ...(showAll ? {} : dueForReviewFilter()),
+        ...(showAll || brokenOnly ? {} : dueForReviewFilter()),
       },
       orderBy: [
         { verifiedAt: { sort: 'asc', nulls: 'first' } },
@@ -86,7 +87,7 @@ export default async function ReviewPage({
     // (like `ids=`) rather than being recomputed on every subsequent render.
     const annotated = sortForReview(await annotateWithLinkStatus(dueResources))
     brokenCount = annotated.filter((r) => r.linkStatus === 'broken').length
-    resources = annotated
+    resources = brokenOnly ? annotated.filter((r) => r.linkStatus === 'broken') : annotated
 
     // Snapshot the queue as a fixed list of IDs so confirming a resource doesn't
     // change the underlying filter result and reshuffle indices mid-review.
@@ -183,11 +184,11 @@ export default async function ReviewPage({
         <Breadcrumb country={country} nameEs={countryRecord.nameEs} />
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center space-y-3">
           <p className="text-gray-500 text-sm">
-            {showAll
+            {showAll || brokenOnly
               ? 'No hay recursos publicados en este país.'
               : '¡Al día! No hay recursos pendientes de revisión.'}
           </p>
-          {!showAll && (
+          {!showAll && !brokenOnly && (
             <Link
               href={`/admin/${country}/review?filter=all`}
               className="inline-block text-sm text-blue-600 hover:underline"
@@ -230,7 +231,7 @@ export default async function ReviewPage({
             </span>
           )}
         </div>
-        <FilterToggle country={country} showAll={showAll} idx={idx} />
+        <FilterToggle country={country} showAll={showAll} brokenOnly={brokenOnly} idx={idx} />
       </div>
 
       {/* Progress bar */}
@@ -469,17 +470,19 @@ function Breadcrumb({ country, nameEs }: { country: string; nameEs: string }) {
 function FilterToggle({
   country,
   showAll,
+  brokenOnly,
   idx,
 }: {
   country: string
   showAll: boolean
+  brokenOnly: boolean
   idx: number
 }) {
   return (
     <div className="flex text-xs rounded-lg border border-gray-200 overflow-hidden">
       <Link
         href={`/admin/${country}/review?i=0`}
-        className={`px-3 py-1.5 ${!showAll ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+        className={`px-3 py-1.5 ${!showAll && !brokenOnly ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
       >
         Urgentes
       </Link>
@@ -488,6 +491,12 @@ function FilterToggle({
         className={`px-3 py-1.5 ${showAll ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
       >
         Todos
+      </Link>
+      <Link
+        href={`/admin/${country}/review?i=0&filter=broken`}
+        className={`px-3 py-1.5 ${brokenOnly ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+      >
+        Rotos
       </Link>
     </div>
   )

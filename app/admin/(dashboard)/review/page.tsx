@@ -61,7 +61,8 @@ export default async function GlobalReviewPage({
 
   const editorCountrySlugs = user.role === 'EDITOR' ? user.countrySlugs : null
   const showAll = filter === 'all'
-  const filterQs = showAll ? '&filter=all' : ''
+  const brokenOnly = filter === 'broken'
+  const filterQs = showAll ? '&filter=all' : brokenOnly ? '&filter=broken' : ''
 
   let resources: Awaited<ReturnType<typeof fetchResourcesByIds>>
   let brokenCount = parseInt(brokenParam ?? '0', 10)
@@ -75,7 +76,7 @@ export default async function GlobalReviewPage({
     const dueResources = await prisma.resource.findMany({
       where: {
         status: 'PUBLISHED',
-        ...(showAll ? {} : dueForReviewFilter()),
+        ...(showAll || brokenOnly ? {} : dueForReviewFilter()),
         ...(editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {}),
       },
       orderBy: [
@@ -90,7 +91,7 @@ export default async function GlobalReviewPage({
     // (like `ids=`) rather than being recomputed on every subsequent render.
     const annotated = sortForReview(await annotateWithLinkStatus(dueResources))
     brokenCount = annotated.filter((r) => r.linkStatus === 'broken').length
-    resources = annotated
+    resources = brokenOnly ? annotated.filter((r) => r.linkStatus === 'broken') : annotated
 
     // Snapshot the queue as a fixed list of IDs so confirming a resource (which
     // updates verifiedAt and would otherwise drop it out of the pending filter)
@@ -189,11 +190,11 @@ export default async function GlobalReviewPage({
         <Breadcrumb />
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center space-y-3">
           <p className="text-gray-500 text-sm">
-            {showAll
+            {showAll || brokenOnly
               ? 'No hay recursos publicados.'
               : '¡Al día! No hay recursos pendientes de revisión.'}
           </p>
-          {!showAll && (
+          {!showAll && !brokenOnly && (
             <Link
               href="/admin/review?filter=all"
               className="inline-block text-sm text-blue-600 hover:underline"
@@ -245,7 +246,7 @@ export default async function GlobalReviewPage({
             </span>
           )}
         </div>
-        <FilterToggle showAll={showAll} />
+        <FilterToggle showAll={showAll} brokenOnly={brokenOnly} />
       </div>
 
       {/* Progress bar */}
@@ -490,12 +491,12 @@ function Breadcrumb() {
   )
 }
 
-function FilterToggle({ showAll }: { showAll: boolean }) {
+function FilterToggle({ showAll, brokenOnly }: { showAll: boolean; brokenOnly: boolean }) {
   return (
     <div className="flex text-xs rounded-lg border border-gray-200 overflow-hidden">
       <Link
         href="/admin/review?i=0"
-        className={`px-3 py-1.5 ${!showAll ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+        className={`px-3 py-1.5 ${!showAll && !brokenOnly ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
       >
         Urgentes
       </Link>
@@ -504,6 +505,12 @@ function FilterToggle({ showAll }: { showAll: boolean }) {
         className={`px-3 py-1.5 ${showAll ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
       >
         Todos
+      </Link>
+      <Link
+        href="/admin/review?i=0&filter=broken"
+        className={`px-3 py-1.5 ${brokenOnly ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+      >
+        Rotos
       </Link>
     </div>
   )
