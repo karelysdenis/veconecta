@@ -102,7 +102,6 @@ export default async function GlobalReviewPage({
   const pendingCount = resources.filter((r) => !r.verifiedAt).length
   const idx = Math.max(0, Math.min(parseInt(iParam ?? '0', 10) || 0, Math.max(total - 1, 0)))
   const resource = resources[idx]
-  const currentLinkStatus = resource.url ? await checkUrl(resource.url) : 'none'
   const prevI = idx > 0 ? idx - 1 : null
   const nextI = idx < total - 1 ? idx + 1 : null
   const afterConfirmI = nextI ?? idx
@@ -191,6 +190,8 @@ export default async function GlobalReviewPage({
       </div>
     )
   }
+
+  const currentLinkStatus = resource.url ? await checkUrl(resource.url) : 'none'
 
   const countrySlugs = [...new Set(resources.map((r) => r.countrySlug))]
   const countryRows = await prisma.country.findMany({

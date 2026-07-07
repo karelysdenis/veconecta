@@ -100,7 +100,6 @@ export default async function ReviewPage({
 
   const idx = Math.max(0, Math.min(parseInt(iParam ?? '0', 10) || 0, Math.max(total - 1, 0)))
   const resource = resources[idx]
-  const currentLinkStatus = resource.url ? await checkUrl(resource.url) : 'none'
   const prevI = idx > 0 ? idx - 1 : null
   const nextI = idx < total - 1 ? idx + 1 : null
   const idsQs = idsParam ? `&ids=${idsParam}` : ''
@@ -203,6 +202,8 @@ export default async function ReviewPage({
       </div>
     )
   }
+
+  const currentLinkStatus = resource.url ? await checkUrl(resource.url) : 'none'
 
   return (
     <div className="max-w-2xl">
