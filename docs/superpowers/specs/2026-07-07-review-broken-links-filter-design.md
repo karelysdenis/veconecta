@@ -33,7 +33,7 @@ En este filtro, `brokenCount` siempre es igual a `total` (todo lo mostrado está
 ## 3. UI
 
 - El componente de toggle (`FilterToggle` en ambas páginas) gana una tercera pestaña "Rotos" junto a "Urgentes"/"Todos", mismo estilo visual.
-- Estado vacío nuevo y específico para este filtro: *"No hay enlaces rotos detectados."* (en vez de reusar el texto de "Urgentes" o "Todos").
+- Estado vacío: `filter=broken` reusa el mismo texto genérico que ya usa `filter=all` ("No hay recursos publicados" / "No hay recursos publicados en este país.") — sin mensaje especial que mencione enlaces rotos.
 - No hay cambios en el badge de estado del enlace, la tarjeta de recurso, ni las acciones (confirmar/archivar/editar).
 
 ## 4. Fuera de alcance
