@@ -7,8 +7,11 @@ import { logAction, touchCountry } from '@/lib/audit'
 import { flagUrl } from '@/lib/country-iso'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { LOCALES } from '@/lib/locale-content'
-import { fetchResourcesByIds } from '@/lib/resource-review'
+import { fetchResourcesByIds, annotateWithLinkStatus, sortForReview } from '@/lib/resource-review'
 import { dueForReviewFilter } from '@/lib/review-config'
+import { checkUrl } from '@/lib/link-check'
+import { LinkStatusBadge } from '@/components/admin/LinkStatusBadge'
+import { ConfirmButton } from '@/components/admin/ConfirmButton'
 
 const CATEGORY_LABELS: Record<string, string> = {
   FIND_FAMILY: 'Encontrar familia',
@@ -21,6 +24,27 @@ const CATEGORY_LABELS: Record<string, string> = {
   MENTAL_HEALTH: 'Salud mental',
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  DRAFT: 'Borrador',
+  PUBLISHED: 'Publicado',
+  ARCHIVED: 'Archivado',
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  DRAFT: 'text-amber-700 bg-amber-50 border-amber-200',
+  PUBLISHED: 'text-blue-700 bg-blue-50 border-blue-200',
+  ARCHIVED: 'text-gray-500 bg-gray-50 border-gray-200',
+}
+
+function isToday(date: Date) {
+  const now = new Date()
+  return (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  )
+}
+
 function Flag({ cca2, slug, flag, size = 20 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
   return <FlagImage src={src} flag={flag} size={size} />
@@ -29,40 +53,56 @@ function Flag({ cca2, slug, flag, size = 20 }: { cca2: string | null; slug: stri
 export default async function GlobalReviewPage({
   searchParams,
 }: {
-  searchParams: Promise<{ i?: string; ids?: string }>
+  searchParams: Promise<{ i?: string; ids?: string; broken?: string }>
 }) {
-  const { i: iParam, ids: idsParam } = await searchParams
+  const { i: iParam, ids: idsParam, broken: brokenParam } = await searchParams
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
 
   const editorCountrySlugs = user.role === 'EDITOR' ? user.countrySlugs : null
 
-  const resources = idsParam
-    ? await fetchResourcesByIds(idsParam.split(','), editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {})
-    : await prisma.resource.findMany({
-        where: {
-          status: 'PUBLISHED',
-          ...dueForReviewFilter(),
-          ...(editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {}),
-        },
-        orderBy: [
-          { verifiedAt: { sort: 'asc', nulls: 'first' } },
-          { createdAt: 'asc' },
-        ],
-        include: { city: true },
-      })
+  let resources: Awaited<ReturnType<typeof fetchResourcesByIds>>
+  let brokenCount = parseInt(brokenParam ?? '0', 10)
 
-  // Snapshot the queue as a fixed list of IDs so confirming a resource (which
-  // updates verifiedAt and would otherwise drop it out of the pending filter)
-  // doesn't reshuffle indices mid-review. Confirmed items stay visible/navigable.
-  if (!idsParam && resources.length > 0) {
-    redirect(`/admin/review?ids=${resources.map((r) => r.id).join(',')}&i=0`)
+  if (idsParam) {
+    resources = await fetchResourcesByIds(
+      idsParam.split(','),
+      editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {},
+    )
+  } else {
+    const dueResources = await prisma.resource.findMany({
+      where: {
+        status: 'PUBLISHED',
+        ...dueForReviewFilter(),
+        ...(editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {}),
+      },
+      orderBy: [
+        { verifiedAt: { sort: 'asc', nulls: 'first' } },
+        { createdAt: 'asc' },
+      ],
+      include: { city: true },
+    })
+
+    // Live link check runs once, here, for the whole batch — this is the only
+    // place the "broken" count is computed, so it travels via the querystring
+    // (like `ids=`) rather than being recomputed on every subsequent render.
+    const annotated = sortForReview(await annotateWithLinkStatus(dueResources))
+    brokenCount = annotated.filter((r) => r.linkStatus === 'broken').length
+    resources = annotated
+
+    // Snapshot the queue as a fixed list of IDs so confirming a resource (which
+    // updates verifiedAt and would otherwise drop it out of the pending filter)
+    // doesn't reshuffle indices mid-review. Confirmed items stay visible/navigable.
+    if (resources.length > 0) {
+      redirect(`/admin/review?ids=${resources.map((r) => r.id).join(',')}&i=0&broken=${brokenCount}`)
+    }
   }
 
   const total = resources.length
   const pendingCount = resources.filter((r) => !r.verifiedAt).length
   const idx = Math.max(0, Math.min(parseInt(iParam ?? '0', 10) || 0, Math.max(total - 1, 0)))
   const resource = resources[idx]
+  const currentLinkStatus = resource.url ? await checkUrl(resource.url) : 'none'
   const prevI = idx > 0 ? idx - 1 : null
   const nextI = idx < total - 1 ? idx + 1 : null
   const afterConfirmI = nextI ?? idx
@@ -89,6 +129,36 @@ export default async function GlobalReviewPage({
     await logAction({
       userEmail: user.email,
       action: 'RESOURCE_CONFIRM',
+      entityType: 'resource',
+      entityId: id,
+      entityName: updated.name,
+      countrySlug: row.countrySlug,
+    })
+    await touchCountry(row.countrySlug)
+    revalidatePath('/admin/review')
+    revalidatePath('/admin')
+    revalidatePath(`/admin/${row.countrySlug}`)
+    revalidatePath(`/admin/${row.countrySlug}/review`)
+    for (const l of LOCALES) revalidatePath(`/${l}/${row.countrySlug}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
+    redirect(`/admin/review?i=${returnI}&ids=${returnIds}`)
+  }
+
+  async function archive(formData: FormData) {
+    'use server'
+    const id = formData.get('id') as string
+    const returnI = formData.get('returnI') as string
+    const returnIds = formData.get('returnIds') as string
+    const { user } = await getSession()
+    if (!user) return
+    const row = await prisma.resource.findUnique({ where: { id }, select: { countrySlug: true } })
+    if (!row) return
+    if (user.role === 'EDITOR' && !user.countrySlugs.includes(row.countrySlug)) return
+
+    const updated = await prisma.resource.update({ where: { id }, data: { status: 'ARCHIVED' } })
+    await logAction({
+      userEmail: user.email,
+      action: 'RESOURCE_ARCHIVE',
       entityType: 'resource',
       entityId: id,
       entityName: updated.name,
@@ -136,7 +206,7 @@ export default async function GlobalReviewPage({
       <Breadcrumb />
 
       {/* Controls */}
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
         <span className="text-sm text-gray-500 tabular-nums">{idx + 1} / {total}</span>
         {pendingCount > 0 ? (
           <span className="text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded">
@@ -145,6 +215,11 @@ export default async function GlobalReviewPage({
         ) : (
           <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
             Todos confirmados
+          </span>
+        )}
+        {brokenCount > 0 && (
+          <span className="text-xs text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
+            {brokenCount} enlaces rotos
           </span>
         )}
       </div>
@@ -178,6 +253,9 @@ export default async function GlobalReviewPage({
             <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
               {CATEGORY_LABELS[resource.category] ?? resource.category}
             </span>
+            <span className={`text-xs px-2 py-1 rounded border ${STATUS_STYLES[resource.status]}`}>
+              {STATUS_LABELS[resource.status] ?? resource.status}
+            </span>
             {resource.city && (
               <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-100">
                 {resource.city.nameEs}
@@ -190,8 +268,9 @@ export default async function GlobalReviewPage({
             )}
           </div>
           {resource.verifiedAt ? (
-            <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded shrink-0">
-              ✓ {new Intl.DateTimeFormat('es-ES').format(resource.verifiedAt)}
+            <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded shrink-0 text-right">
+              <span className="block">✓ {new Intl.DateTimeFormat('es-ES').format(resource.verifiedAt)}</span>
+              {isToday(resource.verifiedAt) && <span className="block font-medium">Recurso confirmado</span>}
             </span>
           ) : (
             <span className="text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-1 rounded shrink-0">
@@ -221,14 +300,17 @@ export default async function GlobalReviewPage({
             <span className="text-xs text-gray-500 truncate min-w-0">
               {resource.url.replace(/^https?:\/\//, '')}
             </span>
-            <a
-              href={resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-white bg-caribe px-3 py-1.5 rounded hover:opacity-90 shrink-0 font-medium"
-            >
-              Abrir ↗
-            </a>
+            <div className="flex items-center gap-2 shrink-0">
+              <LinkStatusBadge status={currentLinkStatus} />
+              <a
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-white bg-caribe px-3 py-1.5 rounded hover:opacity-90 font-medium"
+              >
+                Abrir ↗
+              </a>
+            </div>
           </div>
         )}
 
@@ -285,37 +367,52 @@ export default async function GlobalReviewPage({
 
         {/* Actions */}
         <div className="flex gap-3 pt-2 border-t border-gray-100">
-          {!resource.verifiedAt ? (
-            <form action={confirm}>
-              <input type="hidden" name="id" value={resource.id} />
-              <input type="hidden" name="returnI" value={String(afterConfirmI)} />
-              <input type="hidden" name="returnIds" value={idsParam ?? ''} />
-              <button
-                type="submit"
-                className="text-sm bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 font-medium"
-              >
-                ✓ Confirmar info
-              </button>
-            </form>
-          ) : (
-            <form action={confirm}>
-              <input type="hidden" name="id" value={resource.id} />
-              <input type="hidden" name="returnI" value={String(afterConfirmI)} />
-              <input type="hidden" name="returnIds" value={idsParam ?? ''} />
-              <button
-                type="submit"
-                className="text-sm border border-green-300 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 font-medium"
-              >
-                ↻ Reconfirmar
-              </button>
-            </form>
+          {resource.status !== 'ARCHIVED' && (
+            <ConfirmButton
+              action={archive}
+              hiddenFields={{
+                id: resource.id,
+                returnI: String(afterConfirmI),
+                returnIds: idsParam ?? '',
+              }}
+              label="Archivar"
+              message={`¿Archivar "${resource.name}"?`}
+              className="text-sm border border-red-200 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
+            />
           )}
-          <Link
-            href={`/admin/${resource.countrySlug}/${resource.id}?returnTo=${encodeURIComponent(`/admin/review?i=${idx}${idsQs}`)}`}
-            className="text-sm border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50"
-          >
-            Editar
-          </Link>
+          <div className="flex gap-3 ml-auto">
+            <Link
+              href={`/admin/${resource.countrySlug}/${resource.id}?returnTo=${encodeURIComponent(`/admin/review?i=${idx}${idsQs}`)}`}
+              className="text-sm border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              Editar
+            </Link>
+            {!resource.verifiedAt ? (
+              <form action={confirm}>
+                <input type="hidden" name="id" value={resource.id} />
+                <input type="hidden" name="returnI" value={String(afterConfirmI)} />
+                <input type="hidden" name="returnIds" value={idsParam ?? ''} />
+                <button
+                  type="submit"
+                  className="text-sm bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 font-medium"
+                >
+                  ✓ Confirmar info
+                </button>
+              </form>
+            ) : (
+              <form action={confirm}>
+                <input type="hidden" name="id" value={resource.id} />
+                <input type="hidden" name="returnI" value={String(afterConfirmI)} />
+                <input type="hidden" name="returnIds" value={idsParam ?? ''} />
+                <button
+                  type="submit"
+                  className="text-sm border border-green-300 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 font-medium"
+                >
+                  ↻ Reconfirmar
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
 

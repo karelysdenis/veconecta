@@ -8,18 +8,18 @@ describe('LinkStatusBadge', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('renders the ok label', () => {
+  it('renders the ok icon', () => {
     render(<LinkStatusBadge status="ok" />)
-    expect(screen.getByText('🟢 Enlace OK')).toBeInTheDocument()
+    expect(screen.getByLabelText('Enlace OK')).toHaveTextContent('🟢')
   })
 
-  it('renders the broken label', () => {
+  it('renders the broken icon', () => {
     render(<LinkStatusBadge status="broken" />)
-    expect(screen.getByText('🔴 Enlace roto')).toBeInTheDocument()
+    expect(screen.getByLabelText('Enlace roto')).toHaveTextContent('🔴')
   })
 
-  it('renders the unknown label', () => {
+  it('renders the unknown icon', () => {
     render(<LinkStatusBadge status="unknown" />)
-    expect(screen.getByText('⚪ No se pudo comprobar')).toBeInTheDocument()
+    expect(screen.getByLabelText('No se pudo comprobar')).toHaveTextContent('⚪')
   })
 })
