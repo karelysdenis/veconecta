@@ -53,13 +53,15 @@ function Flag({ cca2, slug, flag, size = 20 }: { cca2: string | null; slug: stri
 export default async function GlobalReviewPage({
   searchParams,
 }: {
-  searchParams: Promise<{ i?: string; ids?: string; broken?: string }>
+  searchParams: Promise<{ i?: string; ids?: string; broken?: string; filter?: string }>
 }) {
-  const { i: iParam, ids: idsParam, broken: brokenParam } = await searchParams
+  const { i: iParam, ids: idsParam, broken: brokenParam, filter } = await searchParams
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
 
   const editorCountrySlugs = user.role === 'EDITOR' ? user.countrySlugs : null
+  const showAll = filter === 'all'
+  const filterQs = showAll ? '&filter=all' : ''
 
   let resources: Awaited<ReturnType<typeof fetchResourcesByIds>>
   let brokenCount = parseInt(brokenParam ?? '0', 10)
@@ -73,7 +75,7 @@ export default async function GlobalReviewPage({
     const dueResources = await prisma.resource.findMany({
       where: {
         status: 'PUBLISHED',
-        ...dueForReviewFilter(),
+        ...(showAll ? {} : dueForReviewFilter()),
         ...(editorCountrySlugs ? { countrySlug: { in: editorCountrySlugs } } : {}),
       },
       orderBy: [
@@ -94,7 +96,7 @@ export default async function GlobalReviewPage({
     // updates verifiedAt and would otherwise drop it out of the pending filter)
     // doesn't reshuffle indices mid-review. Confirmed items stay visible/navigable.
     if (resources.length > 0) {
-      redirect(`/admin/review?ids=${resources.map((r) => r.id).join(',')}&i=0&broken=${brokenCount}`)
+      redirect(`/admin/review?ids=${resources.map((r) => r.id).join(',')}&i=0&broken=${brokenCount}${filterQs}`)
     }
   }
 
@@ -111,6 +113,7 @@ export default async function GlobalReviewPage({
     'use server'
     const id = formData.get('id') as string
     const returnI = formData.get('returnI') as string
+    const returnFilter = formData.get('returnFilter') as string
     const returnIds = formData.get('returnIds') as string
     const { user } = await getSession()
     if (!user) return
@@ -140,13 +143,16 @@ export default async function GlobalReviewPage({
     revalidatePath(`/admin/${row.countrySlug}/review`)
     for (const l of LOCALES) revalidatePath(`/${l}/${row.countrySlug}`)
     for (const l of LOCALES) revalidatePath(`/${l}`)
-    redirect(`/admin/review?i=${returnI}&ids=${returnIds}`)
+
+    const fqs = returnFilter === 'all' ? '&filter=all' : ''
+    redirect(`/admin/review?i=${returnI}&ids=${returnIds}${fqs}`)
   }
 
   async function archive(formData: FormData) {
     'use server'
     const id = formData.get('id') as string
     const returnI = formData.get('returnI') as string
+    const returnFilter = formData.get('returnFilter') as string
     const returnIds = formData.get('returnIds') as string
     const { user } = await getSession()
     if (!user) return
@@ -170,7 +176,9 @@ export default async function GlobalReviewPage({
     revalidatePath(`/admin/${row.countrySlug}/review`)
     for (const l of LOCALES) revalidatePath(`/${l}/${row.countrySlug}`)
     for (const l of LOCALES) revalidatePath(`/${l}`)
-    redirect(`/admin/review?i=${returnI}&ids=${returnIds}`)
+
+    const fqs = returnFilter === 'all' ? '&filter=all' : ''
+    redirect(`/admin/review?i=${returnI}&ids=${returnIds}${fqs}`)
   }
 
   if (total === 0) {
@@ -179,8 +187,18 @@ export default async function GlobalReviewPage({
         <Breadcrumb />
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center space-y-3">
           <p className="text-gray-500 text-sm">
-            ¡Al día! No hay recursos pendientes de revisión.
+            {showAll
+              ? 'No hay recursos publicados.'
+              : '¡Al día! No hay recursos pendientes de revisión.'}
           </p>
+          {!showAll && (
+            <Link
+              href="/admin/review?filter=all"
+              className="inline-block text-sm text-blue-600 hover:underline"
+            >
+              Ver todos los recursos →
+            </Link>
+          )}
           <div>
             <Link href="/admin" className="text-sm text-gray-400 hover:underline">
               ← Volver a inicio
@@ -207,22 +225,25 @@ export default async function GlobalReviewPage({
       <Breadcrumb />
 
       {/* Controls */}
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        <span className="text-sm text-gray-500 tabular-nums">{idx + 1} / {total}</span>
-        {pendingCount > 0 ? (
-          <span className="text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded">
-            {pendingCount} sin confirmar
-          </span>
-        ) : (
-          <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
-            Todos confirmados
-          </span>
-        )}
-        {brokenCount > 0 && (
-          <span className="text-xs text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
-            {brokenCount} enlaces rotos
-          </span>
-        )}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-gray-500 tabular-nums">{idx + 1} / {total}</span>
+          {pendingCount > 0 ? (
+            <span className="text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded">
+              {pendingCount} sin confirmar
+            </span>
+          ) : (
+            <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
+              Todos confirmados
+            </span>
+          )}
+          {brokenCount > 0 && (
+            <span className="text-xs text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
+              {brokenCount} enlaces rotos
+            </span>
+          )}
+        </div>
+        <FilterToggle showAll={showAll} />
       </div>
 
       {/* Progress bar */}
@@ -374,6 +395,7 @@ export default async function GlobalReviewPage({
               hiddenFields={{
                 id: resource.id,
                 returnI: String(afterConfirmI),
+                returnFilter: showAll ? 'all' : '',
                 returnIds: idsParam ?? '',
               }}
               label="Archivar"
@@ -383,7 +405,7 @@ export default async function GlobalReviewPage({
           )}
           <div className="flex gap-3 ml-auto">
             <Link
-              href={`/admin/${resource.countrySlug}/${resource.id}?returnTo=${encodeURIComponent(`/admin/review?i=${idx}${idsQs}`)}`}
+              href={`/admin/${resource.countrySlug}/${resource.id}?returnTo=${encodeURIComponent(`/admin/review?i=${idx}${filterQs}${idsQs}`)}`}
               className="text-sm border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50"
             >
               Editar
@@ -392,6 +414,7 @@ export default async function GlobalReviewPage({
               <form action={confirm}>
                 <input type="hidden" name="id" value={resource.id} />
                 <input type="hidden" name="returnI" value={String(afterConfirmI)} />
+                <input type="hidden" name="returnFilter" value={showAll ? 'all' : ''} />
                 <input type="hidden" name="returnIds" value={idsParam ?? ''} />
                 <button
                   type="submit"
@@ -404,6 +427,7 @@ export default async function GlobalReviewPage({
               <form action={confirm}>
                 <input type="hidden" name="id" value={resource.id} />
                 <input type="hidden" name="returnI" value={String(afterConfirmI)} />
+                <input type="hidden" name="returnFilter" value={showAll ? 'all' : ''} />
                 <input type="hidden" name="returnIds" value={idsParam ?? ''} />
                 <button
                   type="submit"
@@ -421,7 +445,7 @@ export default async function GlobalReviewPage({
       <div className="flex justify-between items-center mt-4">
         {prevI !== null ? (
           <Link
-            href={`/admin/review?i=${prevI}${idsQs}`}
+            href={`/admin/review?i=${prevI}${filterQs}${idsQs}`}
             className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
           >
             ← Anterior
@@ -431,7 +455,7 @@ export default async function GlobalReviewPage({
         )}
         {nextI !== null ? (
           <Link
-            href={`/admin/review?i=${nextI}${idsQs}`}
+            href={`/admin/review?i=${nextI}${filterQs}${idsQs}`}
             className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
           >
             Siguiente →
@@ -458,5 +482,24 @@ function Breadcrumb() {
       <span className="text-gray-300">/</span>
       <span className="text-gray-900 font-medium">Revisión global</span>
     </nav>
+  )
+}
+
+function FilterToggle({ showAll }: { showAll: boolean }) {
+  return (
+    <div className="flex text-xs rounded-lg border border-gray-200 overflow-hidden">
+      <Link
+        href="/admin/review?i=0"
+        className={`px-3 py-1.5 ${!showAll ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+      >
+        Urgentes
+      </Link>
+      <Link
+        href="/admin/review?i=0&filter=all"
+        className={`px-3 py-1.5 ${showAll ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+      >
+        Todos
+      </Link>
+    </div>
   )
 }
