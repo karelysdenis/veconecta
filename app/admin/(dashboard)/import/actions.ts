@@ -133,11 +133,20 @@ export async function confirmImportAction(fd: FormData) {
         }
       }
 
+      const baseSlug = slugify(row.nameEn || row.name)
+      let slug = baseSlug
+      let suffix = 2
+      while (await tx.resource.findFirst({ where: { slug } })) {
+        slug = `${baseSlug}-${suffix}`
+        suffix += 1
+      }
+
       await tx.resource.create({
         data: {
           countrySlug: row.countrySlug,
           category: row.category,
           name: row.name,
+          slug,
           nameEn: row.nameEn,
           namePt: row.namePt,
           nameFr: row.nameFr,

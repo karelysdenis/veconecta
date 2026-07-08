@@ -14,6 +14,7 @@ import { LOCALES, localizedFieldsFromForm } from '@/lib/locale-content'
 import { CitySelect } from '@/components/admin/CitySelect'
 import { KindDateFields } from '@/components/admin/KindDateFields'
 import { resolveCityId } from '@/lib/city'
+import { slugify } from '@/lib/slugify'
 
 const CATEGORIES = Object.values(ResourceCategory)
 
@@ -61,11 +62,20 @@ export default async function NewResourcePage({
     const eventStartsAtRaw = fd.get('eventStartsAt') as string
     const eventEndsAtRaw = fd.get('eventEndsAt') as string
     const name = (fd.get('name') as string).trim()
+    const nameEnRaw = (fd.get('nameEn') as string | null)?.trim() || null
+    const baseSlug = slugify(nameEnRaw || name)
+    let slug = baseSlug
+    let suffix = 2
+    while (await prisma.resource.findFirst({ where: { slug } })) {
+      slug = `${baseSlug}-${suffix}`
+      suffix += 1
+    }
     const cityId = await resolveCityId(country, fd)
     const resource = await prisma.resource.create({
       data: {
         countrySlug: country,
         name,
+        slug,
         ...localizedFieldsFromForm(fd, 'name'),
         category: fd.get('category') as ResourceCategory,
         status: (fd.get('status') as ResourceStatus) || ResourceStatus.DRAFT,
