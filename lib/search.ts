@@ -6,6 +6,7 @@ import { rankSearchResults } from '@/lib/search-rank'
 
 const RESOURCE_SELECT = {
   id: true,
+  slug: true,
   name: true,
   nameEn: true,
   namePt: true,

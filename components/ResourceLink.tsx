@@ -6,6 +6,7 @@ import type { SerializedResource } from '@/lib/types'
 import { getResourceName } from '@/lib/types'
 import { localizeSuffixed, formatEventRange, INTL_LOCALE, type Locale } from '@/lib/locale-content'
 import { cleanUrlDisplay } from '@/lib/format-url'
+import { resourceCanonicalPath } from '@/lib/resource-detail'
 
 export function ResourceLink({
   resource,
@@ -40,7 +41,7 @@ export function ResourceLink({
   return (
     <div className="relative flex items-center justify-between gap-3 min-h-14 px-5 py-3 border-t border-[rgba(20,20,20,0.08)] hover:bg-guacamaya/5 transition-colors">
       <Link
-        href={`/${locale}/recursos/${resource.id}`}
+        href={resourceCanonicalPath(resource, locale)}
         className="absolute inset-0"
         aria-label={name}
       />
