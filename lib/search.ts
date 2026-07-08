@@ -83,6 +83,15 @@ async function findMatchingResources(query: string, countrySlugs: string[]) {
   })
 }
 
+async function findGlobalFallback() {
+  return prisma.resource.findMany({
+    where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global', ...notPastEventFilter() },
+    select: RESOURCE_SELECT,
+    orderBy: { createdAt: 'asc' },
+    take: 50,
+  })
+}
+
 /**
  * Single source of truth for resource search: query + relevance ranking +
  * the "no results → show global resources instead" fallback. Used by both
@@ -106,12 +115,7 @@ export async function searchResources({ query, locale }: { query: string; locale
 
   let fallback: typeof results = []
   if (results.length === 0) {
-    const rawFallback = await prisma.resource.findMany({
-      where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global', ...notPastEventFilter() },
-      select: RESOURCE_SELECT,
-      orderBy: { createdAt: 'asc' },
-      take: 50,
-    })
+    const rawFallback = await findGlobalFallback()
     const visibleFallback = rawFallback.filter((r) => isCountryVisibleInLocale(r.country.enabledLocales, locale))
     fallback = rankSearchResults(visibleFallback, query, locale)
   }
