@@ -14,11 +14,11 @@ const prisma = new PrismaClient()
 const COMMIT = process.argv.includes('--commit')
 
 async function main() {
-  const resources = await prisma.resource.findMany({
-    where: { slug: null },
+  const all = await prisma.resource.findMany({
     orderBy: { createdAt: 'asc' },
-    select: { id: true, name: true, nameEn: true },
+    select: { id: true, name: true, nameEn: true, slug: true },
   })
+  const resources = all.filter((r) => !r.slug)
 
   console.log(`${resources.length} resource(s) without a slug.`)
 
