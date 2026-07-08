@@ -156,6 +156,16 @@ export default async function EditResourcePage({
         </Link>
         <span className="text-gray-300">/</span>
         <span className="text-gray-900 font-medium truncate">{resource.name}</span>
+        {resource.status === 'PUBLISHED' && (
+          <a
+            href={`/es/recursos/${resource.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto shrink-0 text-xs text-caribe hover:underline flex items-center gap-1"
+          >
+            Ver en el sitio ↗
+          </a>
+        )}
       </nav>
 
       <form action={save} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
