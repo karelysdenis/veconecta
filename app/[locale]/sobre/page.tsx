@@ -62,10 +62,10 @@ function AboutContentEs() {
         ciudad de Caracas y varias zonas del estado Miranda.
       </p>
       <p>
-        Según Reuters, hasta el sábado 4 de julio, la cifra oficial de fallecidos ascendía a 2.954
+        Según Reuters, hasta el lunes 6 de julio, la cifra oficial de fallecidos ascendía a 3.535
         personas. El gobierno venezolano informó que cerca de 30.000 funcionarios nacionales de
         emergencia y 3.281 rescatistas internacionales han sido desplegados para apoyar las labores
-        de búsqueda, rescate y recuperación. Más de 16.000 personas han quedado sin hogar, mientras
+        de búsqueda, rescate y recuperación. Cerca de 17.854 personas han quedado sin hogar, mientras
         que un registro no oficial, pero ampliamente utilizado por organizaciones y familiares,
         reporta más de 41.000 personas desaparecidas.
       </p>
@@ -152,10 +152,10 @@ function AboutContentEn() {
         Caracas, and parts of Miranda state.
       </p>
       <p>
-        According to Reuters, as of Saturday, July 4, the official death toll has risen to 2,954.
+        According to Reuters, as of Monday, July 6, the official death toll has risen to 3,535.
         The Venezuelan government says nearly 30,000 national emergency personnel and 3,281
         international rescue workers have been deployed to assist with search, rescue, and recovery
-        operations. More than 16,000 people have been left homeless, while an unofficial but widely
+        operations. About 17,854 people have been left homeless, while an unofficial but widely
         used registry lists more than 41,000 people as still missing. (Reuters)
       </p>
       <p>
