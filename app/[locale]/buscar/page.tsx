@@ -1,38 +1,12 @@
 import Link from 'next/link'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { prisma } from '@/lib/prisma'
-import { ResourceCategory, ResourceStatus } from '@prisma/client'
+import { ResourceCategory } from '@prisma/client'
 import { SearchResultLink } from '@/components/SearchResultLink'
 import { SearchInput } from '@/components/SearchInput'
 import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, type LucideIcon } from 'lucide-react'
-import { localizeSuffixed, isCountryVisibleInLocale } from '@/lib/locale-content'
-import { notPastEventFilter } from '@/lib/resource-visibility'
+import { localizeSuffixed } from '@/lib/locale-content'
+import { searchResources } from '@/lib/search'
 import type { Metadata } from 'next'
-
-const GLOBAL_SELECT = {
-  id: true,
-  name: true,
-  nameEn: true,
-  namePt: true,
-  nameFr: true,
-  nameDe: true,
-  category: true,
-  countrySlug: true,
-  kind: true,
-  eventStartsAt: true,
-  eventEndsAt: true,
-  notesEs: true,
-  notesEn: true,
-  notesPt: true,
-  notesFr: true,
-  notesDe: true,
-  country: {
-    select: { nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true, enabledLocales: true },
-  },
-  city: {
-    select: { slug: true, nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true },
-  },
-} as const
 
 const CATEGORY_ORDER: ResourceCategory[] = [
   'DONATE_PHYSICALLY',
@@ -98,67 +72,7 @@ export default async function SearchPage({
     getTranslations('search'),
   ])
 
-  const matchingCountries = query.length >= 2
-    ? (await prisma.country.findMany({
-        where: {
-          active: true,
-          OR: [
-            { nameEs: { contains: query, mode: 'insensitive' } },
-            { nameEn: { contains: query, mode: 'insensitive' } },
-            { namePt: { contains: query, mode: 'insensitive' } },
-            { nameFr: { contains: query, mode: 'insensitive' } },
-            { nameDe: { contains: query, mode: 'insensitive' } },
-          ],
-        },
-        select: {
-          slug: true,
-          nameEs: true, nameEn: true, namePt: true, nameFr: true, nameDe: true, cca2: true,
-          enabledLocales: true,
-        },
-      })).filter((c) => isCountryVisibleInLocale(c.enabledLocales, locale))
-    : []
-  const countrySlugs = matchingCountries.map(c => c.slug)
-
-  const rawResults = query.length >= 2
-    ? await prisma.resource.findMany({
-        where: {
-          status: ResourceStatus.PUBLISHED,
-          AND: [
-            notPastEventFilter(),
-            {
-              OR: [
-                { name: { contains: query, mode: 'insensitive' } },
-                { nameEn: { contains: query, mode: 'insensitive' } },
-                { namePt: { contains: query, mode: 'insensitive' } },
-                { nameFr: { contains: query, mode: 'insensitive' } },
-                { nameDe: { contains: query, mode: 'insensitive' } },
-                { notesEs: { contains: query, mode: 'insensitive' } },
-                { notesEn: { contains: query, mode: 'insensitive' } },
-                { notesPt: { contains: query, mode: 'insensitive' } },
-                { notesFr: { contains: query, mode: 'insensitive' } },
-                { notesDe: { contains: query, mode: 'insensitive' } },
-                ...(countrySlugs.length > 0 ? [{ countrySlug: { in: countrySlugs } }] : []),
-              ],
-            },
-          ],
-        },
-        select: GLOBAL_SELECT,
-        orderBy: { createdAt: 'asc' },
-        take: 100,
-      })
-    : []
-  // A resource whose country page 404s in this locale shouldn't surface in
-  // search either — it would be a dead end with no way back to its country.
-  const results = rawResults.filter((r) => isCountryVisibleInLocale(r.country.enabledLocales, locale))
-
-  const fallback = query.length >= 2 && results.length === 0
-    ? (await prisma.resource.findMany({
-        where: { status: ResourceStatus.PUBLISHED, countrySlug: 'global', ...notPastEventFilter() },
-        select: GLOBAL_SELECT,
-        orderBy: { createdAt: 'asc' },
-        take: 50,
-      })).filter((r) => isCountryVisibleInLocale(r.country.enabledLocales, locale))
-    : []
+  const { results, fallback, countries: matchingCountries } = await searchResources({ query, locale })
 
   const byCategory = CATEGORY_ORDER.reduce(
     (acc, cat) => {
