@@ -10,3 +10,12 @@ export function cleanUrlDisplay(url: string): string {
     return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
   }
 }
+
+/** Bare hostname for compact card display (no path, no query/hash). */
+export function urlHost(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+  }
+}
