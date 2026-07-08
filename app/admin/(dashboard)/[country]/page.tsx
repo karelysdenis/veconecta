@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation'
-import { Calendar } from 'lucide-react'
+import { Calendar, ExternalLink } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { revalidatePath } from 'next/cache'
@@ -348,6 +348,16 @@ export default async function AdminCountryPage({
                       ⎘
                     </button>
                   </form>
+                  <a
+                    href={`/es/recursos/${r.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Ver en el sitio"
+                    aria-label="Ver en el sitio"
+                    className="border border-gray-300 text-gray-500 px-2.5 py-1.5 rounded hover:bg-gray-50 flex items-center"
+                  >
+                    <ExternalLink size={14} />
+                  </a>
                   <Link
                     href={`/admin/${country}/${r.id}`}
                     className="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-50"
