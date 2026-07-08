@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getResourceName, type SerializedCity } from '@/lib/types'
 import { localizeSuffixed, formatEventRange, type Locale } from '@/lib/locale-content'
-import { urlHost } from '@/lib/format-url'
+import { cleanUrlDisplay } from '@/lib/format-url'
 import type { ResourceKind } from '@prisma/client'
 
 type ResourceWithCountry = {
@@ -64,7 +64,7 @@ export function SearchResultLink({
         </p>
         {resource.url && (
           <p className="font-sans font-light text-[12px] text-[#808080] mt-0.5">
-            {urlHost(resource.url)}
+            {cleanUrlDisplay(resource.url)}
           </p>
         )}
         {notes && (
