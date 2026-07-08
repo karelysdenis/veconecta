@@ -2,10 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { ResourceStatus } from '@prisma/client'
 import { effectiveLocalesForCountry, localizeBare, localizeSuffixed } from '@/lib/locale-content'
 import { getActiveLocales, getCountryLocaleMap } from '@/lib/locale-active'
-import { resourceCanonicalPath } from '@/lib/resource-detail'
+import { resourceCanonicalPath, SITE_URL } from '@/lib/resource-detail'
 import type { Metadata } from 'next'
-
-const SITE_URL = 'https://www.veconecta.org'
 
 export async function fetchPublishedResourceBySlug(slug: string) {
   return prisma.resource.findUnique({

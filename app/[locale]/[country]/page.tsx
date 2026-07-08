@@ -9,6 +9,7 @@ import { notPastEventFilter, MIN_CITY_RESOURCES } from '@/lib/resource-visibilit
 import { flagUrl } from '@/lib/country-iso'
 import { localizeSuffixed, INTL_LOCALE, effectiveLocalesForCountry, type Locale } from '@/lib/locale-content'
 import { getActiveLocales, getCountryLocaleMap } from '@/lib/locale-active'
+import { SITE_URL } from '@/lib/resource-detail'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -59,9 +60,9 @@ export async function generateMetadata({
       images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
     },
     alternates: {
-      canonical: `https://www.veconecta.org/${locale}/${urlSlug}`,
+      canonical: `${SITE_URL}/${locale}/${urlSlug}`,
       languages: Object.fromEntries(
-        effectiveLocales.map((l) => [l, `https://www.veconecta.org/${l}/${country.slug}`]),
+        effectiveLocales.map((l) => [l, `${SITE_URL}/${l}/${country.slug}`]),
       ),
     },
   }
