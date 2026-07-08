@@ -7,10 +7,12 @@ import type { ResourceCategory, ResourceKind } from '@prisma/client'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getResourceName, type SerializedCity } from '@/lib/types'
 import { localizeSuffixed, formatEventRange, type Locale } from '@/lib/locale-content'
+import { urlHost } from '@/lib/format-url'
 
 type Result = {
   id: string
   name: string
+  url: string | null
   category: ResourceCategory
   countrySlug: string
   kind: ResourceKind
@@ -300,6 +302,11 @@ function ResultRow({
       />
       <div className="flex-1 min-w-0 pointer-events-none">
         <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">{name}</p>
+        {result.url && (
+          <p className="font-sans font-light text-[12px] text-[#808080] mt-0.5">
+            {urlHost(result.url)}
+          </p>
+        )}
         {notes && (
           <p className="font-sans font-light text-[13px] text-[#808080] mt-0.5 leading-snug line-clamp-1">{notes}</p>
         )}

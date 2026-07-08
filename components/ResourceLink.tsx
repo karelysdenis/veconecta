@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import type { SerializedResource } from '@/lib/types'
 import { getResourceName } from '@/lib/types'
 import { localizeSuffixed, formatEventRange, INTL_LOCALE, type Locale } from '@/lib/locale-content'
+import { urlHost } from '@/lib/format-url'
 
 export function ResourceLink({
   resource,
@@ -47,6 +48,11 @@ export function ResourceLink({
         <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">
           {name}
         </p>
+        {resource.url && (
+          <p className="font-sans font-light text-[12px] text-[#808080] mt-0.5">
+            {urlHost(resource.url)}
+          </p>
+        )}
         {notes && (
           <p className="font-sans font-light text-[13px] text-[#808080] mt-0.5 leading-snug line-clamp-1">
             {notes}

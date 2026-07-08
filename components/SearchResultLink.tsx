@@ -4,11 +4,13 @@ import { useTranslations } from 'next-intl'
 import { flagUrl as isoFlagUrl } from '@/lib/country-iso'
 import { getResourceName, type SerializedCity } from '@/lib/types'
 import { localizeSuffixed, formatEventRange, type Locale } from '@/lib/locale-content'
+import { urlHost } from '@/lib/format-url'
 import type { ResourceKind } from '@prisma/client'
 
 type ResourceWithCountry = {
   id: string
   name: string
+  url: string | null
   countrySlug: string
   kind: ResourceKind
   eventStartsAt: Date | null
@@ -60,6 +62,11 @@ export function SearchResultLink({
         <p className="font-sans font-normal text-[15px] text-[#141414] leading-snug">
           {name}
         </p>
+        {resource.url && (
+          <p className="font-sans font-light text-[12px] text-[#808080] mt-0.5">
+            {urlHost(resource.url)}
+          </p>
+        )}
         {notes && (
           <p className="font-sans font-light text-[13px] text-[#808080] mt-0.5 leading-snug line-clamp-1">
             {notes}
