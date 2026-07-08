@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient, ResourceCategory, ResourceStatus } from '@prisma/client'
+import { PrismaClient, ResourceCategory, ResourceStatus, Prisma } from '@prisma/client'
 import { slugify } from '../lib/slugify'
 
 const prisma = new PrismaClient()
@@ -9,6 +9,27 @@ const VERIFIED_AT = new Date('2026-06-28')
 
 function exp(dateStr: string): Date {
   return new Date(dateStr)
+}
+
+// Assigns each seed resource a unique slug from its English name (falling
+// back to Spanish). Tracked in one module-level set (not per-call) because a
+// handful of resource names repeat verbatim across different countries.
+const usedSlugs = new Set<string>()
+function withSlugs(
+  items: Array<Omit<Prisma.ResourceCreateManyInput, 'slug'>>,
+): Prisma.ResourceCreateManyInput[] {
+  return items.map((item) => {
+    const nameEn = 'nameEn' in item && typeof item.nameEn === 'string' ? item.nameEn : ''
+    const baseSlug = slugify(nameEn || item.name)
+    let slug = baseSlug
+    let suffix = 2
+    while (usedSlugs.has(slug)) {
+      slug = `${baseSlug}-${suffix}`
+      suffix += 1
+    }
+    usedSlugs.add(slug)
+    return { ...item, slug }
+  })
 }
 
 async function main() {
@@ -73,7 +94,7 @@ async function main() {
   // GLOBAL resources (shown on every country page)
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'global',
         category: ResourceCategory.FIND_FAMILY,
@@ -237,13 +258,13 @@ async function main() {
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
       },
-    ],
+    ]),
   })
 
   // SPAIN
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'spain',
         category: ResourceCategory.CALL_FREE,
@@ -381,13 +402,13 @@ async function main() {
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
       },
-    ],
+    ]),
   })
 
   // USA
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'usa',
         category: ResourceCategory.DONATE_MONEY,
@@ -498,13 +519,13 @@ async function main() {
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
       },
-    ],
+    ]),
   })
 
   // COLOMBIA
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'colombia',
         category: ResourceCategory.DONATE_MONEY,
@@ -705,13 +726,13 @@ async function main() {
         verifiedAt: VERIFIED_AT,
         verifiedBy: VERIFIED_BY,
       },
-    ],
+    ]),
   })
 
   // ARGENTINA
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'argentina',
         category: ResourceCategory.FIND_FAMILY,
@@ -822,13 +843,13 @@ async function main() {
         verifiedBy: VERIFIED_BY,
         validUntil: exp('2026-07-03'),
       },
-    ],
+    ]),
   })
 
   // MEXICO
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'mexico',
         category: ResourceCategory.DONATE_PHYSICALLY,
@@ -857,13 +878,13 @@ async function main() {
         verifiedBy: VERIFIED_BY,
         validUntil: exp('2026-07-03'),
       },
-    ],
+    ]),
   })
 
   // ECUADOR
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'ecuador',
         category: ResourceCategory.DONATE_PHYSICALLY,
@@ -908,13 +929,13 @@ async function main() {
         verifiedBy: VERIFIED_BY,
         validUntil: exp('2026-07-03'),
       },
-    ],
+    ]),
   })
 
   // PERU
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'peru',
         category: ResourceCategory.DONATE_PHYSICALLY,
@@ -943,13 +964,13 @@ async function main() {
         verifiedBy: VERIFIED_BY,
         validUntil: exp('2026-07-03'),
       },
-    ],
+    ]),
   })
 
   // CHILE
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'chile',
         category: ResourceCategory.FIND_FAMILY,
@@ -1086,13 +1107,13 @@ async function main() {
         verifiedBy: VERIFIED_BY,
         validUntil: exp('2026-07-03'),
       },
-    ],
+    ]),
   })
 
   // BRAZIL
   await prisma.resource.createMany({
     skipDuplicates: true,
-    data: [
+    data: withSlugs([
       {
         countrySlug: 'brazil',
         category: ResourceCategory.FIND_FAMILY,
@@ -1131,7 +1152,7 @@ async function main() {
         verifiedBy: VERIFIED_BY,
         validUntil: exp('2026-07-03'),
       },
-    ],
+    ]),
   })
 
   // Admin user
