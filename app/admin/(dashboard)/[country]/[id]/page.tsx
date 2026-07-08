@@ -11,6 +11,8 @@ import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
 import { LOCALES, DEFAULT_LOCALE, localizedFieldsFromForm, localizedDefaultValues } from '@/lib/locale-content'
+import { slugify } from '@/lib/slugify'
+import { resourceCanonicalPath } from '@/lib/resource-detail'
 import { CitySelect } from '@/components/admin/CitySelect'
 import { PaymentKeyField } from '@/components/admin/PaymentKeyField'
 import { KindDateFields } from '@/components/admin/KindDateFields'
@@ -88,12 +90,21 @@ export default async function EditResourcePage({
     const eventStartsAtRaw = fd.get('eventStartsAt') as string
     const eventEndsAtRaw = fd.get('eventEndsAt') as string
     const name = (fd.get('name') as string).trim()
+    const rawSlug = (fd.get('slug') as string).trim()
+    const baseSlug = slugify(rawSlug || name)
+    let slug = baseSlug
+    let suffix = 2
+    while (await prisma.resource.findFirst({ where: { slug, id: { not: id } } })) {
+      slug = `${baseSlug}-${suffix}`
+      suffix += 1
+    }
     const newStatus = fd.get('status') as ResourceStatus
     const cityId = countryChanged ? null : await resolveCityId(country, fd)
     await prisma.resource.update({
       where: { id },
       data: {
         name,
+        slug,
         ...localizedFieldsFromForm(fd, 'name'),
         category: fd.get('category') as ResourceCategory,
         status: newStatus,
@@ -158,7 +169,7 @@ export default async function EditResourcePage({
         <span className="text-gray-900 font-medium truncate">{resource.name}</span>
         {resource.status === 'PUBLISHED' && (
           <a
-            href={`/${DEFAULT_LOCALE}/recursos/${resource.id}`}
+            href={resourceCanonicalPath(resource, DEFAULT_LOCALE)}
             target="_blank"
             rel="noopener noreferrer"
             className="ml-auto shrink-0 text-xs text-caribe hover:underline flex items-center gap-1"
@@ -194,6 +205,8 @@ export default async function EditResourcePage({
           <Sel label="Categoría" name="category" value={resource.category} opts={CATEGORIES} labels={CATEGORY_LABELS} />
           <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} labels={STATUS_LABELS} />
         </div>
+
+        <F label="Slug (URL)" name="slug" defaultValue={resource.slug} required />
 
         <UrlField defaultValue={resource.url ?? ''} />
 
