@@ -49,6 +49,20 @@ describe('checkUrl', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
+  it('returns "unknown" (not "broken") when both HEAD and GET are blocked with 403 — bot-protection, not proof the content is gone', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 403 })
+    vi.stubGlobal('fetch', fetchMock)
+
+    expect(await checkUrl('https://example.com/protected')).toBe('unknown')
+  })
+
+  it('returns "unknown" (not "broken") when both HEAD and GET are rate-limited with 429', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 429 })
+    vi.stubGlobal('fetch', fetchMock)
+
+    expect(await checkUrl('https://example.com/rate-limited')).toBe('unknown')
+  })
+
   it('returns "unknown" when fetch aborts (timeout)', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new DOMException('Aborted', 'AbortError')))
     expect(await checkUrl('https://example.com', 10)).toBe('unknown')
