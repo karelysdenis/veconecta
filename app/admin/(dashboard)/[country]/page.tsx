@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { flagUrl } from '@/lib/country-iso'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
-import { LOCALES, formatEventRange } from '@/lib/locale-content'
+import { LOCALES, DEFAULT_LOCALE, formatEventRange } from '@/lib/locale-content'
 import { reviewCutoff, REVIEW_CYCLE_DAYS } from '@/lib/review-config'
 import { ConfirmButton } from '@/components/admin/ConfirmButton'
 
@@ -349,7 +349,7 @@ export default async function AdminCountryPage({
                     </button>
                   </form>
                   <a
-                    href={`/es/recursos/${r.id}`}
+                    href={`/${DEFAULT_LOCALE}/recursos/${r.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     title="Ver en el sitio"

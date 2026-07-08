@@ -49,7 +49,7 @@ describe('checkUrl', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
-  it('returns "unknown" (not "broken") when both HEAD and GET are blocked with 403 — bot-protection, not proof the content is gone', async () => {
+  it('returns "unknown" (not "broken") when both HEAD and GET are blocked with 403: bot-protection, not proof the content is gone', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 403 })
     vi.stubGlobal('fetch', fetchMock)
 

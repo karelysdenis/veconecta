@@ -10,7 +10,7 @@ import { NameTabs } from '@/components/admin/NameTabs'
 import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
-import { LOCALES, localizedFieldsFromForm, localizedDefaultValues } from '@/lib/locale-content'
+import { LOCALES, DEFAULT_LOCALE, localizedFieldsFromForm, localizedDefaultValues } from '@/lib/locale-content'
 import { CitySelect } from '@/components/admin/CitySelect'
 import { PaymentKeyField } from '@/components/admin/PaymentKeyField'
 import { KindDateFields } from '@/components/admin/KindDateFields'
@@ -158,7 +158,7 @@ export default async function EditResourcePage({
         <span className="text-gray-900 font-medium truncate">{resource.name}</span>
         {resource.status === 'PUBLISHED' && (
           <a
-            href={`/es/recursos/${resource.id}`}
+            href={`/${DEFAULT_LOCALE}/recursos/${resource.id}`}
             target="_blank"
             rel="noopener noreferrer"
             className="ml-auto shrink-0 text-xs text-caribe hover:underline flex items-center gap-1"
