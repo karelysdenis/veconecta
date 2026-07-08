@@ -25,7 +25,7 @@
 - Modify (cleanup, done in Task 3/4, not here): none yet
 
 **Interfaces:**
-- Produces: `CATEGORY_LABELS: Record<string, string>`, `STATUS_LABELS: Record<string, string>`, `STATUS_STYLES: Record<string, string>`, `isToday(date: Date): boolean`, `Flag({ cca2, slug, flag, size }: { cca2: string | null; slug: string; flag: string; size?: number }): JSX.Element` — all currently duplicated verbatim in `app/admin/(dashboard)/[country]/review/page.tsx` and `app/admin/(dashboard)/review/page.tsx`.
+- Produces: `CATEGORY_LABELS: Record<string, string>`, `STATUS_LABELS: Record<string, string>`, `STATUS_STYLES: Record<string, string>`, `isToday(date: Date): boolean`, `Flag({ cca2, slug, flag, size }: { cca2: string | null; slug: string; flag: string; size?: number }): JSX.Element`: all currently duplicated verbatim in `app/admin/(dashboard)/[country]/review/page.tsx` and `app/admin/(dashboard)/review/page.tsx`.
 
 - [ ] **Step 1: Write the failing test for `isToday`**
 
@@ -57,7 +57,7 @@ describe('isToday', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run tests/components/resource-review-constants.test.ts`
-Expected: FAIL — `Cannot find module '@/components/admin/resource-review-constants'`
+Expected: FAIL: `Cannot find module '@/components/admin/resource-review-constants'`
 
 - [ ] **Step 3: Create the constants file**
 
@@ -122,8 +122,8 @@ Expected: PASS (3 tests)
 
 - [ ] **Step 5: Full verification and commit**
 
-Run: `npx tsc --noEmit` — expect clean (no new errors; pre-existing DT-7 build-time issue with `RESEND_API_KEY` does not affect `tsc`).
-Run: `npm test` — expect all existing tests still pass.
+Run: `npx tsc --noEmit`: expect clean (no new errors; pre-existing DT-7 build-time issue with `RESEND_API_KEY` does not affect `tsc`).
+Run: `npm test`: expect all existing tests still pass.
 
 ```bash
 git add components/admin/resource-review-constants.tsx tests/components/resource-review-constants.test.ts
@@ -230,7 +230,7 @@ describe('ResourceReviewCard', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run tests/components/ResourceReviewCard.test.tsx`
-Expected: FAIL — `Cannot find module '@/components/admin/ResourceReviewCard'`
+Expected: FAIL: `Cannot find module '@/components/admin/ResourceReviewCard'`
 
 - [ ] **Step 3: Create the component**
 
@@ -475,8 +475,8 @@ Expected: PASS (4 tests)
 
 - [ ] **Step 5: Full verification and commit**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 ```bash
 git add components/admin/ResourceReviewCard.tsx tests/components/ResourceReviewCard.test.tsx
@@ -810,8 +810,8 @@ function FilterToggle({
 
 - [ ] **Step 2: Verify no behavior change**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass (no test targets this page directly; this step only guards against breaking imports elsewhere).
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass (no test targets this page directly; this step only guards against breaking imports elsewhere).
 
 - [ ] **Step 3: Commit**
 
@@ -1144,8 +1144,8 @@ function FilterToggle({ showAll, brokenOnly }: { showAll: boolean; brokenOnly: b
 
 - [ ] **Step 2: Verify no behavior change**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 3: Commit**
 
@@ -1156,13 +1156,13 @@ git commit -m "refactor: use shared ResourceReviewCard in global review page"
 
 ---
 
-### Task 5: `lib/review-view.ts` — cookie-backed view mode
+### Task 5: `lib/review-view.ts`: cookie-backed view mode
 
 **Files:**
 - Create: `lib/review-view.ts`
 
 **Interfaces:**
-- Produces: `type ReviewViewMode = 'list' | 'one'`; `getReviewViewMode(): Promise<ReviewViewMode>`; `setReviewViewMode(formData: FormData): Promise<void>` (Server Action — reads `mode` and `returnTo` fields from the FormData, sets the `review_view` cookie, redirects to `returnTo`).
+- Produces: `type ReviewViewMode = 'list' | 'one'`; `getReviewViewMode(): Promise<ReviewViewMode>`; `setReviewViewMode(formData: FormData): Promise<void>` (Server Action: reads `mode` and `returnTo` fields from the FormData, sets the `review_view` cookie, redirects to `returnTo`).
 
 No automated test for this file: it wraps `next/headers`/`next/navigation` APIs that only work inside a real request context, the same reason `lib/lucia.ts` (which also wraps `cookies()`) has no unit test in this codebase. Verified manually in Task 9.
 
@@ -1203,7 +1203,7 @@ export async function setReviewViewMode(formData: FormData) {
 
 - [ ] **Step 2: Verify it compiles**
 
-Run: `npx tsc --noEmit` — expect clean.
+Run: `npx tsc --noEmit`: expect clean.
 
 - [ ] **Step 3: Commit**
 
@@ -1221,8 +1221,8 @@ git commit -m "feat: add cookie-backed review view mode helper"
 - Test: `tests/components/ViewToggle.test.tsx`
 
 **Interfaces:**
-- Consumes: `ReviewViewMode` type from `@/lib/review-view` (Task 5) — type-only import, does not pull in `next/headers` at runtime.
-- Produces: `ViewToggle({ mode, returnTo, action }: { mode: ReviewViewMode; returnTo: string; action: (fd: FormData) => void }): JSX.Element`. Takes the mutating action as a prop (rather than importing `setReviewViewMode` directly) so it stays a plain, easily-testable component — the two review pages pass `setReviewViewMode` in.
+- Consumes: `ReviewViewMode` type from `@/lib/review-view` (Task 5): type-only import, does not pull in `next/headers` at runtime.
+- Produces: `ViewToggle({ mode, returnTo, action }: { mode: ReviewViewMode; returnTo: string; action: (fd: FormData) => void }): JSX.Element`. Takes the mutating action as a prop (rather than importing `setReviewViewMode` directly) so it stays a plain, easily-testable component: the two review pages pass `setReviewViewMode` in.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1251,7 +1251,7 @@ describe('ViewToggle', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run tests/components/ViewToggle.test.tsx`
-Expected: FAIL — `Cannot find module '@/components/admin/ViewToggle'`
+Expected: FAIL: `Cannot find module '@/components/admin/ViewToggle'`
 
 - [ ] **Step 3: Create the component**
 
@@ -1303,8 +1303,8 @@ Expected: PASS (2 tests)
 
 - [ ] **Step 5: Full verification and commit**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 ```bash
 git add components/admin/ViewToggle.tsx tests/components/ViewToggle.test.tsx
@@ -1667,8 +1667,8 @@ function FilterToggle({
 
 - [ ] **Step 2: Verify it compiles and existing tests still pass**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 3: Commit**
 
@@ -1685,7 +1685,7 @@ git commit -m "feat: add list view mode to per-country review queue"
 - Modify: `app/admin/(dashboard)/review/page.tsx` (full rewrite, building on Task 4's version)
 
 **Interfaces:**
-- Consumes: same as Task 7, applied to the global page. Additionally passes `country={currentCountry ?? null}` per list-mode card, resolved from the same `countryMap` the one-at-a-time view already builds — but in list mode, resources may span multiple countries, so the map must be built from the full `resources` list's `countrySlug`s regardless of view mode.
+- Consumes: same as Task 7, applied to the global page. Additionally passes `country={currentCountry ?? null}` per list-mode card, resolved from the same `countryMap` the one-at-a-time view already builds: but in list mode, resources may span multiple countries, so the map must be built from the full `resources` list's `countrySlug`s regardless of view mode.
 
 - [ ] **Step 1: Replace the file contents**
 
@@ -2028,8 +2028,8 @@ function FilterToggle({ showAll, brokenOnly }: { showAll: boolean; brokenOnly: b
 
 - [ ] **Step 2: Verify it compiles and existing tests still pass**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 3: Commit**
 
@@ -2050,14 +2050,14 @@ Run: `npm run dev` (background). Confirm it boots without errors on `http://loca
 
 - [ ] **Step 2: Log in as admin**
 
-Trigger a magic-link login for `karelys@reakagency.com` at `/admin/login`, capture the link from the dev server console log (`🔑 MAGIC LINK (dev)`), and visit it to establish a real session — same approach used in prior sessions for this project (see project memory).
+Trigger a magic-link login for `karelys@reakagency.com` at `/admin/login`, capture the link from the dev server console log (`🔑 MAGIC LINK (dev)`), and visit it to establish a real session: same approach used in prior sessions for this project (see project memory).
 
 - [ ] **Step 3: Verify the per-country review queue**
 
 At `/admin/spain/review` (or another seeded country):
 - Confirm the default view on first visit (no cookie yet) is "Uno a uno", matching current behavior.
 - Click the "Lista" toggle button. Confirm the page re-renders as a flat stacked list of all queued resources, each with its own Confirmar/Archivar/Editar controls, link-status badge, no progress bar, no Anterior/Siguiente.
-- Confirm one resource from the middle of the list. Confirm the page does **not** navigate/redirect — it stays on the list, the confirmed card updates to show the ✓ badge, and scroll position is not reset to the top.
+- Confirm one resource from the middle of the list. Confirm the page does **not** navigate/redirect: it stays on the list, the confirmed card updates to show the ✓ badge, and scroll position is not reset to the top.
 - Archive a resource from the list. Confirm it stays visible with the "Archivado" badge and the "Archivar" button disappears from that card.
 - Switch back to "Uno a uno". Confirm the original card-by-card flow with Anterior/Siguiente still works exactly as before.
 - Try the "Todos" and "Rotos" filters in both view modes; confirm the resource set shown matches the filter in both.
@@ -2074,8 +2074,8 @@ While viewing `/admin/spain/review`, switch to "Lista". Navigate to `/admin/revi
 
 - [ ] **Step 6: Run the full verification suite one more time**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 7: Update project memory**
 
@@ -2086,5 +2086,5 @@ Update `project-veconecta.md` in the memory directory with a new dated section s
 ## Self-Review Notes
 
 - **Spec coverage:** Section "Alcance" → Tasks 7/8 (both pages). "Arquitectura" → Tasks 1/2/5/6. "Comportamiento de la lista" (no index, confirm/archive without redirect, archived resources stay visible, Editar `returnTo`) → Tasks 7/8. "Chequeo de enlaces en modo lista" (re-check every reload) → Tasks 7/8 via `annotateWithLinkStatus(resources)` called on every list-mode render. "Persistencia del toggle" (cookie, site-wide, default `one`) → Task 5. "Fuera de alcance" items are not implemented anywhere in this plan, as intended.
-- **Placeholder scan:** none found — every step has literal file contents or exact commands.
+- **Placeholder scan:** none found. Eevery step has literal file contents or exact commands.
 - **Type consistency:** `ReviewResource`/`ResourceReviewCard` props (Task 2) are used identically in Tasks 3/4/7/8; `ReviewViewMode`/`getReviewViewMode`/`setReviewViewMode` (Task 5) match their usage in Tasks 6/7/8; `ViewToggle`'s `action` prop signature `(fd: FormData) => void` matches `setReviewViewMode`'s signature.

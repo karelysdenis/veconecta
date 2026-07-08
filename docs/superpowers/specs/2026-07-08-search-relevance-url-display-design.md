@@ -11,11 +11,11 @@ Además, ninguna de las tres vistas que listan recursos (`ResourceLink` en las p
 1. Ranking por relevancia en ambos puntos de búsqueda (`/api/search` y `/buscar`), centralizando la query hoy duplicada entre los dos.
 2. Dominio visible como subtítulo en las 3 vistas que listan recursos: `ResourceLink`, `SearchResultLink`, `ResultRow` (dentro de `SearchOverlay`).
 
-**Fuera de alcance (explícitamente, para la próxima sesión):** fusionar `ResourceLink`/`SearchResultLink`/`ResultRow` en un solo componente compartido. Los tres ya eran casi idénticos entre sí antes de este cambio; este trabajo los toca pero no los consolida — eso queda como el siguiente paso, ya acordado con el usuario.
+**Fuera de alcance (explícitamente, para la próxima sesión):** fusionar `ResourceLink`/`SearchResultLink`/`ResultRow` en un solo componente compartido. Los tres ya eran casi idénticos entre sí antes de este cambio; este trabajo los toca pero no los consolida: eso queda como el siguiente paso, ya acordado con el usuario.
 
 ## Arquitectura
 
-### `lib/search.ts` (nuevo) — query centralizada
+### `lib/search.ts` (nuevo): query centralizada
 
 Hoy `app/api/search/route.ts` y `app/[locale]/buscar/page.tsx` tienen cada uno su propia versión de: la query de países que matchean el nombre, la query de recursos (mismo `where`/`OR` sobre `name`/`notes` en los 5 idiomas, mismo filtro `notPastEventFilter()`, mismo `select` de campos), y el fallback a recursos globales cuando no hay resultados. Se extrae una sola función:
 
@@ -35,7 +35,7 @@ export async function searchResources({
 
 que hace la query Prisma (con `url: true` agregado al `select`, que hoy falta en los dos) y aplica el ranking antes de devolver. `app/api/search/route.ts` y `app/[locale]/buscar/page.tsx` quedan como wrappers delgados: arman los `searchParams`, llaman `searchResources`, y renderizan. Esto asegura que un fix de ranking futuro se aplique una sola vez, no en dos sitios que puedan desincronizarse (el mismo patrón de riesgo que ya se vio en la auditoría de la cola de revisión).
 
-### `lib/search-rank.ts` (nuevo) — ranking puro y testeable
+### `lib/search-rank.ts` (nuevo): ranking puro y testeable
 
 Función pura, sin acceso a base de datos, mismo espíritu que `sortForReview` en `lib/resource-review.ts`:
 
@@ -55,11 +55,11 @@ Clasifica cada recurso en un nivel (0 = mejor match, 4 = peor) según dónde apa
 - **Nivel 3:** las notas en el idioma del visitante contienen el término.
 - **Nivel 4:** las notas en cualquier otro idioma contienen el término.
 
-Un recurso que matchea por varios criterios se queda con el nivel más bajo (mejor) que alcance. Dentro de un mismo nivel, se preserva el orden que ya traían los resultados (que sigue viniendo de la DB ordenado por `createdAt: 'asc'`) — desempate estable, sin sorpresas de orden dentro de un empate de relevancia.
+Un recurso que matchea por varios criterios se queda con el nivel más bajo (mejor) que alcance. Dentro de un mismo nivel, se preserva el orden que ya traían los resultados (que sigue viniendo de la DB ordenado por `createdAt: 'asc'`): desempate estable, sin sorpresas de orden dentro de un empate de relevancia.
 
 `searchResources` en `lib/search.ts` llama `rankSearchResults` sobre `results` y sobre `fallback` antes de devolverlos (el fallback también se beneficia: si hay varios recursos globales, los que matchean mejor deberían ir primero, aunque ese caso es menos común).
 
-### `lib/format-url.ts` — nuevo helper `urlHost`
+### `lib/format-url.ts`: nuevo helper `urlHost`
 
 Junto al `cleanUrlDisplay` ya existente (host + ruta, usado en la página de detalle donde hay más espacio), se agrega:
 
@@ -82,9 +82,9 @@ Usado por los 3 componentes de tarjeta (no por la página de detalle, que sigue 
 
 ## Fuera de alcance
 
-- Full-text search de Postgres (`tsvector`/`ts_rank`) — se evalúa si el catálogo crece mucho; con el volumen actual (decenas a ~150 recursos) el ranking por niveles alcanza.
-- Fusión de `ResourceLink`/`SearchResultLink`/`ResultRow` en un componente compartido — próxima sesión.
-- Badge de estado de enlace (🟢/🔴) en las tarjetas públicas — esa infraestructura (`checkUrl`) es de uso administrativo bajo demanda; correrla en cada carga de página pública sería otro costo de red por visitante, no se evalúa aquí.
+- Full-text search de Postgres (`tsvector`/`ts_rank`): se evalúa si el catálogo crece mucho; con el volumen actual (decenas a ~150 recursos) el ranking por niveles alcanza.
+- Fusión de `ResourceLink`/`SearchResultLink`/`ResultRow` en un componente compartido: próxima sesión.
+- Badge de estado de enlace (🟢/🔴) en las tarjetas públicas: esa infraestructura (`checkUrl`) es de uso administrativo bajo demanda; correrla en cada carga de página pública sería otro costo de red por visitante, no se evalúa aquí.
 
 ## Testing
 

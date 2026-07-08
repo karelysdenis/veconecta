@@ -12,8 +12,8 @@
 
 - `tsc --noEmit` must stay clean and `vitest run` (full suite) must pass after every task.
 - No new dependencies.
-- Spanish/multi-locale UI copy — no new user-facing strings are needed for this feature (the domain subtitle has no label, just the bare host).
-- Do NOT consolidate `ResourceLink`/`SearchResultLink`/`SearchOverlay`'s `ResultRow` into one shared component — that is explicitly out of scope for this plan (next session).
+- Spanish/multi-locale UI copy: no new user-facing strings are needed for this feature (the domain subtitle has no label, just the bare host).
+- Do NOT consolidate `ResourceLink`/`SearchResultLink`/`SearchOverlay`'s `ResultRow` into one shared component: that is explicitly out of scope for this plan (next session).
 
 ---
 
@@ -24,7 +24,7 @@
 - Test: `tests/lib/format-url.test.ts` (new)
 
 **Interfaces:**
-- Produces: `urlHost(url: string): string` — bare hostname (no `www.`, no path/query/hash), for compact card display. Sits next to the existing `cleanUrlDisplay(url: string): string` (host + path, used only by the resource detail page — untouched by this plan).
+- Produces: `urlHost(url: string): string`: bare hostname (no `www.`, no path/query/hash), for compact card display. Sits next to the existing `cleanUrlDisplay(url: string): string` (host + path, used only by the resource detail page: untouched by this plan).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -52,7 +52,7 @@ describe('urlHost', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run tests/lib/format-url.test.ts`
-Expected: FAIL — `urlHost is not exported` / `undefined is not a function`
+Expected: FAIL: `urlHost is not exported` / `undefined is not a function`
 
 - [ ] **Step 3: Add `urlHost` to `lib/format-url.ts`**
 
@@ -89,8 +89,8 @@ Expected: PASS (3 tests)
 
 - [ ] **Step 5: Full verification and commit**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all existing tests still pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all existing tests still pass.
 
 ```bash
 git add lib/format-url.ts tests/lib/format-url.test.ts
@@ -106,8 +106,8 @@ git commit -m "feat: add urlHost helper for compact domain display"
 - Test: `tests/lib/search-rank.test.ts`
 
 **Interfaces:**
-- Consumes: `localizeBare`, `localizeSuffixed` from `@/lib/locale-content` (existing — these already implement the "es lives in the bare column, other locales live in suffixed columns, fall back to es if empty" rule used everywhere else in the app, e.g. `getResourceName`).
-- Produces: `rankSearchResults<T extends RankableResource>(results: T[], query: string, locale: string): T[]`, where `RankableResource = { name: string; nameEn: string | null; namePt: string | null; nameFr: string | null; nameDe: string | null; notesEs: string | null; notesEn: string | null; notesPt: string | null; notesFr: string | null; notesDe: string | null }`. Sorts by match tier (0 = best) using a **stable** sort — ties keep the input's relative order.
+- Consumes: `localizeBare`, `localizeSuffixed` from `@/lib/locale-content` (existing. these already implement the "es lives in the bare column, other locales live in suffixed columns, fall back to es if empty" rule used everywhere else in the app, e.g. `getResourceName`).
+- Produces: `rankSearchResults<T extends RankableResource>(results: T[], query: string, locale: string): T[]`, where `RankableResource = { name: string; nameEn: string | null; namePt: string | null; nameFr: string | null; nameDe: string | null; notesEs: string | null; notesEn: string | null; notesPt: string | null; notesFr: string | null; notesDe: string | null }`. Sorts by match tier (0 = best) using a **stable** sort: ties keep the input's relative order.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -170,7 +170,7 @@ describe('rankSearchResults', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run tests/lib/search-rank.test.ts`
-Expected: FAIL — `Cannot find module '@/lib/search-rank'`
+Expected: FAIL: `Cannot find module '@/lib/search-rank'`
 
 - [ ] **Step 3: Create `lib/search-rank.ts`**
 
@@ -236,8 +236,8 @@ Expected: PASS (5 tests)
 
 - [ ] **Step 5: Full verification and commit**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 ```bash
 git add lib/search-rank.ts tests/lib/search-rank.test.ts
@@ -254,9 +254,9 @@ git commit -m "feat: add relevance-based ranking for search results"
 
 **Interfaces:**
 - Consumes: `rankSearchResults` from `@/lib/search-rank` (Task 2); `isCountryVisibleInLocale` from `@/lib/locale-content`; `notPastEventFilter` from `@/lib/resource-visibility`; `prisma` from `@/lib/prisma`.
-- Produces: `searchResources({ query, locale }: { query: string; locale: string }): Promise<{ results: Resource[]; fallback: Resource[]; countries: Country[] }>`, where each `Resource` carries `url` (new — neither of the two pre-existing selects fetched it) plus every field the old `RESOURCE_SELECT`/`GLOBAL_SELECT` already fetched.
+- Produces: `searchResources({ query, locale }: { query: string; locale: string }): Promise<{ results: Resource[]; fallback: Resource[]; countries: Country[] }>`, where each `Resource` carries `url` (new: neither of the two pre-existing selects fetched it) plus every field the old `RESOURCE_SELECT`/`GLOBAL_SELECT` already fetched.
 
-No automated test for this file: it's a thin DB-query orchestrator (same category as `lib/resource-review.ts#fetchResourcesByIds`, which also has no direct unit test) — the ranking logic it calls is already covered by Task 2, and the query itself is verified in Task 8's manual pass.
+No automated test for this file: it's a thin DB-query orchestrator (same category as `lib/resource-review.ts#fetchResourcesByIds`, which also has no direct unit test): the ranking logic it calls is already covered by Task 2, and the query itself is verified in Task 8's manual pass.
 
 - [ ] **Step 1: Create `lib/search.ts`**
 
@@ -403,8 +403,8 @@ export async function GET(request: Request) {
 
 - [ ] **Step 3: Verify it compiles**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 4: Commit**
 
@@ -629,8 +629,8 @@ Note what changed vs. the original: removed the local `GLOBAL_SELECT` constant a
 
 - [ ] **Step 2: Verify it compiles**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 3: Commit**
 
@@ -649,7 +649,7 @@ git commit -m "refactor: use shared searchResources on the /buscar page"
 **Interfaces:**
 - Consumes: `urlHost` from `@/lib/format-url` (Task 1). `SerializedResource` (from `@/lib/types`, unchanged) already has a `url: string | null` field, so no type change is needed here.
 
-No automated test for this component (no existing test file for it, and this is a one-line conditional JSX addition around an already-tested helper) — verified visually in Task 8.
+No automated test for this component (no existing test file for it, and this is a one-line conditional JSX addition around an already-tested helper): verified visually in Task 8.
 
 - [ ] **Step 1: Add the import and the domain line**
 
@@ -690,7 +690,7 @@ The surrounding block should read:
 
 - [ ] **Step 2: Verify it compiles**
 
-Run: `npx tsc --noEmit` — expect clean.
+Run: `npx tsc --noEmit`: expect clean.
 
 - [ ] **Step 3: Commit**
 
@@ -708,9 +708,9 @@ git commit -m "feat: show the linked domain in country/category resource lists"
 
 **Interfaces:**
 - Consumes: `urlHost` from `@/lib/format-url` (Task 1).
-- The local `ResourceWithCountry` type gains `url: string | null` — the objects flowing into this component now come from `searchResources()` (Task 3/4), whose `RESOURCE_SELECT` includes `url`, so the data is already there; only the type needs updating.
+- The local `ResourceWithCountry` type gains `url: string | null`: the objects flowing into this component now come from `searchResources()` (Task 3/4), whose `RESOURCE_SELECT` includes `url`, so the data is already there; only the type needs updating.
 
-No automated test for this component — verified visually in Task 8.
+No automated test for this component: verified visually in Task 8.
 
 - [ ] **Step 1: Add `url` to the prop type and the import**
 
@@ -790,7 +790,7 @@ The surrounding block should read:
 
 - [ ] **Step 3: Verify it compiles**
 
-Run: `npx tsc --noEmit` — expect clean (this will also confirm `results`/`fallback` from `searchResources()` are structurally compatible with the updated `ResourceWithCountry` type, since both now require `url`).
+Run: `npx tsc --noEmit`: expect clean (this will also confirm `results`/`fallback` from `searchResources()` are structurally compatible with the updated `ResourceWithCountry` type, since both now require `url`).
 
 - [ ] **Step 4: Commit**
 
@@ -808,9 +808,9 @@ git commit -m "feat: show the linked domain in /buscar search results"
 
 **Interfaces:**
 - Consumes: `urlHost` from `@/lib/format-url` (Task 1).
-- The local `Result` type gains `url: string | null` — `SearchOverlay` fetches JSON from `/api/search` (Task 3), whose response now includes `url` on every result, but this component's `Result` type is hand-maintained (not derived from a shared type) and must be updated manually.
+- The local `Result` type gains `url: string | null`: `SearchOverlay` fetches JSON from `/api/search` (Task 3), whose response now includes `url` on every result, but this component's `Result` type is hand-maintained (not derived from a shared type) and must be updated manually.
 
-No automated test for this component — verified visually in Task 8.
+No automated test for this component: verified visually in Task 8.
 
 - [ ] **Step 1: Add `url` to the `Result` type and the import**
 
@@ -890,8 +890,8 @@ The surrounding block should read:
 
 - [ ] **Step 3: Verify it compiles**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 4: Commit**
 
@@ -908,13 +908,13 @@ git commit -m "feat: show the linked domain in the header quick-search overlay"
 
 - [ ] **Step 1: Start the dev server**
 
-Run: `npm run dev` (background). If port 3000 is already taken by another session's dev server (has happened before in this repo — see project memory on concurrent sessions), just verify against that same server; don't kill it.
+Run: `npm run dev` (background). If port 3000 is already taken by another session's dev server (has happened before in this repo: see project memory on concurrent sessions), just verify against that same server; don't kill it.
 
 - [ ] **Step 2: Verify ranking on `/buscar`**
 
 Search for a term that appears in a resource's name (e.g. part of "I Love Venezuela Foundation" or "GoFundMe") and confirm that resource now appears first (or highest) within its category, ahead of resources where the term only appears in notes or in another language's fields. Compare against the pre-fix behavior if useful (creation-date order).
 
-Also test: a query that only matches an other-locale field (e.g. a term only present in `nameFr`/`notesFr` for some resource, not in the Spanish fields) still surfaces that resource, just ranked below any Spanish-language matches — confirms tier 2/4 fallback works, not just the happy path.
+Also test: a query that only matches an other-locale field (e.g. a term only present in `nameFr`/`notesFr` for some resource, not in the Spanish fields) still surfaces that resource, just ranked below any Spanish-language matches: confirms tier 2/4 fallback works, not just the happy path.
 
 - [ ] **Step 3: Verify ranking via the header quick-search overlay**
 
@@ -928,17 +928,17 @@ Same checks as Step 2, but through the header's `SearchOverlay` (which hits `/ap
 
 - [ ] **Step 5: Run the full verification suite one more time**
 
-Run: `npx tsc --noEmit` — expect clean.
-Run: `npm test` — expect all tests pass.
+Run: `npx tsc --noEmit`: expect clean.
+Run: `npm test`: expect all tests pass.
 
 - [ ] **Step 6: Update project memory**
 
-Update `project-veconecta.md` in the memory directory with a new dated section summarizing: the relevance-ranking algorithm (tiers, locale priority), the `lib/search.ts` consolidation (and that `/api/search` and `/buscar` no longer have separate duplicated queries), the `urlHost` addition and where it's used, and the explicit note that `ResourceLink`/`SearchResultLink`/`SearchOverlay`'s `ResultRow` are still three separate components by design — that consolidation is the next planned session.
+Update `project-veconecta.md` in the memory directory with a new dated section summarizing: the relevance-ranking algorithm (tiers, locale priority), the `lib/search.ts` consolidation (and that `/api/search` and `/buscar` no longer have separate duplicated queries), the `urlHost` addition and where it's used, and the explicit note that `ResourceLink`/`SearchResultLink`/`SearchOverlay`'s `ResultRow` are still three separate components by design: that consolidation is the next planned session.
 
 ---
 
 ## Self-Review Notes
 
 - **Spec coverage:** "Ranking por niveles" → Task 2 (tiers 0-5, locale priority via `localizeBare`/`localizeSuffixed` reuse) + Task 3 (`searchResources` calls it on both `results` and `fallback`). "Centralizar la query duplicada" → Task 3 (`lib/search.ts`) + Task 4 (`/buscar` now calls it instead of its own Prisma queries). "Dominio visible... en las 3 vistas" → Tasks 5/6/7 (`ResourceLink`, `SearchResultLink`, `SearchOverlay`'s `ResultRow`). "url agregado al select" → Task 3's `RESOURCE_SELECT`. "Fuera de alcance: fusión de los 3 componentes" → not touched by any task, explicitly called out in Tasks 5-7 and the Global Constraints.
-- **Placeholder scan:** none found — every step has literal file contents or exact commands.
+- **Placeholder scan:** none found. Eevery step has literal file contents or exact commands.
 - **Type consistency:** `rankSearchResults<T extends RankableResource>` (Task 2) is called with the same shape of Prisma resource objects in Task 3's `searchResources`, which matches `RESOURCE_SELECT`'s fields (`name`, `nameEn`/`Pt`/`Fr`/`De`, `notesEs`/`En`/`Pt`/`Fr`/`De` all present). `urlHost(url: string)` (Task 1) is called consistently as `urlHost(resource.url)`/`urlHost(result.url)` only inside `resource.url && (...)`/`result.url && (...)` guards in Tasks 5-7, so it never receives `null`. `ResourceWithCountry.url` (Task 6) and `Result.url` (Task 7) are both typed `string | null`, matching `SerializedResource`'s existing `url: string | null` (from the Prisma `Resource` model) and the new `RESOURCE_SELECT.url` field in `lib/search.ts`.
