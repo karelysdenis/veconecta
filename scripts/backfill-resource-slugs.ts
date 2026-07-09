@@ -14,10 +14,13 @@ const prisma = new PrismaClient()
 const COMMIT = process.argv.includes('--commit')
 
 async function main() {
-  const all = await prisma.resource.findMany({
-    orderBy: { createdAt: 'asc' },
-    select: { id: true, name: true, nameEn: true, slug: true },
-  })
+  // Raw query: the Resource.slug column is still nullable in the database at
+  // this point (the NOT NULL migration hasn't run yet), but the generated
+  // Prisma Client already types it as a required String, so a normal
+  // findMany() throws (P2032) trying to hydrate the existing null values.
+  const all = await prisma.$queryRaw<
+    { id: string; name: string; nameEn: string | null; slug: string | null }[]
+  >`SELECT id, name, "nameEn", slug FROM "Resource" ORDER BY "createdAt" ASC`
   const resources = all.filter((r) => !r.slug)
 
   console.log(`${resources.length} resource(s) without a slug.`)
