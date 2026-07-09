@@ -61,16 +61,19 @@ export default async function EditResourcePage({
   const resource = await prisma.resource.findUnique({ where: { id } })
   if (!resource || resource.countrySlug !== country) notFound()
 
-  // 'global' is a virtual country (active: false, never offered when creating/reassigning
-  // a resource), but a resource already assigned to it must still show it here as its
-  // current value — otherwise the <select> silently falls back to whichever active
-  // country sorts first, and saving would reassign the resource to that country.
+  // 'global' is active:false so it's excluded from the *creation* form (new/page.tsx),
+  // where an EDITOR (not just ADMIN) could otherwise globalize a resource by accident.
+  // This editor's country field is ADMIN-only already (see the ternary below), and an
+  // ADMIN can already freely reassign a resource to any other country here — so 'global'
+  // is included too, both to let an ADMIN deliberately move a resource to/from Global and
+  // so a resource already on 'global' shows its real value instead of the <select>
+  // silently falling back to whichever active country sorts first.
   const [countryRecord, cities, allCountries] = await Promise.all([
     prisma.country.findUnique({ where: { slug: country } }),
     prisma.city.findMany({ where: { countrySlug: country }, orderBy: { nameEs: 'asc' } }),
     user.role === 'ADMIN'
       ? prisma.country.findMany({
-          where: resource.countrySlug === 'global' ? { OR: [{ active: true }, { slug: 'global' }] } : { active: true },
+          where: { OR: [{ active: true }, { slug: 'global' }] },
           orderBy: { nameEs: 'asc' },
           select: { slug: true, nameEs: true },
         })
@@ -89,9 +92,11 @@ export default async function EditResourcePage({
 
     const isAdmin = user.role === 'ADMIN'
     const requestedCountry = (fd.get('countrySlug') as string) || country
-    // Validate the target country exists and is active before trusting it
+    // Validate the target country exists and is active (or is 'global', the one
+    // deliberately-inactive country this ADMIN-only field is still allowed to target —
+    // see the matching comment on the allCountries query above) before trusting it
     const newCountrySlug = isAdmin && requestedCountry !== country
-      ? (await prisma.country.findFirst({ where: { slug: requestedCountry, active: true }, select: { slug: true } }))?.slug ?? country
+      ? (await prisma.country.findFirst({ where: { slug: requestedCountry, OR: [{ active: true }, { slug: 'global' }] }, select: { slug: true } }))?.slug ?? country
       : country
     const countryChanged = newCountrySlug !== country
     const validUntilRaw = fd.get('validUntil') as string
