@@ -215,6 +215,21 @@ export default async function AdminCountryPage({
     revalidatePath('/admin')
   }
 
+  async function deleteResource(formData: FormData) {
+    'use server'
+    const id = formData.get('id') as string
+    const { user } = await getSession()
+    if (user?.role !== 'ADMIN') return
+    const resource = await prisma.resource.findUnique({ where: { id } })
+    if (!resource || resource.countrySlug !== country || resource.status !== 'ARCHIVED') return
+    await prisma.resource.delete({ where: { id } })
+    await logAction({ userEmail: user.email, action: 'RESOURCE_DELETE', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country, detail: JSON.stringify(resource) })
+    await touchCountry(country)
+    for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
+    for (const l of LOCALES) revalidatePath(`/${l}`)
+    revalidatePath(`/admin/${country}`)
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -433,6 +448,15 @@ export default async function AdminCountryPage({
                         Restaurar a borrador
                       </button>
                     </form>
+                    {user.role === 'ADMIN' && (
+                      <ConfirmButton
+                        action={deleteResource}
+                        hiddenFields={{ id: r.id }}
+                        label="Eliminar"
+                        message={`¿Eliminar "${r.name}" definitivamente? No se puede deshacer.`}
+                        confirmLabel="Sí, eliminar"
+                      />
+                    )}
                   </div>
                 </div>
                 <p className="font-medium text-sm text-gray-600 w-full mt-2">{r.name}</p>
