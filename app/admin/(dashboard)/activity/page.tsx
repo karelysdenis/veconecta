@@ -82,7 +82,7 @@ export default async function ActivityPage() {
                     )}
                   </div>
                   {(log.countrySlug || log.detail) && (
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-400 mt-0.5 break-all">
                       {[log.countrySlug, log.detail].filter(Boolean).join(' · ')}
                     </p>
                   )}
