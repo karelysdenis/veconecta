@@ -58,15 +58,24 @@ export default async function EditResourcePage({
 
   const returnTo = sanitizeReturnTo(rawReturnTo, `/admin/${country}`)
 
-  const [resource, countryRecord, cities, allCountries] = await Promise.all([
-    prisma.resource.findUnique({ where: { id } }),
+  const resource = await prisma.resource.findUnique({ where: { id } })
+  if (!resource || resource.countrySlug !== country) notFound()
+
+  // 'global' is a virtual country (active: false, never offered when creating/reassigning
+  // a resource), but a resource already assigned to it must still show it here as its
+  // current value — otherwise the <select> silently falls back to whichever active
+  // country sorts first, and saving would reassign the resource to that country.
+  const [countryRecord, cities, allCountries] = await Promise.all([
     prisma.country.findUnique({ where: { slug: country } }),
     prisma.city.findMany({ where: { countrySlug: country }, orderBy: { nameEs: 'asc' } }),
     user.role === 'ADMIN'
-      ? prisma.country.findMany({ where: { active: true }, orderBy: { nameEs: 'asc' }, select: { slug: true, nameEs: true } })
+      ? prisma.country.findMany({
+          where: resource.countrySlug === 'global' ? { OR: [{ active: true }, { slug: 'global' }] } : { active: true },
+          orderBy: { nameEs: 'asc' },
+          select: { slug: true, nameEs: true },
+        })
       : Promise.resolve(null),
   ])
-  if (!resource || resource.countrySlug !== country) notFound()
 
   async function save(fd: FormData) {
     'use server'
