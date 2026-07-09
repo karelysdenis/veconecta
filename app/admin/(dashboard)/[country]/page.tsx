@@ -223,7 +223,7 @@ export default async function AdminCountryPage({
     const resource = await prisma.resource.findUnique({ where: { id } })
     if (!resource || resource.countrySlug !== country || resource.status !== 'ARCHIVED') return
     await prisma.resource.delete({ where: { id } })
-    await logAction({ userEmail: user.email, action: 'RESOURCE_DELETE', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country, detail: JSON.stringify(resource) })
+    await logAction({ userEmail: user.email, action: 'RESOURCE_DELETE', entityType: 'resource', entityId: id, entityName: resource.name, countrySlug: country, detail: JSON.stringify(resource, null, 2) })
     await touchCountry(country)
     for (const l of LOCALES) revalidatePath(`/${l}/${country}`)
     for (const l of LOCALES) revalidatePath(`/${l}`)

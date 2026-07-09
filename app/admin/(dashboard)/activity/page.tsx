@@ -81,10 +81,21 @@ export default async function ActivityPage() {
                       </span>
                     )}
                   </div>
-                  {(log.countrySlug || log.detail) && (
-                    <p className="text-xs text-gray-400 mt-0.5 break-all">
-                      {[log.countrySlug, log.detail].filter(Boolean).join(' · ')}
-                    </p>
+                  {log.action === 'RESOURCE_DELETE' && log.detail ? (
+                    <details className="mt-0.5">
+                      <summary className="text-xs text-gray-400 cursor-pointer select-none hover:text-gray-600">
+                        {log.countrySlug ? `${log.countrySlug} · ` : ''}Ver recurso eliminado
+                      </summary>
+                      <pre className="text-xs text-gray-500 bg-gray-50 border border-gray-100 rounded-lg p-3 mt-1 overflow-x-auto whitespace-pre-wrap break-words">
+                        {log.detail}
+                      </pre>
+                    </details>
+                  ) : (
+                    (log.countrySlug || log.detail) && (
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {[log.countrySlug, log.detail].filter(Boolean).join(' · ')}
+                      </p>
+                    )
                   )}
                 </div>
                 <time className="text-xs text-gray-400 shrink-0 pt-0.5" title={log.createdAt.toISOString()}>
