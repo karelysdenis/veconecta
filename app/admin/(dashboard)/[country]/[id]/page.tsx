@@ -11,6 +11,8 @@ import { logAction, touchCountry } from '@/lib/audit'
 import { FlagImage } from '@/components/admin/FlagImage'
 import { flagUrl } from '@/lib/country-iso'
 import { LOCALES, DEFAULT_LOCALE, localizedFieldsFromForm, localizedDefaultValues } from '@/lib/locale-content'
+import { slugify } from '@/lib/slugify'
+import { resourceCanonicalPath } from '@/lib/resource-detail'
 import { CitySelect } from '@/components/admin/CitySelect'
 import { PaymentKeyField } from '@/components/admin/PaymentKeyField'
 import { KindDateFields } from '@/components/admin/KindDateFields'
@@ -46,25 +48,34 @@ export default async function EditResourcePage({
   searchParams,
 }: {
   params: Promise<{ country: string; id: string }>
-  searchParams: Promise<{ returnTo?: string }>
+  searchParams: Promise<{ returnTo?: string; error?: string }>
 }) {
   const { country, id } = await params
-  const { returnTo: rawReturnTo } = await searchParams
+  const { returnTo: rawReturnTo, error } = await searchParams
   const { user } = await getSession()
   if (!user) redirect('/admin/login')
   if (user.role === 'EDITOR' && !user.countrySlugs.includes(country)) redirect('/admin')
 
   const returnTo = sanitizeReturnTo(rawReturnTo, `/admin/${country}`)
 
-  const [resource, countryRecord, cities, allCountries] = await Promise.all([
-    prisma.resource.findUnique({ where: { id } }),
+  const resource = await prisma.resource.findUnique({ where: { id } })
+  if (!resource || resource.countrySlug !== country) notFound()
+
+  // 'global' is a virtual country (active: false, never offered when creating/reassigning
+  // a resource), but a resource already assigned to it must still show it here as its
+  // current value — otherwise the <select> silently falls back to whichever active
+  // country sorts first, and saving would reassign the resource to that country.
+  const [countryRecord, cities, allCountries] = await Promise.all([
     prisma.country.findUnique({ where: { slug: country } }),
     prisma.city.findMany({ where: { countrySlug: country }, orderBy: { nameEs: 'asc' } }),
     user.role === 'ADMIN'
-      ? prisma.country.findMany({ where: { active: true }, orderBy: { nameEs: 'asc' }, select: { slug: true, nameEs: true } })
+      ? prisma.country.findMany({
+          where: resource.countrySlug === 'global' ? { OR: [{ active: true }, { slug: 'global' }] } : { active: true },
+          orderBy: { nameEs: 'asc' },
+          select: { slug: true, nameEs: true },
+        })
       : Promise.resolve(null),
   ])
-  if (!resource || resource.countrySlug !== country) notFound()
 
   async function save(fd: FormData) {
     'use server'
@@ -88,33 +99,51 @@ export default async function EditResourcePage({
     const eventStartsAtRaw = fd.get('eventStartsAt') as string
     const eventEndsAtRaw = fd.get('eventEndsAt') as string
     const name = (fd.get('name') as string).trim()
+    const rawSlug = (fd.get('slug') as string).trim()
+    const slug = slugify(rawSlug || name)
+    const redirectSlugDuplicate = () => {
+      const errorParams = new URLSearchParams({ error: 'slug-duplicate' })
+      if (rawReturnTo) errorParams.set('returnTo', rawReturnTo)
+      redirect(`/admin/${country}/${id}?${errorParams.toString()}`)
+    }
+    if (await prisma.resource.findFirst({ where: { slug, id: { not: id } } })) {
+      redirectSlugDuplicate()
+    }
     const newStatus = fd.get('status') as ResourceStatus
     const cityId = countryChanged ? null : await resolveCityId(country, fd)
-    await prisma.resource.update({
-      where: { id },
-      data: {
-        name,
-        ...localizedFieldsFromForm(fd, 'name'),
-        category: fd.get('category') as ResourceCategory,
-        status: newStatus,
-        url: (fd.get('url') as string).trim() || null,
-        phone: (fd.get('phone') as string).trim() || null,
-        paymentKey: (fd.get('paymentKey') as string).trim() || null,
-        countrySlug: newCountrySlug,
-        cityId,
-        address: (fd.get('address') as string).trim() || null,
-        schedule: (fd.get('schedule') as string).trim() || null,
-        free: fd.get('free') === 'on',
-        notesEs: (fd.get('notesEs') as string).trim() || null,
-        ...localizedFieldsFromForm(fd, 'notes'),
-        kind,
-        validUntil: kind === ResourceKind.PERMANENT && validUntilRaw ? new Date(validUntilRaw) : null,
-        eventStartsAt: kind === ResourceKind.EVENT && eventStartsAtRaw ? new Date(eventStartsAtRaw) : null,
-        eventEndsAt: kind === ResourceKind.EVENT && eventEndsAtRaw ? new Date(eventEndsAtRaw) : null,
-        verifiedAt: isAdmin ? new Date() : undefined,
-        verifiedBy: isAdmin ? user.email : undefined,
-      },
-    })
+    try {
+      await prisma.resource.update({
+        where: { id },
+        data: {
+          name,
+          slug,
+          ...localizedFieldsFromForm(fd, 'name'),
+          category: fd.get('category') as ResourceCategory,
+          status: newStatus,
+          url: (fd.get('url') as string).trim() || null,
+          phone: (fd.get('phone') as string).trim() || null,
+          paymentKey: (fd.get('paymentKey') as string).trim() || null,
+          countrySlug: newCountrySlug,
+          cityId,
+          address: (fd.get('address') as string).trim() || null,
+          schedule: (fd.get('schedule') as string).trim() || null,
+          free: fd.get('free') === 'on',
+          notesEs: (fd.get('notesEs') as string).trim() || null,
+          ...localizedFieldsFromForm(fd, 'notes'),
+          kind,
+          validUntil: kind === ResourceKind.PERMANENT && validUntilRaw ? new Date(validUntilRaw) : null,
+          eventStartsAt: kind === ResourceKind.EVENT && eventStartsAtRaw ? new Date(eventStartsAtRaw) : null,
+          eventEndsAt: kind === ResourceKind.EVENT && eventEndsAtRaw ? new Date(eventEndsAtRaw) : null,
+          verifiedAt: isAdmin ? new Date() : undefined,
+          verifiedBy: isAdmin ? user.email : undefined,
+        },
+      })
+    } catch (e: unknown) {
+      if ((e as { code?: string })?.code === 'P2002') {
+        redirectSlugDuplicate()
+      }
+      throw e
+    }
     const logDetail = countryChanged ? `${country} → ${newCountrySlug}` : newStatus
     await logAction({ userEmail: user.email, action: 'RESOURCE_UPDATE', entityType: 'resource', entityId: id, entityName: name, countrySlug: newCountrySlug, detail: logDetail })
     await touchCountry(country)
@@ -158,7 +187,7 @@ export default async function EditResourcePage({
         <span className="text-gray-900 font-medium truncate">{resource.name}</span>
         {resource.status === 'PUBLISHED' && (
           <a
-            href={`/${DEFAULT_LOCALE}/recursos/${resource.id}`}
+            href={resourceCanonicalPath(resource, DEFAULT_LOCALE)}
             target="_blank"
             rel="noopener noreferrer"
             className="ml-auto shrink-0 text-xs text-caribe hover:underline flex items-center gap-1"
@@ -194,6 +223,11 @@ export default async function EditResourcePage({
           <Sel label="Categoría" name="category" value={resource.category} opts={CATEGORIES} labels={CATEGORY_LABELS} />
           <Sel label="Estado" name="status" value={resource.status} opts={STATUSES} labels={STATUS_LABELS} />
         </div>
+
+        {error === 'slug-duplicate' && (
+          <p className="text-sm text-red-600">Ese slug ya está en uso por otro recurso. Prueba otro.</p>
+        )}
+        <F label="Slug (URL)" name="slug" defaultValue={resource.slug} required />
 
         <UrlField defaultValue={resource.url ?? ''} />
 

@@ -10,6 +10,8 @@ import { FlagImage } from '@/components/admin/FlagImage'
 import { LOCALES, DEFAULT_LOCALE, formatEventRange } from '@/lib/locale-content'
 import { reviewCutoff, REVIEW_CYCLE_DAYS } from '@/lib/review-config'
 import { ConfirmButton } from '@/components/admin/ConfirmButton'
+import { slugify } from '@/lib/slugify'
+import { resourceCanonicalPath } from '@/lib/resource-detail'
 
 function Flag({ cca2, slug, flag, size = 32 }: { cca2: string | null; slug: string; flag: string; size?: number }) {
   const src = cca2 ? `https://flagcdn.com/w40/${cca2}.png` : flagUrl(slug)
@@ -166,9 +168,16 @@ export default async function AdminCountryPage({
     if (!canManageCountry(user, country)) return
     const src = await prisma.resource.findUnique({ where: { id } })
     if (!src || src.countrySlug !== country) return
-    const { id: _id, createdAt: _c, updatedAt: _u, verifiedAt: _va, verifiedBy: _vb, status: _s, ...fields } = src
+    const { id: _id, slug: _slug, createdAt: _c, updatedAt: _u, verifiedAt: _va, verifiedBy: _vb, status: _s, ...fields } = src
+    const baseSlug = slugify(src.nameEn || src.name)
+    let slug = baseSlug
+    let suffix = 2
+    while (await prisma.resource.findFirst({ where: { slug } })) {
+      slug = `${baseSlug}-${suffix}`
+      suffix += 1
+    }
     const copy = await prisma.resource.create({
-      data: { ...fields, status: 'DRAFT', verifiedAt: null, verifiedBy: null },
+      data: { ...fields, slug, status: 'DRAFT', verifiedAt: null, verifiedBy: null },
     })
     await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: copy.id, entityName: copy.name, countrySlug: country })
     await touchCountry(country)
@@ -349,7 +358,7 @@ export default async function AdminCountryPage({
                     </button>
                   </form>
                   <a
-                    href={`/${DEFAULT_LOCALE}/recursos/${r.id}`}
+                    href={resourceCanonicalPath(r, DEFAULT_LOCALE)}
                     target="_blank"
                     rel="noopener noreferrer"
                     title="Ver en el sitio"

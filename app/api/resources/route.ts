@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/lucia'
 import { ResourceCategory } from '@prisma/client'
+import { slugify } from '@/lib/slugify'
 
 const schema = z.object({
   countrySlug: z.string(),
@@ -31,8 +32,16 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const baseSlug = slugify(parsed.data.name)
+    let slug = baseSlug
+    let suffix = 2
+    while (await prisma.resource.findFirst({ where: { slug } })) {
+      slug = `${baseSlug}-${suffix}`
+      suffix += 1
+    }
+
     const resource = await prisma.resource.create({
-      data: { ...parsed.data, status: 'DRAFT', url: parsed.data.url || null },
+      data: { ...parsed.data, slug, status: 'DRAFT', url: parsed.data.url || null },
     })
     return NextResponse.json(resource, { status: 201 })
   } catch (err) {
