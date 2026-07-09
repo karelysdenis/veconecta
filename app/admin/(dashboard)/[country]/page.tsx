@@ -182,6 +182,12 @@ export default async function AdminCountryPage({
     await logAction({ userEmail: user.email, action: 'RESOURCE_CREATE', entityType: 'resource', entityId: copy.id, entityName: copy.name, countrySlug: country })
     await touchCountry(country)
     revalidatePath(`/admin/${country}`)
+    // Archivar/restaurar cambian el estado de la fila donde ya estás mirando,
+    // así que el feedback es visible en el sitio. Duplicar crea una fila nueva
+    // en Borradores, que puede quedar fuera de vista si duplicaste algo más
+    // abajo en Publicados — el hash fuerza que el navegador haga scroll hasta
+    // ahí (un redirect sin hash a la misma ruta no mueve el scroll).
+    redirect(`/admin/${country}#borradores`)
   }
 
   async function archiveResource(formData: FormData) {
@@ -266,7 +272,7 @@ export default async function AdminCountryPage({
       </div>
 
       {drafts.length > 0 && (
-        <section>
+        <section id="borradores">
           <h2 className="text-base font-semibold text-amber-700 mb-3">
             Borradores ({drafts.length})
           </h2>
