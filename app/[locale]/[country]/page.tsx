@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
 import { CityList, type CityEntry } from '@/components/CityList'
+import { UpcomingEvents } from '@/components/UpcomingEvents'
 import { serializeResource } from '@/lib/types'
 import { notPastEventFilter, MIN_CITY_RESOURCES } from '@/lib/resource-visibility'
 import { flagUrl } from '@/lib/country-iso'
@@ -186,6 +187,10 @@ export default async function CountryPage({
   const serializedCountry = country.resources.map(serializeResource)
   const serializedGlobal = globalResources.map(serializeResource)
 
+  const upcomingEvents = serializedCountry
+    .filter((r) => r.kind === 'EVENT' && r.eventStartsAt !== null)
+    .sort((a, b) => new Date(a.eventStartsAt as string).getTime() - new Date(b.eventStartsAt as string).getTime())
+
   const resourcesByCategory = CATEGORY_ORDER.reduce(
     (acc, cat) => {
       acc[cat] = [
@@ -229,6 +234,8 @@ export default async function CountryPage({
           </h1>
         </div>
       </div>
+
+      <UpcomingEvents events={upcomingEvents} locale={locale as Locale} />
 
       {CATEGORY_ORDER.map((category) => (
         <ActionCard
