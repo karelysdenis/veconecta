@@ -58,6 +58,14 @@ export function formatEventRange(
   return fmt.format((end ?? start) as Date)
 }
 
+/** { day: "14", month: "jul" } for the event date badge, formatted in the given locale. */
+export function formatEventBadge(startIso: string, locale: Locale): { day: string; month: string } {
+  const date = new Date(startIso)
+  const day = new Intl.DateTimeFormat(INTL_LOCALE[locale], { day: 'numeric' }).format(date)
+  const month = new Intl.DateTimeFormat(INTL_LOCALE[locale], { month: 'short' }).format(date)
+  return { day, month }
+}
+
 // Column suffix per locale: name + suffix = nameEn, namePt...
 export const LOCALE_SUFFIX: Record<Locale, string> = {
   es: 'Es',
