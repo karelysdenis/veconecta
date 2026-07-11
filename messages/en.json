@@ -58,7 +58,8 @@
     "lastUpdated": "Updated: {date}",
     "noResources": "Initiatives in preparation — check back soon.",
     "fromCountry": "From {name}",
-    "whatYouCanDo": "Here's what you can do right now:"
+    "whatYouCanDo": "Here's what you can do right now:",
+    "upcomingEvents": "Upcoming events"
   },
   "search": {
     "title": "Search",

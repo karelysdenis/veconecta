@@ -58,7 +58,8 @@
     "lastUpdated": "Mis à jour : {date}",
     "noResources": "Initiatives en préparation — revenez bientôt.",
     "fromCountry": "Depuis {name}",
-    "whatYouCanDo": "Voici ce que vous pouvez faire dès maintenant :"
+    "whatYouCanDo": "Voici ce que vous pouvez faire dès maintenant :",
+    "upcomingEvents": "Événements à venir"
   },
   "search": {
     "title": "Rechercher",
