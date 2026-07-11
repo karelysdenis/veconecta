@@ -15,7 +15,6 @@ export function UpcomingEvents({
   locale: Locale
 }) {
   const tCountry = useTranslations('country')
-  const tCategories = useTranslations('categories')
 
   const validEvents = events.filter((r) => r.eventStartsAt !== null)
 
@@ -31,12 +30,7 @@ export function UpcomingEvents({
         </h2>
       </div>
       {validEvents.map((r) => (
-        <EventAgendaRow
-          key={r.id}
-          resource={r}
-          locale={locale}
-          categoryLabel={tCategories(r.category)}
-        />
+        <EventAgendaRow key={r.id} resource={r} locale={locale} />
       ))}
     </div>
   )
@@ -45,11 +39,9 @@ export function UpcomingEvents({
 function EventAgendaRow({
   resource,
   locale,
-  categoryLabel,
 }: {
   resource: SerializedResource
   locale: Locale
-  categoryLabel: string
 }) {
   const name = getResourceName(resource, locale)
   // `UpcomingEvents` filters out events with a null `eventStartsAt` before rendering
@@ -86,7 +78,6 @@ function EventAgendaRow({
               {cityName}
             </span>
           )}
-          <span className="font-sans text-[11px] text-[#808080]">{categoryLabel}</span>
           {rangeStr && (
             <span className="font-sans text-[11px] text-[#808080]">{rangeStr}</span>
           )}

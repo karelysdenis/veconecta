@@ -5,7 +5,6 @@ import type { SerializedResource } from '@/lib/types'
 
 const messages: Record<string, Record<string, string>> = {
   country: { upcomingEvents: 'Próximos eventos' },
-  categories: { DONATE_PHYSICALLY: 'Donar físicamente' },
 }
 
 vi.mock('next-intl', () => ({
