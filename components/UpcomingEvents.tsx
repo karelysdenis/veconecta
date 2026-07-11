@@ -17,7 +17,9 @@ export function UpcomingEvents({
   const tCountry = useTranslations('country')
   const tCategories = useTranslations('categories')
 
-  if (events.length === 0) return null
+  const validEvents = events.filter((r) => r.eventStartsAt !== null)
+
+  if (validEvents.length === 0) return null
 
   return (
     <div>
@@ -28,7 +30,7 @@ export function UpcomingEvents({
           {tCountry('upcomingEvents')}
         </h2>
       </div>
-      {events.map((r) => (
+      {validEvents.map((r) => (
         <EventAgendaRow
           key={r.id}
           resource={r}
@@ -50,7 +52,9 @@ function EventAgendaRow({
   categoryLabel: string
 }) {
   const name = getResourceName(resource, locale)
-  const { day, month } = formatEventBadge(resource.eventStartsAt as string, locale)
+  // `UpcomingEvents` filters out events with a null `eventStartsAt` before rendering
+  // this row, so this is guaranteed to be a non-null string here.
+  const { day, month } = formatEventBadge(resource.eventStartsAt!, locale)
   const isMultiDay =
     resource.eventStartsAt &&
     resource.eventEndsAt &&

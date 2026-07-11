@@ -70,4 +70,14 @@ describe('UpcomingEvents', () => {
     const names = screen.getAllByText(/Primero|Segundo/).map((el) => el.textContent)
     expect(names).toEqual(['Primero', 'Segundo'])
   })
+
+  it('excludes events with a null eventStartsAt instead of rendering a bogus date', () => {
+    const events = [
+      baseEvent({ id: 'ev1', name: 'Sin fecha', eventStartsAt: null }),
+      baseEvent({ id: 'ev2', name: 'Con fecha' }),
+    ]
+    render(<UpcomingEvents events={events} locale="es" />)
+    expect(screen.getByText('Con fecha')).toBeInTheDocument()
+    expect(screen.queryByText('Sin fecha')).not.toBeInTheDocument()
+  })
 })
