@@ -1,9 +1,18 @@
-/** Prisma where clause fragment: excludes events whose eventEndsAt is in the past. Permanent resources (eventEndsAt always null) always pass. */
+/**
+ * Prisma where clause fragment: excludes events that have already happened.
+ * Permanent resources (both event fields null) always pass. A single-day
+ * event without `eventEndsAt` filled in (the common case: the admin form
+ * treats start/end as two independent optional fields, see
+ * `KindDateFields.tsx`) is judged by `eventStartsAt` instead of falling
+ * through as "no end date = never expires".
+ */
 export function notPastEventFilter() {
+  const now = new Date()
   return {
     OR: [
-      { eventEndsAt: null },
-      { eventEndsAt: { gte: new Date() } },
+      { eventEndsAt: null, eventStartsAt: null },
+      { eventEndsAt: { gte: now } },
+      { eventEndsAt: null, eventStartsAt: { gte: now } },
     ],
   }
 }
