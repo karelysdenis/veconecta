@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { CountrySelector } from '@/components/CountrySelector'
 import { INTL_LOCALE, isCountryVisibleInLocale, type Locale } from '@/lib/locale-content'
+import { getActiveLocales } from '@/lib/locale-active'
+import { buildAlternates } from '@/lib/hreflang'
 import { notPastEventFilter } from '@/lib/resource-visibility'
 import { ResourceStatus } from '@prisma/client'
 import { Globe } from 'lucide-react'
@@ -17,6 +19,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const isEn = locale === 'en'
+  const activeLocales = await getActiveLocales()
   return {
     title: isEn ? 'Help Venezuela from wherever you are | VEconecta' : 'Ayuda a Venezuela desde donde estás | VEconecta',
     description: isEn
@@ -27,6 +30,11 @@ export async function generateMetadata({
       siteName: 'VEconecta',
       images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
     },
+    alternates: buildAlternates(
+      locale,
+      activeLocales.map((l) => l.code),
+      (l) => `/${l}`,
+    ),
   }
 }
 

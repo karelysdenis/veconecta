@@ -5,7 +5,10 @@ import { ActionCard } from '@/components/ActionCard'
 import { serializeResource } from '@/lib/types'
 import { notPastEventFilter } from '@/lib/resource-visibility'
 import type { Locale } from '@/lib/locale-content'
+import { getActiveLocales } from '@/lib/locale-active'
+import { buildAlternates } from '@/lib/hreflang'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +22,35 @@ const CATEGORY_ORDER: ResourceCategory[] = [
   'CONSULAR',
   'MENTAL_HEALTH',
 ]
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const isEn = locale === 'en'
+  const [tHomepage, activeLocales] = await Promise.all([
+    getTranslations({ locale, namespace: 'homepage' }),
+    getActiveLocales(),
+  ])
+  return {
+    title: `${tHomepage('globalSection')} | VEconecta`,
+    description: isEn
+      ? 'Verified initiatives for Venezuelans available from any country of residence.'
+      : 'Iniciativas verificadas para venezolanos disponibles desde cualquier país de residencia.',
+    openGraph: {
+      type: 'website',
+      siteName: 'VEconecta',
+      images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
+    },
+    alternates: buildAlternates(
+      locale,
+      activeLocales.map((l) => l.code),
+      (l) => `/${l}/global`,
+    ),
+  }
+}
 
 export default async function GlobalPage({
   params,

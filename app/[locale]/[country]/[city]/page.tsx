@@ -7,7 +7,9 @@ import { ReportForm } from '@/components/ReportForm'
 import { serializeResource } from '@/lib/types'
 import { notPastEventFilter, MIN_CITY_RESOURCES } from '@/lib/resource-visibility'
 import { flagUrl } from '@/lib/country-iso'
-import { localizeSuffixed, type Locale } from '@/lib/locale-content'
+import { localizeSuffixed, effectiveLocalesForCountry, type Locale } from '@/lib/locale-content'
+import { getActiveLocales, getCountryLocaleMap } from '@/lib/locale-active'
+import { buildAlternates } from '@/lib/hreflang'
 import { ResourceCategory, ResourceStatus } from '@prisma/client'
 import type { Metadata } from 'next'
 
@@ -28,11 +30,21 @@ export async function generateMetadata({
   params: Promise<{ locale: string; country: string; city: string }>
 }): Promise<Metadata> {
   const { locale, country: urlSlug, city: citySlug } = await params
-  const country = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
+  const [country, activeLocales, countryLocaleMap] = await Promise.all([
+    prisma.country.findUnique({ where: { slug: urlSlug, active: true } }),
+    getActiveLocales(),
+    getCountryLocaleMap(),
+  ])
   if (!country) return {}
 
   const cityRecord = await prisma.city.findFirst({ where: { countrySlug: country.slug, slug: citySlug } })
   if (!cityRecord) return {}
+
+  const effectiveLocales = effectiveLocalesForCountry(
+    country.slug,
+    activeLocales.map((l) => l.code),
+    countryLocaleMap,
+  )
   const cityName = localizeSuffixed(cityRecord, 'name', locale) ?? cityRecord.nameEs
 
   const countryName = localizeSuffixed(country, 'name', locale) ?? country.nameEs
@@ -62,6 +74,7 @@ export async function generateMetadata({
       siteName: 'VEconecta',
       images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
     },
+    alternates: buildAlternates(locale, effectiveLocales, (l) => `/${l}/${country.slug}/${citySlug}`),
   }
 }
 

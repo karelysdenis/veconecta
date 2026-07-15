@@ -5,6 +5,8 @@ import { SearchResultLink } from '@/components/SearchResultLink'
 import { SearchInput } from '@/components/SearchInput'
 import { Users, Heart, ArrowLeftRight, Phone, Package, Globe, Landmark, Brain, type LucideIcon } from 'lucide-react'
 import { localizeSuffixed } from '@/lib/locale-content'
+import { getActiveLocales } from '@/lib/locale-active'
+import { buildAlternates } from '@/lib/hreflang'
 import { searchResources } from '@/lib/search'
 import type { Metadata } from 'next'
 
@@ -47,10 +49,18 @@ export async function generateMetadata({
     siteName: 'VEconecta',
     images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
   }
+  // hreflang always points at the base page, not a specific query — a
+  // per-query URL isn't a "translation" of another locale's same query.
+  const activeLocales = await getActiveLocales()
+  const alternates = buildAlternates(
+    locale,
+    activeLocales.map((l) => l.code),
+    (l) => `/${l}/buscar`,
+  )
   if (!query) {
-    return { title: `${t('title')} | VEconecta`, openGraph }
+    return { title: `${t('title')} | VEconecta`, openGraph, alternates }
   }
-  return { title: `"${query}" — ${t('title')} | VEconecta`, openGraph }
+  return { title: `"${query}" — ${t('title')} | VEconecta`, openGraph, alternates }
 }
 
 export default async function SearchPage({

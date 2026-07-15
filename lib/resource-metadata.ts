@@ -2,7 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { ResourceStatus } from '@prisma/client'
 import { effectiveLocalesForCountry, localizeBare, localizeSuffixed } from '@/lib/locale-content'
 import { getActiveLocales, getCountryLocaleMap } from '@/lib/locale-active'
-import { resourceCanonicalPath, SITE_URL } from '@/lib/resource-detail'
+import { resourceCanonicalPath } from '@/lib/resource-detail'
+import { buildAlternates } from '@/lib/hreflang'
 import type { Metadata } from 'next'
 
 export async function fetchPublishedResourceBySlug(slug: string) {
@@ -53,11 +54,6 @@ export async function buildResourceMetadata(
       description,
       images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
     },
-    alternates: {
-      canonical: `${SITE_URL}${resourceCanonicalPath(resource, locale)}`,
-      languages: Object.fromEntries(
-        effectiveLocales.map((l) => [l, `${SITE_URL}${resourceCanonicalPath(resource, l)}`]),
-      ),
-    },
+    alternates: buildAlternates(locale, effectiveLocales, (l) => resourceCanonicalPath(resource, l)),
   }
 }

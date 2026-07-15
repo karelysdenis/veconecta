@@ -1,5 +1,8 @@
 import { setRequestLocale } from 'next-intl/server'
 import { InstagramEmbed } from '@/components/InstagramEmbed'
+import { STATIC_PAGE_LOCALES } from '@/lib/locale-content'
+import { getActiveLocales } from '@/lib/locale-active'
+import { buildAlternates } from '@/lib/hreflang'
 import type { Metadata } from 'next'
 
 const INSTAGRAM_POSTS = [
@@ -14,6 +17,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const isEn = locale === 'en'
+  const activeLocales = await getActiveLocales()
+  const activeCodes = activeLocales.map((l) => l.code)
+  const pageLocales = (STATIC_PAGE_LOCALES.sobre ?? activeCodes).filter((l) => activeCodes.includes(l))
   return {
     title: isEn ? 'About VEconecta' : 'Sobre VEconecta',
     description: isEn
@@ -24,6 +30,7 @@ export async function generateMetadata({
       siteName: 'VEconecta',
       images: [{ url: `/api/og?locale=${locale}`, width: 1200, height: 630 }],
     },
+    alternates: buildAlternates(locale, pageLocales, (l) => `/${l}/sobre`),
   }
 }
 
