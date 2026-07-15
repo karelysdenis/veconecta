@@ -10,8 +10,8 @@ export const revalidate = 3600
 
 // Mirrors the same visibility rules the pages themselves enforce (active
 // locales, per-country locale restriction, the city-page promotion
-// threshold, past-event filtering) so the sitemap never lists a URL that
-// would 404 or redirect.
+// threshold, past-event filtering) so the sitemap never advertises a
+// locale/country/resource combination the site itself doesn't consider valid.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [activeLocales, countryLocaleMap, countries, resources, citiesWithCount] = await Promise.all([
     getActiveLocales(),
@@ -19,16 +19,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     prisma.country.findMany({ where: { active: true } }),
     prisma.resource.findMany({
       where: { status: ResourceStatus.PUBLISHED, ...notPastEventFilter() },
-      select: { slug: true, kind: true },
+      select: { slug: true, kind: true, countrySlug: true },
     }),
     prisma.city.findMany({
-      include: {
+      where: { country: { active: true } },
+      select: {
+        slug: true,
+        countrySlug: true,
         _count: { select: { resources: { where: { status: ResourceStatus.PUBLISHED, ...notPastEventFilter() } } } },
       },
     }),
   ])
 
   const activeCodes = activeLocales.map((l) => l.code) as Locale[]
+
+  // Computed once per country rather than once per locale×country — the
+  // result never depends on which locale is currently being iterated below.
+  // Also used for a resource's own countrySlug: an unrestricted/virtual
+  // country like 'global' (excluded from `countries` since it's inactive)
+  // falls back to every active locale, matching the /global page itself.
+  const effectiveLocalesByCountry = new Map<string, string[]>(
+    countries.map((c) => [c.slug, effectiveLocalesForCountry(c.slug, activeCodes, countryLocaleMap)]),
+  )
+
   const promotedCitiesByCountry = new Map<string, string[]>()
   for (const city of citiesWithCount) {
     if (city._count.resources < MIN_CITY_RESOURCES) continue
@@ -50,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     for (const country of countries) {
-      const effectiveLocales = effectiveLocalesForCountry(country.slug, activeCodes, countryLocaleMap)
+      const effectiveLocales = effectiveLocalesByCountry.get(country.slug) ?? activeCodes
       if (!effectiveLocales.includes(locale)) continue
       add(`/${locale}/${country.slug}`, 0.8)
 
@@ -60,6 +73,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     for (const resource of resources) {
+      const effectiveLocales = effectiveLocalesByCountry.get(resource.countrySlug) ?? activeCodes
+      if (!effectiveLocales.includes(locale)) continue
       add(resourceCanonicalPath(resource, locale), 0.5)
     }
   }

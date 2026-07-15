@@ -88,8 +88,19 @@ export default async function CityPage({
 
   const tNav = await getTranslations('nav')
 
-  const country = await prisma.country.findUnique({ where: { slug: urlSlug, active: true } })
+  const [country, activeLocales, countryLocaleMap] = await Promise.all([
+    prisma.country.findUnique({ where: { slug: urlSlug, active: true } }),
+    getActiveLocales(),
+    getCountryLocaleMap(),
+  ])
   if (!country) notFound()
+
+  const effectiveLocales = effectiveLocalesForCountry(
+    country.slug,
+    activeLocales.map((l) => l.code),
+    countryLocaleMap,
+  )
+  if (!effectiveLocales.includes(locale)) notFound()
 
   const countrySlug = country.slug
 
