@@ -33,13 +33,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const activeCodes = activeLocales.map((l) => l.code) as Locale[]
 
-  // Computed once per country rather than once per locale×country — the
-  // result never depends on which locale is currently being iterated below.
-  // Also used for a resource's own countrySlug: an unrestricted/virtual
-  // country like 'global' (excluded from `countries` since it's inactive)
-  // falls back to every active locale, matching the /global page itself.
+  // Keyed from countryLocaleMap (every country, active or not — see
+  // getCountryLocaleMap) rather than `countries` (active-only): a resource
+  // can belong to a country that's since been deactivated, and it should
+  // still respect whatever locale restriction that country had, not
+  // silently fall back to "unrestricted". Computed once per country rather
+  // than once per locale×country since the result doesn't depend on locale.
   const effectiveLocalesByCountry = new Map<string, string[]>(
-    countries.map((c) => [c.slug, effectiveLocalesForCountry(c.slug, activeCodes, countryLocaleMap)]),
+    Object.keys(countryLocaleMap).map((slug) => [slug, effectiveLocalesForCountry(slug, activeCodes, countryLocaleMap)]),
   )
 
   const promotedCitiesByCountry = new Map<string, string[]>()

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActionCard } from '@/components/ActionCard'
@@ -100,7 +100,13 @@ export default async function CityPage({
     activeLocales.map((l) => l.code),
     countryLocaleMap,
   )
-  if (!effectiveLocales.includes(locale)) notFound()
+  if (!effectiveLocales.includes(locale)) {
+    // Same policy as the country page: send visitors (and any indexed/shared
+    // old links) to the closest locale this country actually offers, in the
+    // site's own priority order, instead of a hard 404.
+    if (effectiveLocales.length === 0) notFound()
+    redirect(`/${effectiveLocales[0]}/${country.slug}/${citySlug}`)
+  }
 
   const countrySlug = country.slug
 
