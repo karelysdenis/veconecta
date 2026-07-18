@@ -56,6 +56,11 @@ const INITIAL_FORM: FormState = {
 
 const fieldLabel = 'block font-sans font-semibold text-[11px] uppercase tracking-wide text-[#808080] mb-1.5'
 const fieldInput = 'w-full font-sans text-[15px] text-[#141414] border border-[rgba(20,20,20,0.12)] rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-caribe/30 focus:border-caribe transition-colors'
+// Long "e.g." examples go here instead of into the placeholder attribute:
+// a single-line <input> placeholder doesn't wrap and gets clipped, and any
+// placeholder disappears the moment the visitor starts typing — a caption
+// stays visible and readable regardless of text length or language.
+const fieldHint = 'font-sans font-light text-xs text-[#b8b8b8] mt-1'
 
 export function SuggestionModal({ countries }: { countries: CountryOption[] }) {
   const t = useTranslations('suggestion')
@@ -198,11 +203,11 @@ export function SuggestionModal({ countries }: { countries: CountryOption[] }) {
                     type="text"
                     value={form.name}
                     onChange={e => update('name', e.target.value)}
-                    placeholder={t('namePlaceholder')}
                     required
                     maxLength={60}
                     className={fieldInput}
                   />
+                  <p className={fieldHint}>{t('namePlaceholder')}</p>
                 </div>
 
                 <div>
@@ -224,11 +229,11 @@ export function SuggestionModal({ countries }: { countries: CountryOption[] }) {
                     type="text"
                     value={form.beneficiary}
                     onChange={e => update('beneficiary', e.target.value)}
-                    placeholder={t('beneficiaryPlaceholder')}
                     required
                     maxLength={70}
                     className={fieldInput}
                   />
+                  <p className={fieldHint}>{t('beneficiaryPlaceholder')}</p>
                 </div>
 
                 {form.type === 'EVENT' && (
@@ -258,7 +263,7 @@ export function SuggestionModal({ countries }: { countries: CountryOption[] }) {
                   />
                 </div>
 
-                <div>
+                <div className="border-t border-[rgba(20,20,20,0.08)] pt-4">
                   <label className={fieldLabel}>{t('countryLabel')}</label>
                   <select
                     value={form.countrySlug}
