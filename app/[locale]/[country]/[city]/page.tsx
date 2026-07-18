@@ -150,8 +150,8 @@ export default async function CityPage({
 
   const totalResources = cityResources.length + globalResources.length
 
-  const flag40 = flagUrl(countrySlug, 'w40')
-  const flag80 = flagUrl(countrySlug, 'w80')
+  const flag40 = country.cca2 ? `https://flagcdn.com/w40/${country.cca2}.png` : flagUrl(countrySlug, 'w40')
+  const flag80 = country.cca2 ? `https://flagcdn.com/w80/${country.cca2}.png` : flagUrl(countrySlug, 'w80')
 
   return (
     <main className="min-h-screen bg-white">

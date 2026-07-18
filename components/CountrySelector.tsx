@@ -18,8 +18,8 @@ export function CountrySelector({
     <div>
       {countries.map((country) => {
         const name = localizeSuffixed(country, 'name', locale) ?? country.nameEs
-        const flag40 = flagUrl(country.slug, 'w40')
-        const flag80 = flagUrl(country.slug, 'w80')
+        const flag40 = country.cca2 ? `https://flagcdn.com/w40/${country.cca2}.png` : flagUrl(country.slug, 'w40')
+        const flag80 = country.cca2 ? `https://flagcdn.com/w80/${country.cca2}.png` : flagUrl(country.slug, 'w80')
 
         return (
           <Link

@@ -135,8 +135,8 @@ export default async function CountryPage({
 
   const hasCitySelector = realCities.length >= 2
 
-  const flag40 = flagUrl(slug, 'w40')
-  const flag80 = flagUrl(slug, 'w80')
+  const flag40 = country.cca2 ? `https://flagcdn.com/w40/${country.cca2}.png` : flagUrl(slug, 'w40')
+  const flag80 = country.cca2 ? `https://flagcdn.com/w80/${country.cca2}.png` : flagUrl(slug, 'w80')
 
   const lastUpdated = country.lastUpdatedAt
     ? new Intl.DateTimeFormat(INTL_LOCALE[locale as keyof typeof INTL_LOCALE] ?? INTL_LOCALE.es, {
