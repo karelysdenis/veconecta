@@ -12,7 +12,7 @@
     "updatedAt": "updated {date}",
     "globalSection": "From anywhere in the world",
     "sectionLabel": "Initiatives by country",
-    "emergencyBanner": "Yaracuy Earthquake · Verified emergency initiatives"
+    "emergencyBanner": "Venezuela Earthquake · Verified emergency initiatives"
   },
   "categories": {
     "FIND_FAMILY": "Find family members",
@@ -52,6 +52,39 @@
     "submit": "Send report",
     "success": "Thank you. We'll review your report within a few hours.",
     "error": "Error sending. Please try again."
+  },
+  "suggestion": {
+    "trigger": "Suggest an initiative or event",
+    "title": "Suggest an initiative or event",
+    "description": "Tell us what it is and who it helps. We'll review it before publishing.",
+    "typeLabel": "Type",
+    "typeInitiative": "Initiative",
+    "typeEvent": "Event",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Select a category",
+    "nameLabel": "Name",
+    "namePlaceholder": "E.g. Relief supply point for earthquake victims in Venezuela",
+    "descriptionFieldLabel": "Description",
+    "descriptionFieldPlaceholder": "E.g. We accept water, non-perishable food, and clothing for earthquake victims",
+    "beneficiaryLabel": "Who benefits?",
+    "beneficiaryPlaceholder": "E.g. Families who lost their homes in the earthquake",
+    "dateLabel": "Date",
+    "datePlaceholder": "E.g. August 20",
+    "scheduleLabel": "Schedule (optional)",
+    "schedulePlaceholder": "E.g. Monday to Friday, 9am to 5pm",
+    "countryLabel": "Country",
+    "countryPlaceholder": "Select a country",
+    "countryGlobalOption": "Any country / international",
+    "countryOtherOption": "Other country (not listed yet)",
+    "countryOtherPlaceholder": "Type the country name",
+    "urlLabel": "Link (optional)",
+    "urlPlaceholder": "https://...",
+    "detailsLabel": "Additional details (optional)",
+    "detailsPlaceholder": "Contact info, or any other relevant detail",
+    "submit": "Send suggestion",
+    "success": "Thank you. We'll review it before publishing.",
+    "error": "Error sending. Please try again.",
+    "close": "Close"
   },
   "disclaimer": "VEconecta is an independent citizen initiative. We verify information before publishing, but initiatives change fast. Always confirm before acting.",
   "country": {

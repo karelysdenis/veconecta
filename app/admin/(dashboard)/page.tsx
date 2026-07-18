@@ -61,7 +61,9 @@ export default async function AdminDashboard() {
   const reports = await prisma.communityReport.findMany({
     where: {
       resolved: false,
-      ...(user.role === 'EDITOR' ? { countrySlug: { in: user.countrySlugs } } : {}),
+      // 'global' suggestions (and site-wide resources) belong to everyone,
+      // not to a single country's editor — include them for every EDITOR.
+      ...(user.role === 'EDITOR' ? { countrySlug: { in: [...user.countrySlugs, 'global'] } } : {}),
     },
     orderBy: { createdAt: 'desc' },
     take: 20,

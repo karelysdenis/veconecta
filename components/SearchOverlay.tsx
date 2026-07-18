@@ -9,6 +9,8 @@ import { getResourceName, type SerializedCity } from '@/lib/types'
 import { localizeSuffixed, formatEventRange, type Locale } from '@/lib/locale-content'
 import { cleanUrlDisplay } from '@/lib/format-url'
 import { resourceCanonicalPath } from '@/lib/resource-detail'
+import { CATEGORY_ORDER } from '@/lib/resource-categories'
+import { useEscapeToClose } from '@/lib/use-escape-to-close'
 
 type Result = {
   id: string
@@ -33,11 +35,6 @@ type CountryResult = {
   nameEs: string
   cca2: string | null
 }
-
-const CATEGORY_ORDER: ResourceCategory[] = [
-  'DONATE_PHYSICALLY', 'DONATE_MONEY', 'FIND_FAMILY', 'CALL_FREE',
-  'SEND_MONEY', 'DIGITAL_BRIDGE', 'CONSULAR', 'MENTAL_HEALTH',
-]
 
 const CATEGORY_ICONS = {
   FIND_FAMILY: Users, DONATE_MONEY: Heart, SEND_MONEY: ArrowLeftRight,
@@ -69,12 +66,7 @@ export function SearchOverlay({
 
   const placeholder = t('placeholder')
 
-  useEffect(() => {
-    if (!open) return
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') close() }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [open])
+  useEscapeToClose(open, close)
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 50)

@@ -3,16 +3,28 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { createHash } from 'crypto'
 
+// z.string().url() alone accepts any syntactically valid URL, including
+// javascript: — restrict to http/https since this gets rendered as a
+// clickable <a href> in the admin dashboard.
+const httpUrl = z.string().url().refine(
+  (v) => /^https?:\/\//i.test(v),
+  { message: 'Only http/https URLs are allowed' },
+)
+
 const schema = z.object({
-  countrySlug: z.string().min(1),
+  countrySlug: z.string().min(1).max(100),
   message: z.string().min(10).max(500),
-  url: z.string().url().optional().or(z.literal('')),
+  url: httpUrl.optional().or(z.literal('')),
   resourceId: z.string().optional(),
 })
 
 const WINDOW_MS = 60_000
 const MAX_REQUESTS = 3
-const DAILY_GLOBAL_LIMIT = 500
+// Shared by the footer's "suggest an initiative/event" CTA (high-visibility,
+// on every page) and the older "report outdated info" link (low-visibility,
+// buried on resource detail pages) — sized generously so the newer, more
+// prominent CTA can't starve the older feature's daily budget.
+const DAILY_GLOBAL_LIMIT = 2000
 const DAILY_WINDOW_MS = 24 * 60 * 60 * 1000
 
 function hashIp(ip: string): string {
@@ -36,7 +48,11 @@ async function isGlobalLimitReached(): Promise<boolean> {
 }
 
 export async function POST(request: Request) {
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+  // The first entry in x-forwarded-for is whatever the client claims and is
+  // trivially spoofable. The last entry is appended by our own trusted proxy
+  // (Vercel's edge) with the real connecting IP, so use that one instead.
+  const forwardedFor = request.headers.get('x-forwarded-for')
+  const ip = forwardedFor?.split(',').map((s) => s.trim()).filter(Boolean).pop() ?? 'unknown'
   const ipHash = hashIp(ip)
 
   const body = await request.json().catch(() => null)

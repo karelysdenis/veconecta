@@ -12,7 +12,7 @@
     "updatedAt": "aktualisiert am {date}",
     "globalSection": "Von jedem Land aus",
     "sectionLabel": "Initiativen nach Land",
-    "emergencyBanner": "Erdbeben Yaracuy · Verifizierte Notfallinitiativen"
+    "emergencyBanner": "Erdbeben in Venezuela · Verifizierte Notfallinitiativen"
   },
   "categories": {
     "FIND_FAMILY": "Familie finden",
@@ -52,6 +52,39 @@
     "submit": "Meldung senden",
     "success": "Danke. Wir prüfen deine Meldung innerhalb der nächsten Stunden.",
     "error": "Fehler beim Senden. Bitte erneut versuchen."
+  },
+  "suggestion": {
+    "trigger": "Initiative oder Event vorschlagen",
+    "title": "Initiative oder Event vorschlagen",
+    "description": "Erzähl uns, was es ist und wem es hilft. Wir prüfen es vor der Veröffentlichung.",
+    "typeLabel": "Typ",
+    "typeInitiative": "Initiative",
+    "typeEvent": "Event",
+    "categoryLabel": "Kategorie",
+    "categoryPlaceholder": "Kategorie auswählen",
+    "nameLabel": "Name",
+    "namePlaceholder": "Z. B. Hilfsgüter-Sammelstelle für Erdbebenopfer in Venezuela",
+    "descriptionFieldLabel": "Beschreibung",
+    "descriptionFieldPlaceholder": "Z. B. Wir nehmen Wasser, haltbare Lebensmittel und Kleidung für Erdbebenopfer an",
+    "beneficiaryLabel": "Wer profitiert davon?",
+    "beneficiaryPlaceholder": "Z. B. Familien, die durch das Erdbeben ihr Zuhause verloren haben",
+    "dateLabel": "Datum",
+    "datePlaceholder": "Z. B. 20. August",
+    "scheduleLabel": "Öffnungszeiten (optional)",
+    "schedulePlaceholder": "Z. B. Montag bis Freitag, 9 bis 17 Uhr",
+    "countryLabel": "Land",
+    "countryPlaceholder": "Land auswählen",
+    "countryGlobalOption": "Beliebiges Land / international",
+    "countryOtherOption": "Anderes Land (noch nicht gelistet)",
+    "countryOtherPlaceholder": "Name des Landes eingeben",
+    "urlLabel": "Link (optional)",
+    "urlPlaceholder": "https://...",
+    "detailsLabel": "Weitere Details (optional)",
+    "detailsPlaceholder": "Kontakt oder sonstige wichtige Details",
+    "submit": "Vorschlag senden",
+    "success": "Danke. Wir prüfen es vor der Veröffentlichung.",
+    "error": "Fehler beim Senden. Bitte erneut versuchen.",
+    "close": "Schließen"
   },
   "disclaimer": "VEconecta ist eine unabhängige Bürgerinitiative. Wir verifizieren Informationen vor der Veröffentlichung, aber Initiativen ändern sich schnell. Bestätige immer, bevor du handelst.",
   "country": {

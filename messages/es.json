@@ -12,7 +12,7 @@
     "updatedAt": "actualizado {date}",
     "globalSection": "Desde cualquier país",
     "sectionLabel": "Iniciativas por país",
-    "emergencyBanner": "Terremoto Yaracuy · Iniciativas de emergencia verificadas"
+    "emergencyBanner": "Terremoto en Venezuela · Iniciativas de emergencia verificadas"
   },
   "categories": {
     "FIND_FAMILY": "Buscar familiares",
@@ -52,6 +52,39 @@
     "submit": "Enviar reporte",
     "success": "Gracias. Revisaremos tu reporte en las próximas horas.",
     "error": "Error al enviar. Inténtalo de nuevo."
+  },
+  "suggestion": {
+    "trigger": "Sugerir una iniciativa o evento",
+    "title": "Sugerir una iniciativa o evento",
+    "description": "Cuéntanos qué es y a quién ayuda. Lo revisamos antes de publicarlo.",
+    "typeLabel": "Tipo",
+    "typeInitiative": "Iniciativa",
+    "typeEvent": "Evento",
+    "categoryLabel": "Categoría",
+    "categoryPlaceholder": "Selecciona una categoría",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Ej. Punto de acopio para damnificados en Venezuela",
+    "descriptionFieldLabel": "Descripción",
+    "descriptionFieldPlaceholder": "Ej. Recibimos agua, alimentos no perecederos y ropa para los damnificados del terremoto",
+    "beneficiaryLabel": "¿Quién se beneficia?",
+    "beneficiaryPlaceholder": "Ej. Familias que perdieron su vivienda en el terremoto",
+    "dateLabel": "Fecha",
+    "datePlaceholder": "Ej. 20 de agosto",
+    "scheduleLabel": "Horario (opcional)",
+    "schedulePlaceholder": "Ej. Lunes a viernes, 9am a 5pm",
+    "countryLabel": "País",
+    "countryPlaceholder": "Selecciona un país",
+    "countryGlobalOption": "Cualquier país / internacional",
+    "countryOtherOption": "Otro país (aún no está en la lista)",
+    "countryOtherPlaceholder": "Escribe el nombre del país",
+    "urlLabel": "Enlace (opcional)",
+    "urlPlaceholder": "https://...",
+    "detailsLabel": "Detalles adicionales (opcional)",
+    "detailsPlaceholder": "Contacto, o cualquier otro detalle importante",
+    "submit": "Enviar sugerencia",
+    "success": "Gracias. La revisaremos antes de publicarla.",
+    "error": "Error al enviar. Inténtalo de nuevo.",
+    "close": "Cerrar"
   },
   "disclaimer": "VEconecta es una iniciativa ciudadana independiente. Verificamos la información antes de publicarla, pero las iniciativas cambian rápido. Confirma siempre antes de actuar.",
   "country": {

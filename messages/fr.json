@@ -12,7 +12,7 @@
     "updatedAt": "mis à jour {date}",
     "globalSection": "Depuis n'importe quel pays",
     "sectionLabel": "Initiatives par pays",
-    "emergencyBanner": "Séisme de Yaracuy · Initiatives d'urgence vérifiées"
+    "emergencyBanner": "Séisme au Venezuela · Initiatives d'urgence vérifiées"
   },
   "categories": {
     "FIND_FAMILY": "Retrouver des proches",
@@ -52,6 +52,39 @@
     "submit": "Envoyer le signalement",
     "success": "Merci. Nous examinerons votre signalement dans les prochaines heures.",
     "error": "Erreur lors de l'envoi. Réessayez."
+  },
+  "suggestion": {
+    "trigger": "Proposer une initiative ou un événement",
+    "title": "Proposer une initiative ou un événement",
+    "description": "Dites-nous ce que c'est et à qui ça profite. Nous l'examinerons avant publication.",
+    "typeLabel": "Type",
+    "typeInitiative": "Initiative",
+    "typeEvent": "Événement",
+    "categoryLabel": "Catégorie",
+    "categoryPlaceholder": "Sélectionnez une catégorie",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Ex. Point de collecte pour les sinistrés du séisme au Venezuela",
+    "descriptionFieldLabel": "Description",
+    "descriptionFieldPlaceholder": "Ex. Nous acceptons l'eau, les aliments non périssables et les vêtements pour les sinistrés du séisme",
+    "beneficiaryLabel": "À qui ça profite ?",
+    "beneficiaryPlaceholder": "Ex. Familles ayant perdu leur logement dans le séisme",
+    "dateLabel": "Date",
+    "datePlaceholder": "Ex. 20 août",
+    "scheduleLabel": "Horaire (facultatif)",
+    "schedulePlaceholder": "Ex. Du lundi au vendredi, 9h à 17h",
+    "countryLabel": "Pays",
+    "countryPlaceholder": "Sélectionnez un pays",
+    "countryGlobalOption": "N'importe quel pays / international",
+    "countryOtherOption": "Autre pays (pas encore dans la liste)",
+    "countryOtherPlaceholder": "Écrivez le nom du pays",
+    "urlLabel": "Lien (facultatif)",
+    "urlPlaceholder": "https://...",
+    "detailsLabel": "Détails supplémentaires (facultatif)",
+    "detailsPlaceholder": "Contact, ou tout autre détail important",
+    "submit": "Envoyer la proposition",
+    "success": "Merci. Nous l'examinerons avant publication.",
+    "error": "Erreur lors de l'envoi. Réessayez.",
+    "close": "Fermer"
   },
   "disclaimer": "VEconecta est une initiative citoyenne indépendante. Nous vérifions les informations avant publication, mais les initiatives changent rapidement. Confirmez toujours avant d'agir.",
   "country": {
